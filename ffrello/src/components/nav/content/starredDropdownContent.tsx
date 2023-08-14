@@ -25,7 +25,7 @@ const StarredDropdownContent = () => {
                         <Box sx={{ width: '250px' }}>
                             <Stack direction="column" spacing={.25}>
                                 {starredBoards.map((x: Board) => {
-                                    return (<BoardMenuItem {...x} />)
+                                    if(x.isStarred) return (<BoardMenuItem {...x} />)
                                 })}
                             </Stack>
                         </Box>

@@ -1,16 +1,23 @@
+//using this hardcoded file until i hook this up to an api to supply data
+
 import Board from "../types/Board"
 import HomePageHighlight from "../types/HomePageHighlight"
 import Issue from "../types/Issue"
 import Workspace from "../types/Workspace";
 
-
-
-
 const getRand = (min: number, max: number) => {
     return Math.floor(min + Math.random() * (max - min));
 }
 
-const getBoards = () => {
+
+const getBoards = (numBoards: number) => {
+
+    const workspaces=[
+        { id: 1, name: 'Frank Workspace'},
+    { id: 2, name: 'Catherine Workspace' },
+    { id: 3, name: 'M.C. Workspace' },
+    { id: 4, name: 'Project Workspace' }
+    ]
 
     const BoardNames = [    
         'Epic Expedition Board',
@@ -22,26 +29,37 @@ const getBoards = () => {
         'Backlog Odyssey',
         'Velocity Voyage Board',
         'Scrum Saga Station',
-        'Agile Adventure Arena'
-    ]
-
-    const workspaces: Workspace[] = [
-        { id: 1, name: 'Frank Workspace' },
-        { id: 2, name: 'Catherine Workspace' },
-        { id: 3, name: 'M.C. Workspace' },
-        { id: 4, name: 'Project Workspace' }
+        'Agile Adventure Arena',
+        'Innovation Island',
+        'Code Crusade Cove',
+        'Iteration Isle',
+        'Challenge Chamber',
+        'Workflow Wonderland',
+        'Feature Frontier',
+        'Storyboard Safari',
+        'Bug Bounty Bay',
+        'Task Tracker Trail',
+        'User Journey Junction'
     ]
 
     const boards: Board[] = [];
     
-    for(var i=0;i<BoardNames.length;i++){
-        boards.push({id: i, name: BoardNames[i], Workspace: workspaces[getRand(0,workspaces.length-1)], isStarred: getRand(1,3) === 1 ? true : false})
+    for(var i=0;i<numBoards;i++){
+        boards.push({id: i, name: BoardNames[i], Workspace: workspaces[getRand(0,workspaces.length-1)], isStarred: i === 1 ? true : false})
     }
 
     return boards;
 }
 
-export const hardCodedBoards = getBoards();
+export const hardCodedBoards = getBoards(10);
+
+export const workspaces: Workspace[] = [
+    { id: 1, name: 'Frank', boards: getBoards(2) },
+    { id: 2, name: 'Catherine', boards: getBoards(3) },
+    { id: 3, name: 'M.C.', boards: getBoards(1) },
+    { id: 4, name: 'Project', boards: [] }
+]
+
 
 export const hardCodedHighlights: HomePageHighlight[] = [
     { author: { name: 'Fwank Misk' }, comment: 'Yo Yo Yo this is a comment', timestamp: 'Today', issue: { id: 3, name: 'OMFG there is a huge issue', comments: ["", "", ""], attachments: ["links", "links", "links"], users: ["", "", ""] } },

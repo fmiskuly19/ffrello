@@ -22,7 +22,7 @@ const TemplateDropdownContent = () => {
                                 <Typography fontSize="12px">Top Templates</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <Stack sx={{ display: 'flex', maxHeight: '450px' }} direction="column" spacing={1}>
+                                <Stack sx={{ display: 'flex', maxHeight: '350px' }} direction="column" spacing={1}>
                                     {templateNames.map((x) => {
                                         return (
                                             <MenuItem sx={{ padding: '0px' }}>

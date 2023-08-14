@@ -7,6 +7,7 @@ import DvrIcon from '@mui/icons-material/Dvr';
 import HomeIcon from '@mui/icons-material/Home';
 import { useAppSelector, useAppDispatch } from '../../hooks'
 import { setSelectedMenu } from '../../ducks/navSlice'
+import * as data from '../../data/hardcodes'
 
 export interface HomePageLeftSidebarProps {
     sticky?: boolean,
@@ -59,11 +60,15 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                             </IconButton>
                         </Stack>
                         <Stack>
-                            {workspaces.workspaces.map((x) => {
+                            {data.workspaces.map((x) => {
                                 return (
                                     <Accordion disableGutters>
                                         <AccordionSummary>
-                                            <Typography fontSize="14px">{x}</Typography>
+                                            <Stack direction="row" alignItems="center">
+
+                                            </Stack>
+
+                                            <Typography fontSize="14px" fontWeight="600">{x.name} Workspace</Typography>
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             Hello World
