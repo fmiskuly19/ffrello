@@ -12,6 +12,7 @@ import ThemeDropdownContent from './content/themeDropdownContent';
 import AppswitcherDropdownContent from './content/appswitcherDropdownContent';
 import AppsIcon from '@mui/icons-material/Apps';
 import { Link } from 'react-router-dom';
+import InformationDropdownContent from '../../components/nav/content/informationDropdownContent'
 
 const Navbar = () => {
   //   const classes = useStyles();
@@ -45,7 +46,7 @@ const Navbar = () => {
               <Stack direction="row" alignItems="center" spacing={1}>
                 <TextField id="outlined-basic" label="Search" size="small" color="primary" InputLabelProps={{ color: 'primary' }} />
                 <NavDropdown label="Notifications" menuContent={<ThemeDropdownContent />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)' }} />} />
-                <NavDropdown label="Help" menuContent={<ThemeDropdownContent />} icon={<HelpOutlineIcon />} />
+                <NavDropdown label="Information" menuContent={<InformationDropdownContent />} icon={<HelpOutlineIcon />} />
                 <NavDropdown label="Theme" menuContent={<ThemeDropdownContent />} icon={<TonalityIcon />} />
                 <NavDropdown label="Avatar" menuContent={<ThemeDropdownContent />} icon={<Avatar alt="Fwank Misk" src="/static/images/avatar/1.jpg" sx={{ width: 24, height: 24 }} />} />
               </Stack>

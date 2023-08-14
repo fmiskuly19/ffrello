@@ -1,12 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import { Provider } from 'react-redux';
 import { ThemeProvider } from '@mui/material'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import CssBaseline from '@mui/material/CssBaseline';
+
+import store from './ducks/store'
+import theme from './themes/theme.tsx'
+import './index.css'
+
+import BoardsPage from './routes/boards'
+import HomePage from './routes/home.tsx'
+import TemplatesPage from './routes/templates.tsx';
+
 
 const router = createBrowserRouter([
   {
@@ -16,18 +25,22 @@ const router = createBrowserRouter([
   {
     path: "/templates",
     element: <TemplatesPage />
+  },
+  {
+    path: "/boards",
+    element: <BoardsPage />
   }
 ]);
 
-import theme from './themes/theme.tsx'
-import HomePage from './routes/home.tsx'
-import TemplatesPage from './routes/templates.tsx';
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
 )

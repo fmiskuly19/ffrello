@@ -1,21 +1,14 @@
-import { Box, Button, Container, Grid, Icon, IconButton, Menu, MenuItem, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
+import { Container, Grid, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
 import Navbar from "../components/nav/navbar";
-import SideNavbar from "../components/nav/sideNavbar";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
+import HomePageLeftSidebar from "../components/sidebars/homePageLeftSidebar";
 import HomePageHighlight from '../types/HomePageHighlight'
-import HomePageHighlightCard from "../components/homepageHighlightCard";
-import theme from "../themes/theme";
+import HomePageHighlightCard from "../components/cards/homepageHighlightCard";
 import { useEffect } from "react";
-import BoardMenuItem from "../components/boardMenuItem";
-import Board from "../types/Board";
 import * as data from '../data/hardcodes'
-import StarIcon from '@mui/icons-material/Star';
-import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import HomePageRightSidebar from "../components/sidebars/homePageRightSidebar";
 
 const HomePage = () => {
-
-    const boards: Board[] = data.hardCodedBoards
 
     const theme = useTheme();
     const mq_xs = useMediaQuery(theme.breakpoints.only('xs'));
@@ -53,11 +46,11 @@ const HomePage = () => {
         <>
             <Navbar />
             <Container sx={{ padding: '10px', pt: '30px' }}>
-                <Grid container spacing={1}>
+                <Grid container spacing={6}>
                     <Grid item md={3} xl={3}>
-                        <SideNavbar sticky={true} />
+                        <HomePageLeftSidebar sticky={true} />
                     </Grid>
-                    <Grid item md={4} xl={4} sx={{ margin: '8px' }}>
+                    <Grid item md={5} xl={5} sx={{ margin: '8px' }}>
                         <Stack direction="row" spacing={1} mb={1} alignItems="center" pl={1}>
                             <FavoriteBorderIcon style={{ fontSize: '12px' }} />
                             <Typography sx={{ fontSize: '14px' }}>Highlights</Typography>
@@ -69,33 +62,11 @@ const HomePage = () => {
                         </Stack>
                     </Grid>
                     <Grid item md={3} xl={3}>
-                        <Box sx={{ margin: '8px' }}>
-                            <Stack direction="column" spacing={2}>
-                                <Stack direction="row" justifyContent="flex-start" spacing={.5} alignItems={"center"}>
-                                    <StarIcon htmlColor="#F8C021" sx={{ fontSize: '16px' }} />
-                                    <Typography fontSize="12px">Starred</Typography>
-                                </Stack>
-                                <Stack direction="column" spacing={2}>
-                                    {boards.map((x: Board) => {
-                                        if (x.isStarred) return (<BoardMenuItem {...x} />)
-                                    })}
-                                </Stack>
-                                <Typography fontSize="12px">Links</Typography>
-                                <Box>
-                                    <Stack direction="row" alignItems="center" spacing={1}>
-                                        <IconButton sx={{ borderRadius: '5px' }}>
-                                            <AddIcon sx={{ fontSize: '20px' }} />
-                                        </IconButton>
-                                        <Typography variant="body2">Create a Board</Typography>
-                                    </Stack>
-                                </Box>
-                            </Stack>
-                        </Box>
+                        <HomePageRightSidebar />
                     </Grid>
                 </Grid>
             </Container >
         </>
-
     )
 }
 

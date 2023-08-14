@@ -1,5 +1,5 @@
 import { Avatar, AvatarGroup, Box, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
-import Issue from "../types/Issue";
+import Issue from "../../types/Issue";
 import SubjectIcon from '@mui/icons-material/Subject';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
@@ -32,7 +32,7 @@ const IssueCard = (props: IssueCardProps) => {
     }
 
     return (
-        <Paper sx={{ borderRadius: '5px', padding: '8px' }}>
+        <Paper sx={{ borderRadius: '5px', padding: '8px' }} key={props.name}>
             <Stack direction="column" spacing={1}>
                 <Grid container>
                     {getChips()}

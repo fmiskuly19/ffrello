@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, IconButton, Paper, Stack, Typography } from "@mui/material";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import HomePageHighlight from "../types/HomePageHighlight";
+import HomePageHighlight from "../../types/HomePageHighlight";
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import IssueCard from "./IssueCard";
@@ -19,14 +19,14 @@ const HomePageHighlightCard = (props: HomepageHighlightCardProps) => {
     }
 
     return (
-        <Paper sx={{ borderRadius: '8px' }} square={false}>
+        <Paper sx={{ borderRadius: '8px' }} square={false} key={props.id}>
             <Stack direction="column">
                 <Box p={"12px"} sx={{ backgroundColor: `rgb(${getRand()}, ${getRand()}, ${getRand()})` }}>
                     <IssueCard {...props.issue} />
                 </Box>
                 <Box m={"12px"} mt={"16px"}>
                     <Stack direction="column" spacing={1} justifyContent="center">
-                        <Box px={"16px"}>
+                        <Box px={"12px"}>
                             <Stack direction="column" spacing={1}>
                                 <Stack direction="row" justifyContent="space-between">
                                     <Stack direction="row" spacing={1}>

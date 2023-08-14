@@ -1,34 +1,45 @@
 import { Stack, Box, Typography, MenuItem } from "@mui/material"
 import Board from "../types/Board";
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
+
+import { useEffect, useState } from "react";
+import InteractiveStarIcon from "./interactiveStarIcon";
 
 interface BoardMenuItemProps extends Board {
 
 }
 
-const BoardMenuItem = (props: BoardMenuItemProps) => {
+const BoardMenuItem = (props: BoardMenuItemProps) => {  
 
-    const min = 1;
-    const max = 255;
+    const [color1, setColor1] = useState<number>();
+    const [color2, setColor2] = useState<number>();
+    const [color3, setColor3] = useState<number>();
 
-    const getRand = () => {
-        return min + Math.random() * (max - min);
-    }
+    useEffect(() => {
+        const min = 1;
+        const max = 255;
+    
+        const getRand = () => {
+            return min + Math.random() * (max - min);
+        }
+
+        setColor1(getRand());
+        setColor2(getRand());
+        setColor3(getRand());
+    }, [])
 
     return (
         <MenuItem sx={{ padding: '4px', borderRadius: '5px', display: 'block' }}>
             <Box sx={{ display: 'flex' }} flexDirection="row" alignItems="center" justifyContent="space-between">
                 {/* this is the box and workspace/board name */}
                 <Stack direction="row" spacing={1} >
-                    <Box sx={{ height: '32px', width: '40px', background: `linear-gradient(180deg, rgba(${getRand()},${getRand()},${getRand()},1) 0%, rgba(${getRand()},${getRand()},${getRand()},1) 100%)`, borderRadius: '5px' }}></Box>
+                    <Box sx={{ height: '32px', width: '40px', background: `linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`, borderRadius: '5px' }}></Box>
                     <Stack direction="column">
                         <Typography variant="h2" fontSize="14px">{props.name}</Typography>
                         <Typography variant="h2" fontSize="12px">{props.Workspace?.name}</Typography>
                     </Stack>
                 </Stack>
                 {/* this is the icon at the end of the menuitem */}
-                {props.isStarred ? <StarIcon htmlColor="#F8C021" sx={{ fontSize: '22px' }} /> : <StarBorderIcon sx={{ fontSize: '22px' }} />}
+                <InteractiveStarIcon isStarred={props.isStarred} />
             </Box>
         </MenuItem >
     )
