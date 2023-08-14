@@ -1,9 +1,9 @@
-import BoardIssue from './BoardIssue'
+import Issue from './Issue'
 import User from './User';
 
 interface HomePageHighlight {
     id?: number,
-    issue?: BoardIssue,
+    issue: Issue,
     author?: User,
     comment?: string,
     timestamp?: string

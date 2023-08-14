@@ -11,6 +11,7 @@ import Board from "../types/Board";
 import * as data from '../data/hardcodes'
 import StarIcon from '@mui/icons-material/Star';
 import AddIcon from '@mui/icons-material/Add';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const HomePage = () => {
 
@@ -57,15 +58,19 @@ const HomePage = () => {
                         <SideNavbar sticky={true} />
                     </Grid>
                     <Grid item md={4} xl={4} sx={{ margin: '8px' }}>
+                        <Stack direction="row" spacing={1} mb={1} alignItems="center" pl={1}>
+                            <FavoriteBorderIcon style={{ fontSize: '12px' }} />
+                            <Typography sx={{ fontSize: '14px' }}>Highlights</Typography>
+                        </Stack>
                         <Stack direction="column" spacing={4}>
                             {highlights.map((x) => {
-                                return (<HomePageHighlightCard author={x.author} comment={x.comment} timestamp={x.timestamp} />)
+                                return (<HomePageHighlightCard {...x} />)
                             })}
                         </Stack>
                     </Grid>
                     <Grid item md={3} xl={3}>
                         <Box sx={{ margin: '8px' }}>
-                            <Stack direction="column" spacing={1}>
+                            <Stack direction="column" spacing={2}>
                                 <Stack direction="row" justifyContent="flex-start" spacing={.5} alignItems={"center"}>
                                     <StarIcon htmlColor="#F8C021" sx={{ fontSize: '16px' }} />
                                     <Typography fontSize="12px">Starred</Typography>
@@ -75,12 +80,7 @@ const HomePage = () => {
                                         if (x.isStarred) return (<BoardMenuItem {...x} />)
                                     })}
                                 </Stack>
-                                <Stack direction="row" justifyContent="space-between" spacing={.5} alignItems={"center"}>
-                                    <Typography fontSize="12px">Links</Typography>
-                                    <IconButton>
-                                        <AddIcon sx={{ fontSize: '20px' }} />
-                                    </IconButton>
-                                </Stack>
+                                <Typography fontSize="12px">Links</Typography>
                                 <Box>
                                     <Stack direction="row" alignItems="center" spacing={1}>
                                         <IconButton sx={{ borderRadius: '5px' }}>

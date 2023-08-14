@@ -1,23 +1,28 @@
 import { Avatar, Box, Button, IconButton, Paper, Stack, Typography } from "@mui/material";
-import BoardIssue from "../types/BoardIssue";
-import User from "../types/User";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import HomePageHighlight from "../types/HomePageHighlight";
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-
+import IssueCard from "./IssueCard";
 
 interface HomepageHighlightCardProps extends HomePageHighlight {
 
 }
 
 const HomePageHighlightCard = (props: HomepageHighlightCardProps) => {
+
+    const min = 1;
+    const max = 255;
+
+    const getRand = () => {
+        return min + Math.random() * (max - min);
+    }
+
     return (
-        <Paper sx={{ borderRadius: '8px' }}>
+        <Paper sx={{ borderRadius: '8px' }} square={false}>
             <Stack direction="column">
-                <Box p={"12px"} sx={{ backgroundColor: '#CCCCCC' }}>
-                    {/* issue goes here */}
-                    Hello World
+                <Box p={"12px"} sx={{ backgroundColor: `rgb(${getRand()}, ${getRand()}, ${getRand()})` }}>
+                    <IssueCard {...props.issue} />
                 </Box>
                 <Box m={"12px"} mt={"16px"}>
                     <Stack direction="column" spacing={1} justifyContent="center">
