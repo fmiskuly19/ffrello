@@ -1,13 +1,47 @@
 import Board from "../types/Board"
 import HomePageHighlight from "../types/HomePageHighlight"
 import Issue from "../types/Issue"
+import Workspace from "../types/Workspace";
 
-export const hardCodedBoards: Board[] = [
-    { id: 1, name: 'Fwanks Board', Workspace: { id: 1, name: 'Catherine Workspace' }, isStarred: false },
-    { id: 2, name: 'Cafwins Board', Workspace: { id: 2, name: 'Catherine Workspace' }, isStarred: true },
-    { id: 2, name: 'Thomas Board', Workspace: { id: 2, name: 'Catherine Workspace' }, isStarred: false },
-    { id: 2, name: 'M.C Board', Workspace: { id: 2, name: 'M.C. Workspace' }, isStarred: true }
-]
+
+
+
+const getRand = (min: number, max: number) => {
+    return Math.floor(min + Math.random() * (max - min));
+}
+
+const getBoards = () => {
+
+    const BoardNames = [    
+        'Epic Expedition Board',
+        'Bug Battlefront',
+        'Feature Frenzy Forge',
+        'User Story Universe',
+        'Sprint Symphony Stage',
+        'Task Trekker Terrain',
+        'Backlog Odyssey',
+        'Velocity Voyage Board',
+        'Scrum Saga Station',
+        'Agile Adventure Arena'
+    ]
+
+    const workspaces: Workspace[] = [
+        { id: 1, name: 'Frank Workspace' },
+        { id: 2, name: 'Catherine Workspace' },
+        { id: 3, name: 'M.C. Workspace' },
+        { id: 4, name: 'Project Workspace' }
+    ]
+
+    const boards: Board[] = [];
+    
+    for(var i=0;i<BoardNames.length;i++){
+        boards.push({id: i, name: BoardNames[i], Workspace: workspaces[getRand(0,workspaces.length-1)], isStarred: getRand(1,3) === 1 ? true : false})
+    }
+
+    return boards;
+}
+
+export const hardCodedBoards = getBoards();
 
 export const hardCodedHighlights: HomePageHighlight[] = [
     { author: { name: 'Fwank Misk' }, comment: 'Yo Yo Yo this is a comment', timestamp: 'Today', issue: { id: 3, name: 'OMFG there is a huge issue', comments: ["", "", ""], attachments: ["links", "links", "links"], users: ["", "", ""] } },

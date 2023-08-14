@@ -26,8 +26,8 @@ const InteractiveStarIcon = (props: InteractiveStarIconProps) => {
     // }
 
     return(
-        <Box onMouseOver={handleStarHoverOver} onMouseOut={handleStarHoverOut} display="flex" alignItems="center">
-            {props.isStarred ? <StarIcon htmlColor="#F8C021" sx={{ fontSize: '22px' }} /> : isHoveringOnStar ? <StarBorderIcon sx={{ fontSize: '24px', color: '#F8C021' }} /> : <StarBorderIcon sx={{ fontSize: '22px' }}  />}
+        <Box onMouseOver={handleStarHoverOver} onMouseOut={handleStarHoverOut} display="flex" alignItems="center" sx={{height: '22px', width: '22px'}}>
+            {props.isStarred ? <StarIcon htmlColor="#F8C021" sx={{ fontSize: '22px' }} /> : isHoveringOnStar ? <StarBorderIcon sx={{ fontSize: '24px', color: '#F8C021' }} /> : <Box />}
         </Box>
     )
 }
