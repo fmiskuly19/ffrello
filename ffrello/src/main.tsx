@@ -15,6 +15,12 @@ import './index.css'
 import BoardsPage from './routes/boards'
 import HomePage from './routes/home.tsx'
 import TemplatesPage from './routes/templates.tsx';
+import WorkspacePage from './routes/workspace/workspacePage.tsx';
+import WorkspaceMembersPage from './routes/workspace/workspaceMembersPage.tsx';
+import BoardPage from './routes/board.tsx';
+import WorkspaceTableViewPage from './routes/workspace/workspaceTableViewPage.tsx';
+import WorkspaceCalendarViewPage from './routes/workspace/workspaceCalendarViewPage.tsx';
+import WorkspaceSettingsPage from './routes/workspace/workspaceSettingsPage.tsx';
 
 
 const router = createBrowserRouter([
@@ -29,6 +35,38 @@ const router = createBrowserRouter([
   {
     path: "/boards",
     element: <BoardsPage />
+  },
+  {
+    path: "/w/:workspaceid",
+    element: <WorkspacePage />,
+    loader: ((params) => {
+      return ("")
+    }),
+    children: [
+      {
+        path: "members",
+        element: <WorkspaceMembersPage />,
+      },
+      {
+        path: "views/table",
+        element: <WorkspaceTableViewPage />
+      },
+      {
+        path: "views/calendar",
+        element: <WorkspaceCalendarViewPage />
+      },
+      {
+        path: "settings",
+        element: <WorkspaceSettingsPage />
+      }
+    ],
+  },
+  {
+    path: "/b/:boardid/:name",
+    element: <BoardPage />,
+    loader: ((params) => {
+      return ("")
+    }),
   }
 ]);
 

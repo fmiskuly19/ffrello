@@ -34,7 +34,7 @@ const Navbar = () => {
                 <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdownContent />} icon={<AppsIcon style={{ fontSize: '20px' }} />} />
                 <Stack direction='row'>
                   {/* logo goes here */}
-                  <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.main }}><Typography variant="body1" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none' }}>FFrello</Typography></Link>
+                  <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.main }}><Typography variant="h4" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none' }}>FFrello</Typography></Link>
                 </Stack>
                 <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdownContent />} />
                 <NavDropdown label="Recent" menuContent={<RecentBoardsDropdownContent />} />

@@ -2,8 +2,6 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, MenuItem, S
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link } from "react-router-dom";
-import { Link as LinkBase } from '@mui/material';
-import theme from '../../../themes/theme'
 import { templateNames } from '../../../data/hardcodes'
 
 const TemplateDropdownContent = () => {
@@ -43,11 +41,11 @@ const TemplateDropdownContent = () => {
                                 <BackupTableIcon />
                                 <Typography fontSize="14px">See hundreds of templates from the FFrello community</Typography>
                             </Stack>
-                            <Button sx={{ minWidth: '80%' }}><LinkBase component={Link} to="/templates" color='primary' sx={{ textDecoration: 'none', textTransform: 'none' }}>Explore Templates</LinkBase></Button>
+                            <Button component={Link} to="/templates" sx={{ minWidth: '80%', textDecoration: 'none', textTransform: 'none' }}>Explore Templates</Button>
                         </Stack>
                     </Box>
-                </Stack>
-            </Box>
+                </Stack >
+            </Box >
         </>
     )
 }

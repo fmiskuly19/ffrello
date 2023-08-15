@@ -27,7 +27,7 @@ const IssueCard = (props: IssueCardProps) => {
             const randColor1 = getRand(1, 255);
             const randColor2 = getRand(1, 255);
             const randColor3 = getRand(1, 255);
-            if (i > numChips) return (<Grid item><Chip label={x} size="small" sx={{ color: 'black', backgroundColor: `rgb(${randColor1},${randColor2},${randColor3})` }} /></Grid>)
+            if (i > numChips) return (<Grid item><Chip label={x} size="small" color="primary" sx={{ backgroundColor: `rgb(${randColor1},${randColor2},${randColor3})` }} /></Grid>)
         })
     }
 

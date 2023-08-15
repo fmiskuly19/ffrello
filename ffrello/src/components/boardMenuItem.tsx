@@ -3,12 +3,13 @@ import Board from "../types/Board";
 
 import { useEffect, useState } from "react";
 import InteractiveStarIcon from "./interactiveStarIcon";
+import { Link } from "react-router-dom";
 
 interface BoardMenuItemProps extends Board {
 
 }
 
-const BoardMenuItem = (props: BoardMenuItemProps) => {  
+const BoardMenuItem = (props: BoardMenuItemProps) => {
 
     const [color1, setColor1] = useState<number>();
     const [color2, setColor2] = useState<number>();
@@ -17,7 +18,7 @@ const BoardMenuItem = (props: BoardMenuItemProps) => {
     useEffect(() => {
         const min = 1;
         const max = 255;
-    
+
         const getRand = () => {
             return min + Math.random() * (max - min);
         }
@@ -28,7 +29,7 @@ const BoardMenuItem = (props: BoardMenuItemProps) => {
     }, [])
 
     return (
-        <MenuItem sx={{ padding: '4px', borderRadius: '5px', display: 'block' }}>
+        <MenuItem sx={{ padding: '4px', borderRadius: '5px', display: 'block' }} component={Link} to={`/b/${props.id}/${props.name}`}>
             <Box sx={{ display: 'flex' }} flexDirection="row" alignItems="center" justifyContent="space-between">
                 {/* this is the box and workspace/board name */}
                 <Stack direction="row" spacing={1} >

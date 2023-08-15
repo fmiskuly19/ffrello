@@ -1,27 +1,72 @@
 import createTheme, { ThemeOptions } from "@mui/material/styles/createTheme";
+import { blueGrey, green } from "@mui/material/colors";
 
 const themeOptions: ThemeOptions = createTheme({
+    // zIndex: {
+    //     appBar: 1200,
+    //     drawer: 1100,
+    // },
     typography: {
-        fontFamily: 'Roboto'
+        fontFamily: 'Roboto',
+        body1: {
+            fontSize: 14,
+        },
+        body2: {
+            fontSize: 12,
+        },
+        h6: {
+            fontSize: 16
+        },
+        h5: {
+            fontSize: 18
+        },
+        h4: {
+            fontSize: 20
+        },
+        h3: {
+            fontSize: 22
+        },
+        h2: {
+            fontSize: 24
+        },
+        h1: {
+            fontSize: 28
+        },
     },
     palette: {
         mode: 'dark',
         // type: 'dark',
         primary: {
             main: '#9aa1b2',
-            dark: '#9aa1b2',
-            light: '#1e2025'
+            dark: '#090a09',
+            light: '#ffffff',
+            contrastText: '#FFFFFF'
         },
         secondary: {
-            main: '#f50057',
+            main: '#313138',
+            dark: '#4e4e59',
+            light: '#313138',
+            contrastText: '#9aa1b2'
+        },
+        info: {
+            main: '#ffffff',
+            dark: blueGrey[300],
+            light: blueGrey[100],
+            contrastText: blueGrey[900],
+        },
+        success: {
+            main: green[50],
+            dark: green[300],
+            light: green[100],
+            contrastText: green[900],
         },
         background: {
-            default: '#1e2025',
-            paper: '#23262c',
+            default: '#1f1f26',
+            paper: '#1e2025',
         },
         text: {
             primary: '#9aa1b2',
-            secondary: 'rgba(255,255,255,0.54)',
+            secondary: '#ffffff',
             disabled: 'rgba(115,115,115,0.38)',
         },
         divider: 'rgba(191,191,191,0.12)',

@@ -39,7 +39,7 @@ const NavDropdown = (props: NavDropdownProps) => {
                     onClick={handleClick}
                     sx={{ textTransform: 'none', ":hover": { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '100%', minWidth: '0px', padding: '0px', margin: '0px' }}
                 >
-                    <IconButton size="small" sx={{ minWidth: '0px' }}>{props.icon}</IconButton>
+                    <IconButton size="small" sx={{ minWidth: '0px' }} color="primary">{props.icon}</IconButton>
                 </Button>
                 :
                 <Button
@@ -51,7 +51,7 @@ const NavDropdown = (props: NavDropdownProps) => {
                     endIcon={getEndIcon()}
                     sx={{ textTransform: 'none', ":hover": { background: 'rgba(255, 255, 255, .1)' } }}
                 >
-                    <Typography variant="body2">{props.label}</Typography>
+                    <Typography>{props.label}</Typography>
                 </Button>
             }
             <Menu
