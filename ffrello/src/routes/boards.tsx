@@ -14,7 +14,7 @@ const BoardsPage = () => {
             <Container sx={{ padding: '10px', pt: '30px' }}>
                 <Grid container spacing={6}>
                     <Grid item xl={3}>
-                        <HomePageLeftSidebar />
+                        <HomePageLeftSidebar expandedAccordions={[]} />
                     </Grid>
                     <Grid item xl={8}>
                         <Stack direction="column" spacing={8}>

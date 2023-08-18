@@ -5,21 +5,29 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // Define the initial state using that type
 const initialState: HomePageLeftSidebarProps = {
-  selectedMenu: 'Home'
+  selectedMenu: 'Home',
+  selectedWorkspaceMenu: '',
+  expandedAccordions: []
 }
 
 export const navSlice = createSlice({
-  name: 'counter',
+  name: 'nav',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
     setSelectedMenu: (state, action: PayloadAction<string>) => {
       state.selectedMenu = action.payload
     },
+    setSelectedWorkspaceMenu: (state, action: PayloadAction<string>) => {
+      state.selectedWorkspaceMenu = action.payload
+    },
+    setExpandedAccordions: (state, action: PayloadAction<string[]>) => {
+      state.expandedAccordions = action.payload
+    },
   },
 })
 
-export const { setSelectedMenu } = navSlice.actions
+export const { setSelectedMenu, setExpandedAccordions, setSelectedWorkspaceMenu } = navSlice.actions
 
 // // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value
