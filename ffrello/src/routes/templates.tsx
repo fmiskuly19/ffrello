@@ -6,17 +6,9 @@ import HomePageHighlightCard from "../components/cards/homepageHighlightCard";
 const TemplatesPage = () => {
     return (
         <>
-            <Navbar />
-            <Container sx={{ padding: '10px', pt: '30px' }}>
-                <Grid container spacing={6}>
-                    <Grid item md={3}>
-                        <HomePageLeftSidebar />
-                    </Grid>
-                    <Grid item>
-                        Hello
-                    </Grid>
-                </Grid>
-            </Container >
+            <div>
+                Hello this is the templates page
+            </div >
         </>
 
     )

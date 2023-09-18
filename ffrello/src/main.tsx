@@ -21,53 +21,67 @@ import BoardPage from './routes/board.tsx';
 import WorkspaceTableViewPage from './routes/workspace/workspaceTableViewPage.tsx';
 import WorkspaceCalendarViewPage from './routes/workspace/workspaceCalendarViewPage.tsx';
 import WorkspaceSettingsPage from './routes/workspace/workspaceSettingsPage.tsx';
+import MainPage from './routes/mainPage.tsx';
+import HomePages from './routes/homePages.tsx';
 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/templates",
-    element: <TemplatesPage />
-  },
-  {
-    path: "/boards",
-    element: <BoardsPage />
-  },
-  {
-    path: "/w/:workspaceid",
-    element: <WorkspacePage />,
-    loader: ((params) => {
-      return ("")
-    }),
+    element: <MainPage />,
     children: [
       {
-        path: "members",
-        element: <WorkspaceMembersPage />,
+        element: <HomePages />,
+        children: [
+          {
+            path: "/templates",
+            element: <TemplatesPage />
+          },
+          {
+            path: "/boards",
+            element: <BoardsPage />
+          },
+          {
+            path: "/",
+            element: <HomePage />
+          },
+        ]
       },
       {
-        path: "views/table",
-        element: <WorkspaceTableViewPage />
+        path: "/w/:workspaceid",
+        element: <WorkspacePage />,
+        loader: ((params) => {
+          return ("")
+        }),
+        children: [
+          {
+            path: "members",
+            element: <WorkspaceMembersPage />,
+          },
+          {
+            path: "views/table",
+            element: <WorkspaceTableViewPage />
+          },
+          {
+            path: "views/calendar",
+            element: <WorkspaceCalendarViewPage />
+          },
+          {
+            path: "settings",
+            element: <WorkspaceSettingsPage />
+          }
+        ],
       },
       {
-        path: "views/calendar",
-        element: <WorkspaceCalendarViewPage />
-      },
-      {
-        path: "settings",
-        element: <WorkspaceSettingsPage />
+        path: "/b/:boardid/:name",
+        element: <BoardPage />,
+        loader: ((params) => {
+          return ("")
+        }),
       }
-    ],
+    ]
   },
-  {
-    path: "/b/:boardid/:name",
-    element: <BoardPage />,
-    loader: ((params) => {
-      return ("")
-    }),
-  }
+
 ]);
 
 
