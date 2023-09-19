@@ -1,19 +1,20 @@
-import { Box, Container, Grid } from "@mui/material";
-import HomePageLeftSidebar from "../components/sidebars/homePageLeftSidebar";
+import { Container, Grid } from "@mui/material";
+import HomePageLeftSidebar from "../../components/sidebars/homePageLeftSidebar";
 import { Outlet } from "react-router-dom";
 
 const HomePages = () => {
     return (
-        <Container>
+        <Container sx={{ paddingTop: '30px', paddingBottom: '30px' }}>
             <Grid container spacing={6}>
-                <Grid item lg={4} sx={{ border: '1px solid blue' }} justifyContent='center'>
+                <Grid item lg={4} justifyContent='center'>
                     <HomePageLeftSidebar expandedAccordions={[]} />
                 </Grid>
-                <Grid item sx={{ border: '1px solid green' }}>
+                <Grid item lg={8}>
                     <Outlet />
                 </Grid>
             </Grid>
         </Container >
+
     )
 }
 

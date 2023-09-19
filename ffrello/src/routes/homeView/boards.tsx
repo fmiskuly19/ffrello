@@ -1,9 +1,9 @@
 import { Box, Container, Grid, Stack, Typography } from "@mui/material";
-import * as data from '../data/hardcodes'
+import * as data from '../../data/hardcodes'
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import BoardCard from "../components/cards/boardCard";
+import BoardCard from "../../components/cards/boardCard";
 import HistoryIcon from '@mui/icons-material/History';
-import WorkspaceCard from "../components/cards/workspaceCard";
+import WorkspaceCard from "../../components/cards/workspaceCard";
 
 const BoardsPage = () => {
     return (

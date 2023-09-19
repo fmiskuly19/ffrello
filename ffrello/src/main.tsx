@@ -12,17 +12,21 @@ import store from './ducks/store'
 import theme from './themes/theme.tsx'
 import './index.css'
 
-import BoardsPage from './routes/boards'
-import HomePage from './routes/home.tsx'
-import TemplatesPage from './routes/templates.tsx';
-import WorkspacePage from './routes/workspace/workspacePage.tsx';
-import WorkspaceMembersPage from './routes/workspace/workspaceMembersPage.tsx';
-import BoardPage from './routes/board.tsx';
-import WorkspaceTableViewPage from './routes/workspace/workspaceTableViewPage.tsx';
-import WorkspaceCalendarViewPage from './routes/workspace/workspaceCalendarViewPage.tsx';
-import WorkspaceSettingsPage from './routes/workspace/workspaceSettingsPage.tsx';
+
+import HomePage from './routes/homeView/home.tsx'
+import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
+import BoardPage from './routes/workspaceView/board.tsx';
+import WorkspaceTableViewPage from './routes/workspaceView/workspaceTableViewPage.tsx';
+import WorkspaceCalendarViewPage from './routes/workspaceView/workspaceCalendarViewPage.tsx';
+import WorkspaceSettingsPage from './routes/workspaceView/workspaceSettingsPage.tsx';
 import MainPage from './routes/mainPage.tsx';
-import HomePages from './routes/homePages.tsx';
+import HomePages from './routes/homeView/homePages.tsx';
+import TemplatesPage from './routes/homeView/templates.tsx';
+import BoardsPage from './routes/homeView/boards.tsx';
+import WorkspaceView from './routes/workspaceView/workspacePage.tsx';
+import WorkspaceBoardsPage from './routes/workspaceView/workspaceBoardsPage.tsx';
+import WorkspaceHighlightsPage from './routes/homeView/workspaceHighlights.tsx';
+import WorkspaceHomePage from './routes/homeView/workspaceHome.tsx';
 
 
 const router = createBrowserRouter([
@@ -34,6 +38,10 @@ const router = createBrowserRouter([
         element: <HomePages />,
         children: [
           {
+            path: "/",
+            element: <HomePage />
+          },
+          {
             path: "/templates",
             element: <TemplatesPage />
           },
@@ -42,18 +50,26 @@ const router = createBrowserRouter([
             element: <BoardsPage />
           },
           {
-            path: "/",
-            element: <HomePage />
+            path: "/w/:workspaceid/highlights",
+            element: <WorkspaceHighlightsPage />
           },
+          {
+            path: "/w/:workspaceid/home",
+            element: <WorkspaceHomePage />
+          }
         ]
       },
       {
         path: "/w/:workspaceid",
-        element: <WorkspacePage />,
+        element: <WorkspaceView />,
         loader: ((params) => {
           return ("")
         }),
         children: [
+          {
+            path: "",
+            element: <WorkspaceBoardsPage />,
+          },
           {
             path: "members",
             element: <WorkspaceMembersPage />,
@@ -67,7 +83,7 @@ const router = createBrowserRouter([
             element: <WorkspaceCalendarViewPage />
           },
           {
-            path: "settings",
+            path: "account",
             element: <WorkspaceSettingsPage />
           }
         ],

@@ -10,16 +10,16 @@ const getRand = (min: number, max: number) => {
 }
 
 
-const getBoards = (numBoards: number) => {
+export const getBoards = (numBoards: number) => {
 
-    const workspaces=[
-        { id: 1, name: 'Frank Workspace'},
-    { id: 2, name: 'Catherine Workspace' },
-    { id: 3, name: 'M.C. Workspace' },
-    { id: 4, name: 'Project Workspace' }
+    const workspaces = [
+        { id: 1, name: 'Frank Workspace' },
+        { id: 2, name: 'Catherine Workspace' },
+        { id: 3, name: 'M.C. Workspace' },
+        { id: 4, name: 'Project Workspace' }
     ]
 
-    const BoardNames = [    
+    const BoardNames = [
         'Epic Expedition Board',
         'Bug Battlefront',
         'Feature Frenzy Forge',
@@ -43,9 +43,9 @@ const getBoards = (numBoards: number) => {
     ]
 
     const boards: Board[] = [];
-    
-    for(var i=0;i<numBoards;i++){
-        boards.push({id: i, name: BoardNames[i], Workspace: workspaces[getRand(0,workspaces.length-1)], isStarred: i === 1 ? true : false})
+
+    for (var i = 0; i < numBoards; i++) {
+        boards.push({ id: i, name: BoardNames[i], Workspace: workspaces[getRand(0, workspaces.length - 1)], isStarred: i === 1 ? true : false })
     }
 
     return boards;

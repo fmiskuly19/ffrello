@@ -1,11 +1,9 @@
 import { Container, Grid, Stack, Typography } from "@mui/material"
-import Navbar from "../components/nav/navbar";
-import HomePageLeftSidebar from "../components/sidebars/homePageLeftSidebar";
-import HomePageHighlight from '../types/HomePageHighlight'
-import HomePageHighlightCard from "../components/cards/homepageHighlightCard";
-import * as data from '../data/hardcodes'
+import HomePageHighlight from '../../types/HomePageHighlight'
+import HomePageHighlightCard from "../../components/cards/homepageHighlightCard";
+import * as data from '../../data/hardcodes'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import HomePageRightSidebar from "../components/sidebars/homePageRightSidebar";
+import HomePageRightSidebar from "../../components/sidebars/homePageRightSidebar";
 
 const HomePage = () => {
 

@@ -30,11 +30,11 @@ const links = [
 ]
 
 const workspaceMenuItems = [
-    { name: "Boards", icon: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false },
-    { name: "Highlights", icon: <FavoriteBorderIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false },
-    { name: "Views", icon: <GridViewIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true },
-    { name: "Members", icon: <PeopleIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true },
-    { name: "Settings", icon: <SettingsIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true }
+    { name: "Boards", icon: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false, link: 'home' },
+    { name: "Highlights", icon: <FavoriteBorderIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false, link: 'highlights' },
+    { name: "Views", icon: <GridViewIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'views/table' },
+    { name: "Members", icon: <PeopleIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'members' },
+    { name: "Settings", icon: <SettingsIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'account' }
 ]
 
 const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
@@ -43,6 +43,8 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
     const selectedWorkspaceMenu = useAppSelector((state) => state.nav.selectedWorkspaceMenu)
     const expanded = useAppSelector((state) => state.nav.expandedAccordions)
     const dispatch = useAppDispatch()
+
+
 
     const handleChange = (accordionName: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
         if (isExpanded) {
@@ -104,7 +106,7 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                             </IconButton>
                         </Stack>
                         <Stack direction='column'>
-                            {data.workspaces.map((x, i) => {
+                            {data.workspaces.map((workspace, i) => {
                                 return (
                                     <Accordion disableGutters sx={{
                                         "&.MuiPaper-root::before": { content: 'none' }
@@ -114,9 +116,9 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                                         }}>
                                             <Stack direction="row" alignItems="center" spacing={1}>
                                                 <Box sx={{ display: 'flex', height: '22px', width: '22px', background: `linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`, borderRadius: '2px' }} alignItems="center" justifyContent="center">
-                                                    <Typography variant="body1" sx={{ color: 'black' }} fontWeight="800">{x.name.substring(0, 1)}</Typography>
+                                                    <Typography variant="body1" sx={{ color: 'black' }} fontWeight="800">{workspace.name.substring(0, 1)}</Typography>
                                                 </Box>
-                                                <Typography variant="body1" fontWeight="600">{x.name} Workspace</Typography>
+                                                <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
                                             </Stack>
                                         </AccordionSummary>
                                         <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
@@ -126,6 +128,8 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                                                         <MenuItem onClick={(e: React.MouseEvent) => { dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${i}`)) }}
                                                             selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${i}` && expanded.includes(`accordion${i}`)}
                                                             sx={{ paddingLeft: '25px', borderRadius: '6px', width: '100%' }}
+                                                            component={Link}
+                                                            to={`w/${workspace.name}/${workspaceMenuItem.link}`}
                                                         >
                                                             <Stack direction="row" alignItems="center" spacing={1} >
                                                                 {workspaceMenuItem.icon}

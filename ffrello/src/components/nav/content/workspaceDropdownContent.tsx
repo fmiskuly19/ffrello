@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { Box, Divider, MenuList, Stack, Typography } from '@mui/material';
+import LetterBox from '../../letterBox';
 
 interface Workspaces {
     currentWorkspace: string,
@@ -18,9 +19,7 @@ const WorkspaceDropdownContent = () => {
                 <Typography variant="h2" fontSize="12px">Current Workspace</Typography>
                 <MenuItem sx={{ ":hover": '-moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;', padding: '8px', minWidth: '250px' }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
-                        <Box sx={{ display: 'flex', height: '40px', width: '40px', background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(223,255,42,1) 0%, rgba(64,135,0,1) 100%)', borderRadius: '5px' }} alignItems="center" justifyContent="center">
-                            <Typography variant="h6" sx={{ color: 'black' }} fontWeight="800">{workspaces.currentWorkspace.substring(0, 1)}</Typography>
-                        </Box>
+                        <LetterBox backgroundColor={'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(223,255,42,1) 0%, rgba(64,135,0,1) 100%)'} size={40} letter={workspaces.currentWorkspace.substring(0, 1)} />
                         <Typography variant="subtitle2">{workspaces.currentWorkspace}</Typography>
                     </Stack>
                 </MenuItem>
