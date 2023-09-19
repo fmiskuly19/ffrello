@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, MenuItem, Stack, Typography } from "@mui/material";
+import { Box, Button, Divider, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
 import LetterBox from "../letterBox";
 import { Link, useParams } from "react-router-dom";
 import LogoDevIcon from '@mui/icons-material/LogoDev';
@@ -10,16 +10,30 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import * as data from '../../data/hardcodes'
+import React from "react";
+
+interface WorkspaceLeftSidebarProps {
+    workspaceName: string,
+    workspaceId: number,
+}
 
 
-const WorkspaceViewLeftSidebar = () => {
+const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
 
     //TODO
     //there is a height for each MenuItem 44px that is to make them the same size, as the buttons on some cause the height to increase.
     //need to figure out how to make the button small enough so it doesnt resize the menuitem, or find a compact menuitem setting
 
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const workspaceSettingsOpen = Boolean(anchorEl);
 
-    let { workspaceid } = useParams();
+    const handleWorkspaceSettingsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleWorkspaceSettingsClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <Box sx={{ marginTop: '15px' }}>
@@ -28,7 +42,7 @@ const WorkspaceViewLeftSidebar = () => {
                     <Stack direction='row' justifyContent='center' spacing={1} alignItems={'center'}>
                         <LetterBox backgroundColor={'lightpink'} size={32} letter={'E'} />
                         <Stack direction='column'>
-                            <Typography variant="h6" sx={{ wordBreak: "break-word" }}>{workspaceid}</Typography>
+                            <Typography variant="h6" sx={{ wordBreak: "break-word" }}>{props.workspaceName}</Typography>
                             <Typography variant="body2">Free?</Typography>
                         </Stack>
                     </Stack>
@@ -43,7 +57,7 @@ const WorkspaceViewLeftSidebar = () => {
                     selected={selectedMenu === x.name} */}
                     <MenuItem
                         component={Link}
-                        to=''
+                        to={`/w/${props.workspaceId}/`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px', height: '44px' }}
                     >
                         <Stack direction="row" spacing={1} alignItems="center" ml='10px'>
@@ -54,7 +68,7 @@ const WorkspaceViewLeftSidebar = () => {
 
                     <MenuItem
                         component={Link}
-                        to='members'
+                        to={`/w/${props.workspaceId}/members`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px' }}
                     >
                         <Stack direction='row' ml='10px' justifyContent='space-between' width='100%' >
@@ -68,7 +82,9 @@ const WorkspaceViewLeftSidebar = () => {
                         </Stack>
                     </MenuItem>
                     <MenuItem
-                        sx={{ paddingLeft: '3px', marginBottom: '2px' }}
+                        component={Button} //set as button to get onClick handler
+                        sx={{ paddingLeft: '3px', marginBottom: '2px', textTransform: 'none' }} //textTransform to none to get rid of button styling
+                        onClick={handleWorkspaceSettingsClick}
                     >
                         <Stack direction='row' ml='10px' width='100%' justifyContent='space-between'>
                             <Stack direction="row" spacing={1} alignItems="center">
@@ -81,6 +97,34 @@ const WorkspaceViewLeftSidebar = () => {
                         </IconButton>
                     </MenuItem>
 
+                    {/* workspace settings dropdown menu */}
+                    <Menu
+                        id={'workspace-dropdown-menu'}
+                        anchorEl={anchorEl}
+                        open={workspaceSettingsOpen}
+                        onClose={handleWorkspaceSettingsClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'workspace-dropdown-button',
+                            'disablePadding': true,
+                        }}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                        }}
+                    >
+                        <Box mt="12px" mb="12px" minWidth='250px'>
+                            <MenuItem component={Link} to='account' onClick={handleWorkspaceSettingsClose}>
+                                Workspace settings
+                            </MenuItem>
+                            <MenuItem>
+                                Upgrade workspace
+                            </MenuItem>
+                        </Box>
+                    </Menu>
                 </Stack >
 
                 <Stack direction='column'>
@@ -89,7 +133,7 @@ const WorkspaceViewLeftSidebar = () => {
                     </Typography>
                     <MenuItem
                         component={Link}
-                        to='views/table'
+                        to={`/w/${props.workspaceId}/views/table`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px' }}
                     >
                         <Stack direction='row' ml='10px' justifyContent='space-between'>
@@ -101,7 +145,7 @@ const WorkspaceViewLeftSidebar = () => {
                     </MenuItem>
                     <MenuItem
                         component={Link}
-                        to='views/calendar'
+                        to={`/w/${props.workspaceId}/views/calendar`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px' }}
                     >
                         <Stack direction='row' ml='10px' justifyContent='space-between'>
@@ -117,9 +161,11 @@ const WorkspaceViewLeftSidebar = () => {
                         Your Boards
                     </Typography>
 
-                    {data.getBoards(4).map((board, i) => {
+                    {data.getBoards(4).map((board) => {
                         return (
                             <MenuItem
+                                component={Link}
+                                to={`/b/${board.id}/${board.name}`}
                                 sx={{ paddingLeft: '3px', marginBottom: '2px' }}
                             >
                                 <Stack direction='row' ml='10px' justifyContent='space-between'>

@@ -15,9 +15,9 @@ import './index.css'
 
 import HomePage from './routes/homeView/home.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
-import BoardPage from './routes/workspaceView/board.tsx';
-import WorkspaceTableViewPage from './routes/workspaceView/workspaceTableViewPage.tsx';
-import WorkspaceCalendarViewPage from './routes/workspaceView/workspaceCalendarViewPage.tsx';
+import BoardPage from './routes/boardView/board.tsx';
+import WorkspaceTablePage from './routes/workspaceView/workspaceTablePage.tsx';
+import WorkspaceCalendarPage from './routes/workspaceView/workspaceCalendarPage.tsx';
 import WorkspaceSettingsPage from './routes/workspaceView/workspaceSettingsPage.tsx';
 import MainPage from './routes/mainPage.tsx';
 import HomePages from './routes/homeView/homePages.tsx';
@@ -76,11 +76,11 @@ const router = createBrowserRouter([
           },
           {
             path: "views/table",
-            element: <WorkspaceTableViewPage />
+            element: <WorkspaceTablePage />
           },
           {
             path: "views/calendar",
-            element: <WorkspaceCalendarViewPage />
+            element: <WorkspaceCalendarPage />
           },
           {
             path: "account",
@@ -89,11 +89,8 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/b/:boardid/:name",
+        path: "/b/:boardid/:boardname",
         element: <BoardPage />,
-        loader: ((params) => {
-          return ("")
-        }),
       }
     ]
   },

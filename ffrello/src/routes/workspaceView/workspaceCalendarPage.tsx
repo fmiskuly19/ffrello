@@ -1,14 +1,14 @@
 import Navbar from "../../components/nav/navbar";
 import { Container } from "@mui/material";
 
-const WorkspaceTableViewPage = () => {
+const WorkspaceCalendarPage = () => {
     return (
         <>
             <Container>
-                Workspace Table View Page
+                Workspace Calendar View Page
             </Container>
         </>
     )
 }
 
-export default WorkspaceTableViewPage;
+export default WorkspaceCalendarPage;
