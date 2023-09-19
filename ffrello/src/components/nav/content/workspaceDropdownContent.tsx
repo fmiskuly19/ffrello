@@ -2,6 +2,7 @@ import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import { Box, Divider, MenuList, Stack, Typography } from '@mui/material';
 import LetterBox from '../../letterBox';
+import { Link } from 'react-router-dom';
 
 interface Workspaces {
     currentWorkspace: string,
@@ -31,6 +32,8 @@ const WorkspaceDropdownContent = () => {
                 {workspaces.workspaces.map((x) => {
                     return (
                         <MenuItem
+                            component={Link}
+                            to={`w/${x}`}
                             sx={{ ":hover": '-moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;', padding: '8px', minWidth: '250px' }}>
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <Box sx={{ display: 'flex', height: '40px', width: '40px', background: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(223,255,42,1) 0%, rgba(64,135,0,1) 100%)', borderRadius: '5px' }} alignItems="center" justifyContent="center">

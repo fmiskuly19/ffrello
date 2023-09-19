@@ -59,6 +59,7 @@ const NavDropdown = (props: NavDropdownProps) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                onClick={handleClose}
                 MenuListProps={{
                     'aria-labelledby': props.label + '-dropdown-button',
                     'disablePadding': true,

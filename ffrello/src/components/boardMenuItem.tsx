@@ -1,12 +1,11 @@
 import { Stack, Box, Typography, MenuItem } from "@mui/material"
 import Board from "../types/Board";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import InteractiveStarIcon from "./interactiveStarIcon";
 import { Link } from "react-router-dom";
 
 interface BoardMenuItemProps extends Board {
-
 }
 
 const BoardMenuItem = (props: BoardMenuItemProps) => {

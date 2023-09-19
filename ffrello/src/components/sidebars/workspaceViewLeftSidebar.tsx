@@ -24,8 +24,8 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
     //there is a height for each MenuItem 44px that is to make them the same size, as the buttons on some cause the height to increase.
     //need to figure out how to make the button small enough so it doesnt resize the menuitem, or find a compact menuitem setting
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const workspaceSettingsOpen = Boolean(anchorEl);
+    const [workspaceSettingsAnchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const workspaceSettingsOpen = Boolean(workspaceSettingsAnchorEl);
 
     const handleWorkspaceSettingsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -100,7 +100,7 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                     {/* workspace settings dropdown menu */}
                     <Menu
                         id={'workspace-dropdown-menu'}
-                        anchorEl={anchorEl}
+                        anchorEl={workspaceSettingsAnchorEl}
                         open={workspaceSettingsOpen}
                         onClose={handleWorkspaceSettingsClose}
                         MenuListProps={{
@@ -116,7 +116,7 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                             horizontal: 'center',
                         }}
                     >
-                        <Box mt="12px" mb="12px" minWidth='250px'>
+                        <Box mt="8px" mb="8px" minWidth='250px'>
                             <MenuItem component={Link} to='account' onClick={handleWorkspaceSettingsClose}>
                                 Workspace settings
                             </MenuItem>
