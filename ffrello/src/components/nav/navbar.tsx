@@ -29,8 +29,8 @@ const Navbar = () => {
       ) : (
         <>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Toolbar variant="dense">
-              <Stack direction="row" alignItems="center" spacing={1}>
+            <Toolbar variant="dense" disableGutters>
+              <Stack direction="row" alignItems="center" spacing={1} pl='5px'>
                 <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdownContent />} icon={<AppsIcon style={{ fontSize: '20px' }} />} />
                 <Stack direction='row'>
                   {/* logo goes here */}
