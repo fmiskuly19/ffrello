@@ -13,6 +13,7 @@ import AppswitcherDropdownContent from './content/appswitcherDropdownContent';
 import AppsIcon from '@mui/icons-material/Apps';
 import { Link } from 'react-router-dom';
 import InformationDropdownContent from '../../components/nav/content/informationDropdownContent'
+import CreateButtonDropdown from './createButtonDropdown';
 
 const Navbar = () => {
   //   const classes = useStyles();
@@ -40,6 +41,7 @@ const Navbar = () => {
                 <NavDropdown label="Recent" menuContent={<RecentBoardsDropdownContent />} />
                 <NavDropdown label="Starred" menuContent={<StarredDropdownContent />} />
                 <NavDropdown label="Templates" menuContent={<TemplatesDropdownContent />} />
+                <CreateButtonDropdown />
               </Stack>
             </Toolbar>
             <Toolbar variant="dense">

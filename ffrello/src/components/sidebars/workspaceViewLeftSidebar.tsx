@@ -14,7 +14,7 @@ import React from "react";
 
 interface WorkspaceLeftSidebarProps {
     workspaceName: string,
-    workspaceId: number,
+    workspaceId?: string,
 }
 
 

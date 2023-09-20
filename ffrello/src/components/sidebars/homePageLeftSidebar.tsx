@@ -44,8 +44,6 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
     const expanded = useAppSelector((state) => state.nav.expandedAccordions)
     const dispatch = useAppDispatch()
 
-
-
     const handleChange = (accordionName: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
         if (isExpanded) {
             let temp = [...expanded];
