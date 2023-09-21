@@ -1,17 +1,17 @@
-import { Box, Button, Container, Dialog, DialogContent, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
+import { Button, Container, Dialog, DialogContent, Grid, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setOpenCreateWorkspaceModal } from "../../ducks/navSlice";
 
-export interface CreateWorkspaceModalProps {
-    isOpen: boolean;
-    closeModal: () => void;
-}
 
-const CreateWorkspaceModal = (props: CreateWorkspaceModalProps) => {
+const CreateWorkspaceModal = () => {
 
-    const { closeModal, isOpen } = props;
+    //get these from the nav state slice so we dont have to duplicate the modal many times, as its opened from 3 different locations
+    const openModal = useAppSelector((state) => state.nav.openCreateWorkspaceModal);
+    const dispatch = useAppDispatch()
 
     const handleClose = () => {
-        closeModal();
+        dispatch(setOpenCreateWorkspaceModal(false));
     };
 
     const [workspaceType, setWorkspaceType] = useState('');
@@ -21,11 +21,11 @@ const CreateWorkspaceModal = (props: CreateWorkspaceModalProps) => {
     };
 
     return (
-        <Dialog onClose={handleClose} open={isOpen} maxWidth={"lg"} fullWidth={true}>
+        <Dialog onClose={handleClose} open={openModal} maxWidth={"lg"} fullWidth={true}>
             <DialogContent>
                 <Grid container >
-                    <Grid item xs={6} >
-                        <Container sx={{ paddingLeft: '20px', paddingTop: '20px' }}>
+                    <Grid item xs={5} >
+                        <Container sx={{ marginLeft: '40px', paddingTop: '40px' }}>
                             <form>
                                 <Stack direction="column" spacing={3}>
                                     <Stack direction="column" spacing={1}>
@@ -39,13 +39,8 @@ const CreateWorkspaceModal = (props: CreateWorkspaceModalProps) => {
 
                                     <Stack direction="column">
                                         <Typography id="workspacename-input-label">Workspace Name</Typography>
-                                        <OutlinedInput placeholder="Fwanks Workspace" size="small" />
+                                        <OutlinedInput placeholder="Fwanks Workspace"  />
                                         <Typography>This is the name of your company, team, or organization</Typography>
-                                    </Stack>
-
-                                    <Stack direction="column">
-                                        <Typography id="workspacetype-input-label">Workspace Type</Typography>
-                                        <OutlinedInput placeholder="Fwanks Workspace" size="small" />
                                     </Stack>
 
                                     <Stack direction="column">
@@ -85,8 +80,8 @@ const CreateWorkspaceModal = (props: CreateWorkspaceModalProps) => {
                             </form>
                         </Container>
                     </Grid>
-                    <Grid item xs={6}>
-                        Right side with nothing on it
+                    <Grid item xs={7}>
+                        Right side with design grid, should disappear on smaller viewports
                     </Grid>
                 </Grid>
             </DialogContent>

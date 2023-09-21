@@ -62,9 +62,6 @@ const router = createBrowserRouter([
       {
         path: "/w/:workspaceid",
         element: <WorkspaceView />,
-        loader: async ({ params }) => {
-          return await fetch(`/api/workspace/${params.workspaceid}`).then((res) => res.json());
-        },
         children: [
           {
             path: "",

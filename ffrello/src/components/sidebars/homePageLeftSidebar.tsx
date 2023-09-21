@@ -7,7 +7,7 @@ import DvrIcon from '@mui/icons-material/Dvr';
 import HomeIcon from '@mui/icons-material/Home';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { setExpandedAccordions, setSelectedMenu, setSelectedWorkspaceMenu } from '../../ducks/navSlice'
+import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../ducks/navSlice'
 import * as data from '../../data/hardcodes'
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
@@ -99,7 +99,7 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                     <Stack direction="column" spacing={1}>
                         <Stack direction="row" justifyContent={"space-between"} alignItems={"center"}>
                             <Typography variant="body2" sx={{ paddingLeft: '2px' }}>Workspaces</Typography>
-                            <IconButton size={"small"} sx={{ borderRadius: '8px' }}>
+                            <IconButton size={"small"} sx={{ borderRadius: '8px' }} onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>
                                 <AddIcon color="primary" sx={{ fontSize: iconFontSize }} />
                             </IconButton>
                         </Stack>

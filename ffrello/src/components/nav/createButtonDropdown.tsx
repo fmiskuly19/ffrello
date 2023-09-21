@@ -1,25 +1,18 @@
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import React from "react";
-import CreateWorkspaceModal from "../modals/createWorkspaceModal";
+import { setOpenCreateWorkspaceModal } from "../../ducks/navSlice";
+import { useAppDispatch } from "../../hooks";
 
 const CreateButtonDropdown = () => {
+
+    const dispatch = useAppDispatch()
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
-    const [workspaceModalIsOpen, setWorkspaceModalIsOpen] = React.useState(false);
-
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
-    const openCreateWorkspaceModal = () => {
-        setWorkspaceModalIsOpen(true);
-    }
-
-    const closeCreateWorkspaceModal = () => {
-        setWorkspaceModalIsOpen(false);
-    }
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -55,12 +48,10 @@ const CreateButtonDropdown = () => {
                 <MenuItem>
                     Start with a Template
                 </MenuItem>
-                <MenuItem onClick={openCreateWorkspaceModal}>
+                <MenuItem onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>
                     Create Workspace
                 </MenuItem>
             </Menu>
-
-            <CreateWorkspaceModal isOpen={workspaceModalIsOpen} closeModal={closeCreateWorkspaceModal} />
         </>
     )
 }
