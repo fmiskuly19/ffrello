@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../ducks/navSlice'
+import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../redux/navSlice'
 
 import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, IconButton, MenuItem, Stack, Typography, Container, Skeleton } from "@mui/material";
 
@@ -17,6 +17,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import LetterBox from "../letterBox";
+import { setCurrentWorkspace } from "../../redux/homeViewSlice";
 
 export interface HomePageLeftSidebarProps {
     sticky?: boolean,
@@ -109,12 +110,12 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                             </IconButton>
                         </Stack>
                         <Stack direction='column'>
-                            {workspaces.length > 0 ?
-                                workspaces.map((workspace, i) => {
+                            {workspaces?.length ?
+                                workspaces?.map((workspace) => {
                                     return (
                                         <Accordion disableGutters sx={{
                                             "&.MuiPaper-root::before": { content: 'none' }
-                                        }} elevation={0} expanded={expanded.includes(`accordion${i}`)} onChange={handleChange(`accordion${i}`)}>
+                                        }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
                                             <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
                                                 backgroundColor: '#1f1f26', paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
                                             }}>
@@ -127,11 +128,15 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                                                 <Stack direction="column" spacing={1}>
                                                     {workspaceMenuItems.map((workspaceMenuItem) => {
                                                         return (
-                                                            <MenuItem onClick={(e: React.MouseEvent) => { dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${i}`)) }}
-                                                                selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${i}` && expanded.includes(`accordion${i}`)}
+                                                            <MenuItem onClick={(e: React.MouseEvent) => {
+                                                                dispatch(setCurrentWorkspace(workspace.id))
+                                                                dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${workspace.id}`))
+                                                                dispatch(setSelectedMenu(''))
+                                                            }}
+                                                                selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${workspace.id}` && expanded.includes(`accordion${workspace.id}`)}
                                                                 sx={{ paddingLeft: '25px', borderRadius: '6px', width: '100%' }}
                                                                 component={Link}
-                                                                to={`w/${workspace.name}/${workspaceMenuItem.link}`}
+                                                                to={`w/${workspace.id}/${workspaceMenuItem.link}`}
                                                             >
                                                                 <Stack direction="row" alignItems="center" spacing={1} >
                                                                     {workspaceMenuItem.icon}
@@ -155,7 +160,7 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                     </Stack>
                 </Box >
             </Stack >
-        </Container>
+        </Container >
     )
 }
 

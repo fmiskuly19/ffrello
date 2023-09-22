@@ -75,8 +75,6 @@ export const SkeletonWorkspaceCard = () => {
             </Stack>
             <Grid container rowSpacing={2} columnGap={2} >
                 <Grid xl={3}><Skeleton variant="rounded" height="96px" width="100%" /></Grid>
-                <Grid xl={3}><Skeleton variant="rounded" height="96px" width="100%" /></Grid>
-                <Grid xl={3}><Skeleton variant="rounded" height="96px" width="100%" /></Grid>
             </Grid >
         </Stack >
     )

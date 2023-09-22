@@ -11,7 +11,7 @@ import {
 import { ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline';
 
-import store from './ducks/store'
+import store from './redux/store.tsx'
 import theme from './themes/theme.tsx'
 
 import HomePage from './routes/homeView/home.tsx'

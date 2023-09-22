@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import Workspace from "../../types/Workspace";
 import GetWorkspaces from "../../data/api/getWorkspaces";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setWorkspaces } from "../../ducks/homeViewSlice";
+import { setWorkspaces } from "../../redux/homeViewSlice";
 
 const HomePages = () => {
 

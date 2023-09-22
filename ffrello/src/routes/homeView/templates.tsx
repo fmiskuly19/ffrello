@@ -1,6 +1,16 @@
-import { Box, Container, Grid } from "@mui/material";
+import { useEffect } from "react";
+import { useAppDispatch } from "../../hooks";
+import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice";
 
 const TemplatesPage = () => {
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(setSelectedMenu('Templates')) //set this so when we navigate here the left sidebar reflects that
+        dispatch(setSelectedWorkspaceMenu(''))
+    })
+
     return (
         <>
             <div>

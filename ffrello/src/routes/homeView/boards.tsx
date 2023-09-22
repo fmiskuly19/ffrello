@@ -1,4 +1,7 @@
-import { useAppSelector } from "../../hooks";
+import { useEffect } from "react";
+
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice";
 
 import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
@@ -7,7 +10,15 @@ import HistoryIcon from '@mui/icons-material/History';
 import BoardCard, { BoardCardHeight } from "../../components/cards/boardCard";
 import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/cards/workspaceCard";
 
+
 const BoardsPage = () => {
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(setSelectedMenu('Boards')) //set this so when we navigate here the left sidebar reflects that
+        dispatch(setSelectedWorkspaceMenu(''))
+    })
 
     const workspaces = useAppSelector((state) => state.home.Workspaces);
 

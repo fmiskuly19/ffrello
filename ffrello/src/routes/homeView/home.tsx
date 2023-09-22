@@ -1,11 +1,27 @@
-import { Container, Grid, Stack, Typography } from "@mui/material"
+import { useEffect } from "react";
+
+import { useAppDispatch } from "../../hooks";
+import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice";
+
+import { Grid, Stack, Typography } from "@mui/material"
+
 import HomePageHighlight from '../../types/HomePageHighlight'
 import HomePageHighlightCard from "../../components/cards/homepageHighlightCard";
-import * as data from '../../data/hardcodes'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HomePageRightSidebar from "../../components/sidebars/homePageRightSidebar";
 
+
+import * as data from '../../data/hardcodes'
+
+
 const HomePage = () => {
+
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(setSelectedMenu('Home')) //set this so when we navigate here the left sidebar reflects that
+        dispatch(setSelectedWorkspaceMenu(''))
+    })
 
     const highlights: HomePageHighlight[] = data.hardCodedHighlights;
 

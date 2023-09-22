@@ -1,7 +1,7 @@
 import { Button, Container, Dialog, DialogContent, Grid, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setOpenCreateWorkspaceModal } from "../../ducks/navSlice";
+import { setOpenCreateWorkspaceModal } from "../../redux/navSlice";
 
 
 const CreateWorkspaceModal = () => {
