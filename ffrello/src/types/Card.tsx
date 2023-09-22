@@ -1,4 +1,4 @@
-interface Issue {
+interface Card {
     id?: number,
     name: string,
     comments: string[],
@@ -6,4 +6,4 @@ interface Issue {
     users: string[]
 }
 
-export default Issue;
+export default Card;

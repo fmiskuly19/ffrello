@@ -1,6 +1,8 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
 import { Box, Button, Divider, IconButton, Menu, MenuItem, Stack, Typography } from "@mui/material";
-import LetterBox from "../letterBox";
-import { Link, useParams } from "react-router-dom";
+
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
@@ -9,8 +11,10 @@ import WindowIcon from '@mui/icons-material/Window';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+
 import * as data from '../../data/hardcodes'
-import React from "react";
+
+import LetterBox from "../letterBox";
 
 interface WorkspaceLeftSidebarProps {
     workspaceName: string,

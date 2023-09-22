@@ -1,11 +1,11 @@
 import { Avatar, AvatarGroup, Box, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
-import Issue from "../../types/Issue";
+import Card from "../../types/Card";
 import SubjectIcon from '@mui/icons-material/Subject';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
-interface IssueCardProps extends Issue {
+interface IssueCardProps extends Card {
 
 }
 

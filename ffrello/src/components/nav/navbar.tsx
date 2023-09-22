@@ -50,7 +50,7 @@ const Navbar = () => {
                 <NavDropdown label="Notifications" menuContent={<ThemeDropdownContent />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)' }} />} />
                 <NavDropdown label="Information" menuContent={<InformationDropdownContent />} icon={<HelpOutlineIcon />} />
                 <NavDropdown label="Theme" menuContent={<ThemeDropdownContent />} icon={<TonalityIcon />} />
-                <NavDropdown label="Avatar" menuContent={<ThemeDropdownContent />} icon={<Avatar alt="Fwank Misk" src="/static/images/avatar/1.jpg" sx={{ width: 24, height: 24 }} />} />
+                <NavDropdown label="Avatar" menuContent={<ThemeDropdownContent />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} />
               </Stack>
             </Toolbar>
           </Box>

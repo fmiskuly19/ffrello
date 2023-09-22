@@ -38,8 +38,8 @@ const CreateWorkspaceModal = () => {
                                     </Stack>
 
                                     <Stack direction="column">
-                                        <Typography id="workspacename-input-label">Workspace Name</Typography>
-                                        <OutlinedInput placeholder="Fwanks Workspace"  />
+                                        <Typography id="workspacename-input-label" fontWeight='600'>Workspace Name</Typography>
+                                        <OutlinedInput placeholder="Fwanks Workspace" />
                                         <Typography>This is the name of your company, team, or organization</Typography>
                                     </Stack>
 

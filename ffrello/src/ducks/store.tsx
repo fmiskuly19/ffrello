@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import navReducer from './navSlice.tsx'
 import themeReducer from './themeSlice.tsx'
+import homeViewReducer from './homeViewSlice.tsx'
 
 const store = configureStore({
    reducer: {
       nav: navReducer,
       theme: themeReducer,
+      home: homeViewReducer,
    },
 })
 export default store;

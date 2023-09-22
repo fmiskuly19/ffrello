@@ -1,17 +1,18 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@mui/material'
+
+import './index.css'
+
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
+import { ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline';
 
 import store from './ducks/store'
 import theme from './themes/theme.tsx'
-import './index.css'
-
 
 import HomePage from './routes/homeView/home.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
@@ -97,12 +98,12 @@ const router = createBrowserRouter([
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <RouterProvider router={router} />
       </ThemeProvider>
     </Provider>
-  </React.StrictMode>,
+  </>,
 )

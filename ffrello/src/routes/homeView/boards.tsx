@@ -1,11 +1,16 @@
-import { Box, Container, Grid, Stack, Typography } from "@mui/material";
-import * as data from '../../data/hardcodes'
+import { useAppSelector } from "../../hooks";
+
+import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import BoardCard from "../../components/cards/boardCard";
 import HistoryIcon from '@mui/icons-material/History';
-import WorkspaceCard from "../../components/cards/workspaceCard";
+
+import BoardCard, { BoardCardHeight } from "../../components/cards/boardCard";
+import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/cards/workspaceCard";
 
 const BoardsPage = () => {
+
+    const workspaces = useAppSelector((state) => state.home.Workspaces);
+
     return (
         <>
             <Stack direction="column" spacing={8}>
@@ -16,9 +21,18 @@ const BoardsPage = () => {
                             <Typography variant="h6" fontWeight="700">Starred Boards</Typography>
                         </Stack>
                         <Grid container rowSpacing={2} columnGap={2}>
-                            {data.hardCodedBoards.map((x) => {
-                                if (x.isStarred) return (<Grid item xl={3}><BoardCard {...x} /></Grid>)
-                            })}
+                            {/* there is definitely a faster/shorthand way to do this */}
+                            {workspaces.length > 0 ?
+                                workspaces.map((workspace) => {
+                                    return workspace.boards.map((board) => {
+                                        if (board.isStarred) {
+                                            return (<Grid item xl={3}><BoardCard {...board} /></Grid>)
+                                        }
+                                    })
+                                })
+                                :
+                                <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
+                            }
                         </Grid>
                     </Stack>
                     <Stack direction="column" >
@@ -26,19 +40,28 @@ const BoardsPage = () => {
                             <HistoryIcon style={{ fontSize: '26px' }} />
                             <Typography variant="h6" fontWeight="700">Recent Boards</Typography>
                         </Stack>
-                        <Grid container>
-                            <Grid item xl={3}>
-                                <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name' }} />
-                            </Grid>
+                        <Grid container rowSpacing={2} columnGap={2}>
+                            {workspaces.length > 0 ?
+                                <Grid item xl={3}>
+                                    <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} />
+                                </Grid>
+                                :
+                                // generate between 1-3 skeletons for the loader
+                                <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
+                            }
                         </Grid>
                     </Stack>
                 </Stack>
                 <Box>
                     <Typography variant="h6" fontWeight="700" mb={2} sx={{ textTransform: 'uppercase' }}>Your Workspaces</Typography>
                     <Stack direction="column" spacing={4}>
-                        {data.workspaces.map((x) => {
-                            return (<WorkspaceCard {...x} />)
-                        })}
+                        {workspaces.length > 0 ?
+                            workspaces.map((x) => {
+                                return (<WorkspaceCard {...x} />)
+                            })
+                            :
+                            <SkeletonWorkspaceCard />
+                        }
                     </Stack>
                 </Box>
             </Stack>

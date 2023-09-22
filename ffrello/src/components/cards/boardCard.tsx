@@ -8,6 +8,8 @@ interface BoardCardProps extends Board {
 
 }
 
+export const BoardCardHeight = '96px';
+
 const BoardCard = (props: BoardCardProps) => {
 
     const [randomColor1, setRandomColor1] = useState(50);
@@ -29,8 +31,8 @@ const BoardCard = (props: BoardCardProps) => {
                 backgroundColor: `rgb(${randomColor1},${randomColor2},${randomColor3})`,
                 width: '100%',
                 height: '100%',
-                minHeight: '96px',
-                maxHeight: '96px',
+                minHeight: BoardCardHeight,
+                maxHeight: BoardCardHeight,
                 p: '8px',
                 borderRadius: '5px',
                 textDecoration: 'none',
