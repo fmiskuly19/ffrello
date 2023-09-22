@@ -28,7 +28,7 @@ const WorkspaceHighlightsPage = () => {
 
     return (
         <>
-            {workspaceHighlights ?
+            {workspaceHighlights != undefined ?
                 <>Hello Workspace Highlights</>
                 :
                 <Box display="flex" justifyContent="center">
