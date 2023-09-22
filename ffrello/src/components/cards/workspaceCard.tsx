@@ -62,7 +62,7 @@ export const SkeletonWorkspaceCard = () => {
         <Stack direction="column" spacing={1}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Stack direction="row" alignItems="center" spacing={1} justifyContent={'center'}>
-                    <Skeleton variant="rounded" height={`${BOXHEIGHT}px`} width={`${BOXHEIGHT}px`} sx={{ borderRadius: '8px' }} animation="wave" />
+                    <Skeleton variant="rounded" height={`${BOXHEIGHT}px`} width={`${BOXHEIGHT}px`} sx={{ borderRadius: '8px' }}/>
                     {/* this is the workspace title  */}
                     <Skeleton width="150px" animation="wave" />
                 </Stack>

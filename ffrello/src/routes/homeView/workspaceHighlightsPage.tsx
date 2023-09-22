@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { useAppDispatch, useAppSelector } from "../../hooks"
+import { useAppDispatch } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice"
 import { useParams } from "react-router-dom";
 import GetWorkspaceHighlights from "../../data/api/getWorkspaceHighlights";
-import { Box, CircularProgress } from "@mui/material";
+import { Stack } from "@mui/material";
+import { SkeletonHighlightCard } from "../../components/cards/highlightCard";
 
 const WorkspaceHighlightsPage = () => {
 
@@ -31,9 +32,9 @@ const WorkspaceHighlightsPage = () => {
             {workspaceHighlights != undefined ?
                 <>Hello Workspace Highlights</>
                 :
-                <Box display="flex" justifyContent="center">
-                    <CircularProgress />
-                </Box>
+                <Stack direction="column" spacing={4}>
+                    <SkeletonHighlightCard />
+                </Stack>
             }
         </>
     )

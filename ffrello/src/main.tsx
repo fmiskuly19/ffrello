@@ -14,7 +14,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import store from './redux/store.tsx'
 import theme from './themes/theme.tsx'
 
-import HomePage from './routes/homeView/highlightsPage.tsx'
+import HighlightsPage from './routes/homeView/highlightsPage.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
 import BoardPage from './routes/boardView/board.tsx';
 import WorkspaceTablePage from './routes/workspaceView/workspaceTablePage.tsx';
@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/",
-            element: <HomePage />
+            element: <HighlightsPage />
           },
           {
             path: "/templates",

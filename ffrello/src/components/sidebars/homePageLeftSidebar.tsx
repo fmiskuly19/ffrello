@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../../hooks'
 import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../redux/navSlice'
 
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, IconButton, MenuItem, Stack, Typography, Container, Skeleton } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, IconButton, MenuItem, Stack, Typography, Container, Skeleton, CircularProgress } from "@mui/material";
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AddIcon from '@mui/icons-material/Add';
@@ -151,9 +151,10 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                                     )
                                 })
                                 :
-                                <>
-                                    <Skeleton sx={{ minHeight: '60px' }} animation="wave" />
-                                </>
+                                <Box justifyContent="center" display="flex">
+                                    {/* should replace this with a different loading spinner */}
+                                    <CircularProgress />
+                                </Box>
                             }
 
                         </Stack>

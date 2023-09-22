@@ -15,7 +15,7 @@ import * as data from '../../data/hardcodes'
 import GetHomepageHighlights from "../../data/api/getHomepageHighlights";
 
 
-const HomePage = () => {
+const HighlightsPage = () => {
 
     const dispatch = useAppDispatch()
 
@@ -61,4 +61,4 @@ const HomePage = () => {
     )
 }
 
-export default HomePage;
+export default HighlightsPage;

@@ -80,10 +80,10 @@ export const SkeletonHighlightCard = () => {
                                         <Skeleton variant="circular" width="34px" height="34px" sx={{minHeight: '34px', minWidth: '34px'}} />
                                         {/* set full width here so that we can expand the skeleton  */}
                                         <Stack direction="column" spacing={0} sx={{width: '100%'}}> 
-                                            <Skeleton width="40%">
+                                            <Skeleton width="40%" animation="wave">
                                                 <Typography fontSize={"14px"}>Hello</Typography>
                                             </Skeleton>
-                                            <Skeleton width="15%">
+                                            <Skeleton width="15%" animation="wave">
                                                 <Typography fontSize={"12px"}>World</Typography>
                                             </Skeleton>
                                         </Stack>
