@@ -7,7 +7,7 @@ interface HomeSliceProps {
 }
 
 const initialState: HomeSliceProps = {
-    Workspaces: [],
+    Workspaces: undefined,
 }
 
 export const homeViewSlice = createSlice({

@@ -33,7 +33,7 @@ const BoardsPage = () => {
                         </Stack>
                         <Grid container rowSpacing={2} columnGap={2}>
                             {/* there is definitely a faster/shorthand way to do this */}
-                            {workspaces.length > 0 ?
+                            {workspaces ?
                                 workspaces.map((workspace) => {
                                     return workspace.boards.map((board) => {
                                         if (board.isStarred) {
@@ -52,7 +52,7 @@ const BoardsPage = () => {
                             <Typography variant="h6" fontWeight="700">Recent Boards</Typography>
                         </Stack>
                         <Grid container rowSpacing={2} columnGap={2}>
-                            {workspaces.length > 0 ?
+                            {workspaces ?
                                 <Grid item xl={3}>
                                     <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} />
                                 </Grid>
@@ -66,7 +66,7 @@ const BoardsPage = () => {
                 <Box>
                     <Typography variant="h6" fontWeight="700" mb={2} sx={{ textTransform: 'uppercase' }}>Your Workspaces</Typography>
                     <Stack direction="column" spacing={4}>
-                        {workspaces.length > 0 ?
+                        {workspaces ?
                             workspaces.map((x) => {
                                 return (<WorkspaceCard {...x} />)
                             })

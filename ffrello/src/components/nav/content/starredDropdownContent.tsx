@@ -1,8 +1,9 @@
-import { Box, Container, MenuItem, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Container, Grid, MenuItem, Skeleton, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Board from '../../../types/Board'
 import BoardMenuItem from "../../boardMenuItem";
 import * as data from '../../../data/hardcodes'
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 
 const StarredDropdownContent = () => {
 
@@ -16,6 +17,11 @@ const StarredDropdownContent = () => {
 
     const [starredBoards, setStarredBoards] = useState<Board[]>([]);
 
+
+    const dispatch = useAppDispatch()
+
+    const workspaces = useAppSelector((state) => state.home.Workspaces)
+
     return (
         <>
             <Box m="12px">
@@ -24,9 +30,21 @@ const StarredDropdownContent = () => {
                         ?
                         <Box sx={{ width: '250px' }}>
                             <Stack direction="column" spacing={.25}>
-                                {starredBoards.map((x: Board) => {
-                                    if(x.isStarred) return (<BoardMenuItem {...x} />)
-                                })}
+                                {workspaces ?
+                                    workspaces.map((workspace) => {
+                                        return workspace.boards.map((board) => {
+                                            if (board.isStarred) {
+                                                return (<Grid item xl={3}><BoardMenuItem {...board} /></Grid>)
+                                            }
+                                        })
+                                    })
+                                    :
+                                    <Grid item xl={3}>
+                                        <Box display='flex' justifyContent="center">
+                                            <CircularProgress />
+                                        </Box>
+                                    </Grid>
+                                }
                             </Stack>
                         </Box>
                         :

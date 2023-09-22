@@ -1,27 +1,9 @@
-import { Box, CircularProgress, Container, Grid } from "@mui/material";
-import HomePageLeftSidebar from "../../components/sidebars/homePageLeftSidebar";
 import { Outlet } from "react-router-dom";
+import { Container, Grid } from "@mui/material";
+import HomePageLeftSidebar from "../../components/sidebars/homePageLeftSidebar";
 import CreateWorkspaceModal from "../../components/modals/createWorkspaceModal";
-import { useEffect } from "react";
-import Workspace from "../../types/Workspace";
-import GetWorkspaces from "../../data/api/getWorkspaces";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setWorkspaces } from "../../redux/homeViewSlice";
 
 const HomePages = () => {
-
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        const getWorkspaces = async () => {
-            return await GetWorkspaces().then((result) => {
-                dispatch(setWorkspaces(result as Workspace[]))
-            })
-        }
-
-        getWorkspaces();
-    }, [])
-
 
     return (
         <>
