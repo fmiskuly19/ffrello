@@ -17,8 +17,8 @@ const WorkspaceDropdownContent = () => {
 
     const dispatch = useAppDispatch()
 
-    const workspaces = useAppSelector((state) => state.user.Workspaces)
-    const currentWorkspace = useAppSelector((state) => state.user.CurrentWorkspace)
+    const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
+    const currentWorkspace = useAppSelector((state) => state.userSlice.CurrentWorkspace)
 
     return (
         <Box sx={{ minWidth: '200px' }}>

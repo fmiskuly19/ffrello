@@ -1,14 +1,15 @@
-import { Box, Container, Grid, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material"
-import * as data from '../../data/hardcodes'
+import { Box, CircularProgress, IconButton, Stack, Typography } from "@mui/material"
 import StarIcon from '@mui/icons-material/Star';
 import AddIcon from '@mui/icons-material/Add';
 import BoardMenuItem from "../boardMenuItem";
-import Board from "../../types/Board";
 import HistoryIcon from '@mui/icons-material/History';
-
-const boards: Board[] = data.hardCodedBoards
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
 const HomePageRightSidebar = () => {
+
+    const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
+    const dispatch = useAppDispatch()
+
     return (
         <Box sx={{ margin: '8px' }}>
             <Stack direction="column" spacing={2}>
@@ -17,16 +18,26 @@ const HomePageRightSidebar = () => {
                     <Typography fontSize="12px">Starred</Typography>
                 </Stack>
                 <Stack direction="column" spacing={2}>
-                    {boards.map((x: Board) => {
-                        if (x.isStarred) return (<BoardMenuItem {...x} />)
-                    })}
+                    {workspaces ?
+                        workspaces.map((workspace) => {
+                            return workspace.boards.map((board) => {
+                                if (board.isStarred) {
+                                    return (<BoardMenuItem {...board} />)
+                                }
+                            })
+                        })
+                        :
+                        <Box display='flex' justifyContent="center">
+                            <CircularProgress />
+                        </Box>
+                    }
                 </Stack>
                 <Stack direction="row" alignContent="center" alignItems="center" spacing={1}>
-                    <HistoryIcon style={{fontSize: '16px'}} />
+                    <HistoryIcon style={{ fontSize: '16px' }} />
                     <Typography fontSize="12px">Recently Viewed</Typography>
                 </Stack>
                 <Box>
-                    <BoardMenuItem id={0} name={"Dummy Board"} isStarred={false} Workspace={{id: 1, name: 'Dummy Workspace name'}}  />
+                    <BoardMenuItem id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 1, name: 'Dummy Workspace name', boards: [] }} />
                 </Box>
                 <Typography fontSize="12px">Links</Typography>
                 <Box>
@@ -38,7 +49,7 @@ const HomePageRightSidebar = () => {
                     </Stack>
                 </Box>
             </Stack>
-        </Box>
+        </Box >
     )
 }
 

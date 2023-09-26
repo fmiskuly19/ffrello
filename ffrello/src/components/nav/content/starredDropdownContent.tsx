@@ -17,10 +17,9 @@ const StarredDropdownContent = () => {
 
     const [starredBoards, setStarredBoards] = useState<Board[]>([]);
 
-
     const dispatch = useAppDispatch()
 
-    const workspaces = useAppSelector((state) => state.home.Workspaces)
+    const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
 
     return (
         <>
@@ -34,16 +33,14 @@ const StarredDropdownContent = () => {
                                     workspaces.map((workspace) => {
                                         return workspace.boards.map((board) => {
                                             if (board.isStarred) {
-                                                return (<Grid item xl={3}><BoardMenuItem {...board} /></Grid>)
+                                                return (<BoardMenuItem {...board} />)
                                             }
                                         })
                                     })
                                     :
-                                    <Grid item xl={3}>
-                                        <Box display='flex' justifyContent="center">
-                                            <CircularProgress />
-                                        </Box>
-                                    </Grid>
+                                    <Box display='flex' justifyContent="center">
+                                        <CircularProgress />
+                                    </Box>
                                 }
                             </Stack>
                         </Box>
@@ -57,7 +54,7 @@ const StarredDropdownContent = () => {
                             </Box>
                         </Stack>
                 }
-            </Box>
+            </Box >
         </>
     )
 }

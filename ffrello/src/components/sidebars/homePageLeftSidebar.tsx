@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from '../../hooks'
 import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../redux/homeSlice'
@@ -28,27 +28,30 @@ export interface HomePageLeftSidebarProps {
 
 const iconFontSize = '22px';
 
-const links = [
-    { name: "Boards", logo: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, link: `/boards` },
-    { name: "Templates", logo: <DvrIcon sx={{ fontSize: iconFontSize }} />, link: `/templates` },
-    { name: "Home", logo: <HomeIcon sx={{ fontSize: iconFontSize }} />, link: `/` }
-]
 
-const workspaceMenuItems = [
-    { name: "Boards", icon: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false, link: 'home' },
-    { name: "Highlights", icon: <FavoriteBorderIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false, link: 'highlights' },
-    { name: "Views", icon: <GridViewIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'views/table' },
-    { name: "Members", icon: <PeopleIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'members' },
-    { name: "Settings", icon: <SettingsIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'account' }
-]
 
 const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
 
     const selectedMenu = useAppSelector((state) => state.home.selectedMenu)
     const selectedWorkspaceMenu = useAppSelector((state) => state.home.selectedWorkspaceMenu)
     const expanded = useAppSelector((state) => state.home.expandedAccordions)
-    const workspaces = useAppSelector((state) => state.user.Workspaces)
+    const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
+    const userid = useAppSelector((state) => state.userSlice.User.userid)
     const dispatch = useAppDispatch()
+
+    const links = [
+        { name: "Boards", logo: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, link: `/u/${userid}/boards` },
+        { name: "Templates", logo: <DvrIcon sx={{ fontSize: iconFontSize }} />, link: `/templates` },
+        { name: "Home", logo: <HomeIcon sx={{ fontSize: iconFontSize }} />, link: `/` }
+    ]
+
+    const workspaceMenuItems = [
+        { name: "Boards", icon: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false, link: 'home' },
+        { name: "Highlights", icon: <FavoriteBorderIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: false, link: 'highlights' },
+        { name: "Views", icon: <GridViewIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'views/table' },
+        { name: "Members", icon: <PeopleIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'members' },
+        { name: "Settings", icon: <SettingsIcon sx={{ fontSize: iconFontSize }} />, hasAnimatedMenuButton: true, link: 'account' }
+    ]
 
     const handleChange = (accordionName: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
         if (isExpanded) {
@@ -110,8 +113,8 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                             </IconButton>
                         </Stack>
                         <Stack direction='column'>
-                            {workspaces?.length ?
-                                workspaces?.map((workspace) => {
+                            {workspaces ?
+                                workspaces.map((workspace) => {
                                     return (
                                         <Accordion disableGutters sx={{
                                             "&.MuiPaper-root::before": { content: 'none' }

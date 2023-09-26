@@ -20,7 +20,7 @@ const BoardsPage = () => {
         dispatch(setSelectedWorkspaceMenu(''))
     })
 
-    const workspaces = useAppSelector((state) => state.home.Workspaces);
+    const workspaces = useAppSelector((state) => state.userSlice.Workspaces);
 
     return (
         <>

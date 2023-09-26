@@ -7,7 +7,7 @@ const store = configureStore({
    reducer: {
       home: homeReducer,
       theme: themeReducer,
-      user: userReducer,
+      userSlice: userReducer,
    },
 })
 export default store;

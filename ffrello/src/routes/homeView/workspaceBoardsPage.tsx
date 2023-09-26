@@ -1,12 +1,17 @@
 import { useEffect } from "react"
-import { useAppDispatch } from "../../hooks"
+import { useAppDispatch, useAppSelector } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
+import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
+import BoardCard, { BoardCardHeight } from "../../components/cards/boardCard";
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+import HistoryIcon from '@mui/icons-material/History';
 
 const WorkspaceHomePage = () => {
 
     let { workspaceid } = useParams();
 
+    const workspace = useAppSelector((state) => state.userSlice.Workspaces?.find(x => x.id == Number(workspaceid)))
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -15,9 +20,65 @@ const WorkspaceHomePage = () => {
     })
 
     return (
-        <>
-            Workspace Home Page
-        </>
+        <Stack direction="column" spacing={4}>
+            <Stack direction="column" spacing={4}>
+                {workspace?.boards ?
+                    workspace.boards.some(x => x.isStarred) ?
+                        <Stack direction="column">
+                            <Stack direction="row" spacing={1} mb={1} alignItems={"center"}>
+                                <StarBorderIcon style={{ fontSize: '26px' }} />
+                                <Typography variant="h6" fontWeight="700">Starred Boards</Typography>
+                            </Stack>
+                            <Grid container rowSpacing={2} columnGap={2}>
+                                {workspace.boards.map((board) => {
+                                    if (board.isStarred) {
+                                        return (<Grid item xl={3}><BoardCard {...board} /></Grid>)
+                                    }
+                                })}
+                            </Grid>
+                        </Stack>
+                        :
+                        <></>
+                    :
+                    <Stack direction="column">
+                        <Stack direction="row" spacing={1} mb={1} alignItems={"center"}>
+                            <StarBorderIcon style={{ fontSize: '26px' }} />
+                            <Typography variant="h6" fontWeight="700">Starred Boards</Typography>
+                        </Stack>
+                        <Grid container rowSpacing={2} columnGap={2}>
+                            <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
+                        </Grid>
+                    </Stack>
+                }
+                <Stack direction="column" >
+                    <Stack direction="row" spacing={1} mb={1} alignItems={"center"}>
+                        <HistoryIcon style={{ fontSize: '26px' }} />
+                        <Typography variant="h6" fontWeight="700">Recent Boards</Typography>
+                    </Stack>
+                    <Grid container rowSpacing={2} columnGap={2}>
+                        {workspace ?
+                            <Grid item xl={3}>
+                                <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} />
+                            </Grid>
+                            :
+                            <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
+                        }
+                    </Grid>
+                </Stack>
+            </Stack>
+            <Box>
+                <Typography variant="h6" fontWeight="700" mb={2} sx={{ textTransform: 'uppercase' }}>All boards in this Workspace</Typography>
+                <Grid container rowSpacing={2} columnGap={2}>
+                    {workspace?.boards ?
+                        workspace.boards.map((x) => {
+                            return (<Grid item xl={3}><BoardCard {...x} /></Grid>)
+                        })
+                        :
+                        <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
+                    }
+                </Grid>
+            </Box>
+        </Stack>
     )
 }
 
