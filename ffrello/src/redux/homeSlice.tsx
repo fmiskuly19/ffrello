@@ -3,7 +3,7 @@ import { HomePageLeftSidebarProps } from '../components/sidebars/homePageLeftSid
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from '../../app/store' //TODO figure out why we need to use this from store
 
-interface HomeSliceProps extends HomePageLeftSidebarProps{
+interface HomeSliceProps extends HomePageLeftSidebarProps {
   openCreateWorkspaceModal: boolean,
 }
 
@@ -16,7 +16,7 @@ const initialState: HomeSliceProps = {
 }
 
 export const homeSlice = createSlice({
-  name: 'nav',
+  name: 'home',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {

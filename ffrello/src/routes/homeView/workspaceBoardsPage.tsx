@@ -2,10 +2,11 @@ import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
-import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
+import { Grid, Skeleton, Stack, Typography } from "@mui/material";
 import BoardCard, { BoardCardHeight } from "../../components/cards/boardCard";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import HistoryIcon from '@mui/icons-material/History';
+import PeopleIcon from '@mui/icons-material/People';
 
 const WorkspaceHomePage = () => {
 
@@ -65,19 +66,22 @@ const WorkspaceHomePage = () => {
                         }
                     </Grid>
                 </Stack>
+                <Stack direction="column" >
+                    <Stack direction="row" spacing={1} mb={1} alignItems={"center"}>
+                        <PeopleIcon style={{ fontSize: '26px' }} />
+                        <Typography variant="h6" fontWeight="700">All boards in this Workspace</Typography>
+                    </Stack>
+                    <Grid container rowSpacing={2} columnGap={2}>
+                        {workspace?.boards ?
+                            workspace.boards.map((x) => {
+                                return (<Grid item xl={3}><BoardCard {...x} /></Grid>)
+                            })
+                            :
+                            <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
+                        }
+                    </Grid>
+                </Stack>
             </Stack>
-            <Box>
-                <Typography variant="h6" fontWeight="700" mb={2} sx={{ textTransform: 'uppercase' }}>All boards in this Workspace</Typography>
-                <Grid container rowSpacing={2} columnGap={2}>
-                    {workspace?.boards ?
-                        workspace.boards.map((x) => {
-                            return (<Grid item xl={3}><BoardCard {...x} /></Grid>)
-                        })
-                        :
-                        <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>
-                    }
-                </Grid>
-            </Box>
         </Stack>
     )
 }

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import GetWorkspaces from "../data/api/getWorkspaces";
 import Workspace from "../types/Workspace";
 import { setWorkspaces } from "../redux/userSlice";
+import CreateWorkspaceModal from "../components/modals/createWorkspaceModal";
 
 const MainPage = () => {
 
@@ -24,6 +25,7 @@ const MainPage = () => {
         <>
             <Navbar />
             <Outlet />
+            <CreateWorkspaceModal />
         </>
     )
 }
