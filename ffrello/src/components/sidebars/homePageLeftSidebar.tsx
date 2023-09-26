@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../redux/navSlice'
+import { setExpandedAccordions, setOpenCreateWorkspaceModal, setSelectedMenu, setSelectedWorkspaceMenu } from '../../redux/homeSlice'
 
 import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, IconButton, MenuItem, Stack, Typography, Container, Skeleton, CircularProgress } from "@mui/material";
 
@@ -17,7 +17,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 import LetterBox from "../letterBox";
-import { setCurrentWorkspace } from "../../redux/homeViewSlice";
+import { setCurrentWorkspace } from "../../redux/userSlice";
 
 export interface HomePageLeftSidebarProps {
     sticky?: boolean,
@@ -44,10 +44,10 @@ const workspaceMenuItems = [
 
 const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
 
-    const selectedMenu = useAppSelector((state) => state.nav.selectedMenu)
-    const selectedWorkspaceMenu = useAppSelector((state) => state.nav.selectedWorkspaceMenu)
-    const expanded = useAppSelector((state) => state.nav.expandedAccordions)
-    const workspaces = useAppSelector((state) => state.home.Workspaces)
+    const selectedMenu = useAppSelector((state) => state.home.selectedMenu)
+    const selectedWorkspaceMenu = useAppSelector((state) => state.home.selectedWorkspaceMenu)
+    const expanded = useAppSelector((state) => state.home.expandedAccordions)
+    const workspaces = useAppSelector((state) => state.user.Workspaces)
     const dispatch = useAppDispatch()
 
     const handleChange = (accordionName: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {

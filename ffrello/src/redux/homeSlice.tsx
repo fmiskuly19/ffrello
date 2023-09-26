@@ -3,19 +3,19 @@ import { HomePageLeftSidebarProps } from '../components/sidebars/homePageLeftSid
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 // import type { RootState } from '../../app/store' //TODO figure out why we need to use this from store
 
-interface NavSliceProps extends HomePageLeftSidebarProps{
+interface HomeSliceProps extends HomePageLeftSidebarProps{
   openCreateWorkspaceModal: boolean,
 }
 
 // Define the initial state using that type
-const initialState: NavSliceProps = {
+const initialState: HomeSliceProps = {
   selectedMenu: 'Home',
   selectedWorkspaceMenu: '',
   expandedAccordions: [],
   openCreateWorkspaceModal: false,
 }
 
-export const navSlice = createSlice({
+export const homeSlice = createSlice({
   name: 'nav',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
@@ -35,9 +35,9 @@ export const navSlice = createSlice({
   },
 })
 
-export const { setSelectedMenu, setExpandedAccordions, setSelectedWorkspaceMenu, setOpenCreateWorkspaceModal } = navSlice.actions
+export const { setSelectedMenu, setExpandedAccordions, setSelectedWorkspaceMenu, setOpenCreateWorkspaceModal } = homeSlice.actions
 
 // // Other code such as selectors can use the imported `RootState` type
 // export const selectCount = (state: RootState) => state.counter.value
 
-export default navSlice.reducer
+export default homeSlice.reducer

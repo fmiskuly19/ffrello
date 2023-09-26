@@ -1,6 +1,6 @@
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import React from "react";
-import { setOpenCreateWorkspaceModal } from "../../redux/navSlice";
+import { setOpenCreateWorkspaceModal } from "../../redux/homeSlice";
 import { useAppDispatch } from "../../hooks";
 
 const CreateButtonDropdown = () => {

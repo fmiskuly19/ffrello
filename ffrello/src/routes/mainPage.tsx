@@ -3,8 +3,8 @@ import { Outlet } from "react-router-dom";
 import { useAppDispatch } from "../hooks";
 import { useEffect } from "react";
 import GetWorkspaces from "../data/api/getWorkspaces";
-import { setWorkspaces } from "../redux/homeViewSlice";
 import Workspace from "../types/Workspace";
+import { setWorkspaces } from "../redux/userSlice";
 
 const MainPage = () => {
 

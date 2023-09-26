@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice";
+import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice";
 
 import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import StarBorderIcon from '@mui/icons-material/StarBorder';

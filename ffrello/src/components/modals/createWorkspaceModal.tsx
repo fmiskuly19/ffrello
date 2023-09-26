@@ -1,13 +1,13 @@
 import { Button, Container, Dialog, DialogContent, Grid, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setOpenCreateWorkspaceModal } from "../../redux/navSlice";
+import { setOpenCreateWorkspaceModal } from "../../redux/homeSlice";
 
 
 const CreateWorkspaceModal = () => {
 
     //get these from the nav state slice so we dont have to duplicate the modal many times, as its opened from 3 different locations
-    const openModal = useAppSelector((state) => state.nav.openCreateWorkspaceModal);
+    const openModal = useAppSelector((state) => state.home.openCreateWorkspaceModal);
     const dispatch = useAppDispatch()
 
     const handleClose = () => {

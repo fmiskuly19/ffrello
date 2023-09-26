@@ -6,7 +6,7 @@ import { Box, CircularProgress, Divider, Stack, Typography } from '@mui/material
 import MenuItem from '@mui/material/MenuItem';
 
 import LetterBox from '../../letterBox';
-import { setCurrentWorkspace } from '../../../redux/homeViewSlice';
+import { setCurrentWorkspace } from '../../../redux/userSlice';
 
 interface Workspaces {
     currentWorkspace: string,
@@ -17,8 +17,8 @@ const WorkspaceDropdownContent = () => {
 
     const dispatch = useAppDispatch()
 
-    const workspaces = useAppSelector((state) => state.home.Workspaces)
-    const currentWorkspace = useAppSelector((state) => state.home.CurrentWorkspace)
+    const workspaces = useAppSelector((state) => state.user.Workspaces)
+    const currentWorkspace = useAppSelector((state) => state.user.CurrentWorkspace)
 
     return (
         <Box sx={{ minWidth: '200px' }}>

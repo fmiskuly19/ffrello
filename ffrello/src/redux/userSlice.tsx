@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Workspace from '../types/Workspace'
 
-interface HomeSliceProps {
+interface UserSliceProps {
     Workspaces?: Workspace[]
     CurrentWorkspace?: Workspace;
 }
 
-const initialState: HomeSliceProps = {
+const initialState: UserSliceProps = {
     Workspaces: undefined,
 }
 
-export const homeViewSlice = createSlice({
+export const userSlice = createSlice({
     name: 'data',
     initialState,
     reducers: {
@@ -24,6 +24,6 @@ export const homeViewSlice = createSlice({
     },
 })
 
-export const { setCurrentWorkspace, setWorkspaces } = homeViewSlice.actions
+export const { setCurrentWorkspace, setWorkspaces } = userSlice.actions
 
-export default homeViewSlice.reducer
+export default userSlice.reducer

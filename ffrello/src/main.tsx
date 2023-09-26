@@ -14,7 +14,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import store from './redux/store.tsx'
 import theme from './themes/theme.tsx'
 
-import HighlightsPage from './routes/homeView/highlightsPage.tsx'
+import HighlightsPage from './routes/homeView/homeHighlightsPage.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
 import BoardPage from './routes/boardView/board.tsx';
 import WorkspaceTablePage from './routes/workspaceView/workspaceTablePage.tsx';
@@ -22,8 +22,8 @@ import WorkspaceCalendarPage from './routes/workspaceView/workspaceCalendarPage.
 import WorkspaceSettingsPage from './routes/workspaceView/workspaceSettingsPage.tsx';
 import MainPage from './routes/mainPage.tsx';
 import HomePages from './routes/homeView/homePages.tsx';
-import TemplatesPage from './routes/homeView/templatesPage.tsx';
-import BoardsPage from './routes/homeView/boardsPage.tsx';
+import TemplatesPage from './routes/homeView/homeTemplatesPage.tsx';
+import BoardsPage from './routes/homeView/homeBoardsPage.tsx';
 import WorkspaceView from './routes/workspaceView/workspacePage.tsx';
 import WorkspaceBoardsPage from './routes/workspaceView/workspaceBoardsPage.tsx';
 import WorkspaceHighlightsPage from './routes/homeView/workspaceHighlightsPage.tsx';
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
             element: <TemplatesPage />
           },
           {
-            path: "/boards",
+            path: "/u/:userid/boards",
             element: <BoardsPage />
           },
           {

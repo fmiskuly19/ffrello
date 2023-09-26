@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../hooks"
-import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice"
+import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
 import GetWorkspaceHighlights from "../../data/api/getWorkspaceHighlights";
 import { Stack } from "@mui/material";

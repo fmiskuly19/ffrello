@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useAppDispatch } from "../../hooks"
-import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/navSlice"
+import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
 
 const WorkspaceHomePage = () => {
