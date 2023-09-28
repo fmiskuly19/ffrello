@@ -23,11 +23,12 @@ import WorkspaceSettingsPage from './routes/workspaceView/workspaceSettingsPage.
 import MainPage from './routes/mainPage.tsx';
 import HomePages from './routes/homeView/homePages.tsx';
 import TemplatesPage from './routes/homeView/homeTemplatesPage.tsx';
-import BoardsPage from './routes/homeView/homeBoardsPage.tsx';
+import HomeBoardsPage from './routes/homeView/homeBoardsPage.tsx';
 import WorkspaceView from './routes/workspaceView/workspacePage.tsx';
 import WorkspaceBoardsPage from './routes/workspaceView/workspaceBoardsPage.tsx';
 import WorkspaceHighlightsPage from './routes/homeView/workspaceHighlightsPage.tsx';
 import WorkspaceHomePage from './routes/homeView/workspaceBoardsPage.tsx';
+import { SnackbarProvider } from 'notistack';
 
 
 const router = createBrowserRouter([
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
           },
           {
             path: "/u/:userid/boards",
-            element: <BoardsPage />
+            element: <HomeBoardsPage />
           },
           {
             path: "/w/:workspaceid/highlights",
@@ -102,7 +103,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <RouterProvider router={router} />
+        <SnackbarProvider maxSnack={4}>
+          <RouterProvider router={router} />
+        </SnackbarProvider>
       </ThemeProvider>
     </Provider>
   </>,

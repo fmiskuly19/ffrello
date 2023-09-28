@@ -15,9 +15,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
 import GridViewIcon from '@mui/icons-material/GridView';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
 import LetterBox from "../letterBox";
 import { setCurrentWorkspace } from "../../redux/userSlice";
+import { ApiCallStatus } from "../../types/ApiCallStatus";
 
 export interface HomePageLeftSidebarProps {
     sticky?: boolean,
@@ -83,6 +85,65 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
         setColor3(getRand());
     }, [])
 
+    let accordionContent;
+    const workspaceStatus = useAppSelector((state) => state.userSlice.workspaceStatus);
+    if (workspaceStatus == ApiCallStatus.Loading) {
+        accordionContent =
+            <Box justifyContent="center" display="flex">
+                <CircularProgress />
+            </Box >
+    }
+    if (workspaceStatus == ApiCallStatus.Failure) {
+        accordionContent =
+            <Box justifyContent="center" display="flex">
+                <ReportProblemIcon />
+            </Box >
+    }
+    else if (workspaceStatus == ApiCallStatus.Success) {
+        accordionContent =
+            <>
+                {workspaces?.map((workspace) => {
+                    return (
+                        <Accordion disableGutters sx={{
+                            "&.MuiPaper-root::before": { content: 'none' }
+                        }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
+                            <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
+                                backgroundColor: '#1f1f26', paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
+                            }}>
+                                <Stack direction="row" alignItems="center" spacing={1} sx={{ marginTop: '0px' }}>
+                                    <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
+                                    <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
+                                </Stack>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
+                                <Stack direction="column" spacing={1}>
+                                    {workspaceMenuItems.map((workspaceMenuItem) => {
+                                        return (
+                                            <MenuItem onClick={(e: React.MouseEvent) => {
+                                                dispatch(setCurrentWorkspace(workspace.id))
+                                                dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${workspace.id}`))
+                                                dispatch(setSelectedMenu(''))
+                                            }}
+                                                selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${workspace.id}` && expanded.includes(`accordion${workspace.id}`)}
+                                                sx={{ paddingLeft: '25px', borderRadius: '6px', width: '100%' }}
+                                                component={Link}
+                                                to={`w/${workspace.id}/${workspaceMenuItem.link}`}
+                                            >
+                                                <Stack direction="row" alignItems="center" spacing={1} >
+                                                    {workspaceMenuItem.icon}
+                                                    <Typography variant="body2">{workspaceMenuItem.name}</Typography>
+                                                </Stack>
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </Stack>
+                            </AccordionDetails>
+                        </Accordion>
+                    )
+                })}
+            </>
+    }
+
     return (
         <Container>
             <Stack direction="column" spacing={1}>
@@ -113,53 +174,7 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                             </IconButton>
                         </Stack>
                         <Stack direction='column'>
-                            {workspaces ?
-                                workspaces.map((workspace) => {
-                                    return (
-                                        <Accordion disableGutters sx={{
-                                            "&.MuiPaper-root::before": { content: 'none' }
-                                        }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
-                                            <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
-                                                backgroundColor: '#1f1f26', paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
-                                            }}>
-                                                <Stack direction="row" alignItems="center" spacing={1} sx={{ marginTop: '0px' }}>
-                                                    <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
-                                                    <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
-                                                </Stack>
-                                            </AccordionSummary>
-                                            <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
-                                                <Stack direction="column" spacing={1}>
-                                                    {workspaceMenuItems.map((workspaceMenuItem) => {
-                                                        return (
-                                                            <MenuItem onClick={(e: React.MouseEvent) => {
-                                                                dispatch(setCurrentWorkspace(workspace.id))
-                                                                dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${workspace.id}`))
-                                                                dispatch(setSelectedMenu(''))
-                                                            }}
-                                                                selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${workspace.id}` && expanded.includes(`accordion${workspace.id}`)}
-                                                                sx={{ paddingLeft: '25px', borderRadius: '6px', width: '100%' }}
-                                                                component={Link}
-                                                                to={`w/${workspace.id}/${workspaceMenuItem.link}`}
-                                                            >
-                                                                <Stack direction="row" alignItems="center" spacing={1} >
-                                                                    {workspaceMenuItem.icon}
-                                                                    <Typography variant="body2">{workspaceMenuItem.name}</Typography>
-                                                                </Stack>
-                                                            </MenuItem>
-                                                        )
-                                                    })}
-                                                </Stack>
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    )
-                                })
-                                :
-                                <Box justifyContent="center" display="flex">
-                                    {/* should replace this with a different loading spinner */}
-                                    <CircularProgress />
-                                </Box>
-                            }
-
+                            {accordionContent}
                         </Stack>
                     </Stack>
                 </Box >

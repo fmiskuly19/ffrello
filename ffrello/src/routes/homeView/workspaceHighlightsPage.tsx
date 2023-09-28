@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
-import GetWorkspaceHighlights from "../../data/api/getWorkspaceHighlights";
 import { Stack } from "@mui/material";
 import { SkeletonHighlightCard } from "../../components/cards/highlightCard";
 
@@ -18,13 +17,13 @@ const WorkspaceHighlightsPage = () => {
         dispatch(setSelectedMenu(''))
         dispatch(setSelectedWorkspaceMenu(`Highlights-${workspaceid}`))
 
-        const getWorkspaceHighlights = async () => {
-            return await GetWorkspaceHighlights().then(() => {
-                setWorkspaceHighlights([])
-            })
-        }
+        // const getWorkspaceHighlights = async () => {
+        //     return await GetWorkspaceHighlights().then(() => {
+        //         setWorkspaceHighlights([])
+        //     })
+        // }
 
-        getWorkspaceHighlights();
+        // getWorkspaceHighlights();
     }, [])
 
     return (

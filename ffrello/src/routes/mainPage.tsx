@@ -1,25 +1,17 @@
 import Navbar from "../components/nav/navbar";
 import { Outlet } from "react-router-dom";
-import { useAppDispatch } from "../hooks";
-import { useEffect } from "react";
-import GetWorkspaces from "../data/api/getWorkspaces";
-import Workspace from "../types/Workspace";
-import { setWorkspaces } from "../redux/userSlice";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import CreateWorkspaceModal from "../components/modals/createWorkspaceModal";
+import { getUserWorkspaces } from "../redux/userSlice";
+import { ApiCallStatus } from "../types/ApiCallStatus";
 
 const MainPage = () => {
 
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        const getWorkspaces = async () => {
-            return await GetWorkspaces().then((result) => {
-                dispatch(setWorkspaces(result as Workspace[]))
-            })
-        }
-
-        getWorkspaces();
-    }, [])
+    const workspaceStatus = useAppSelector((state) => state.userSlice.workspaceStatus);
+    if (workspaceStatus == ApiCallStatus.Idle) {
+        dispatch(getUserWorkspaces('fwank'));
+    }
 
     return (
         <>
