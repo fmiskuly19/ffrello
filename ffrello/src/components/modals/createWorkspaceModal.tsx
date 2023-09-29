@@ -16,6 +16,9 @@ const CreateWorkspaceModal = () => {
 
     const handleClose = () => {
         setIsClosing(true);
+        setWorkspaceName('')
+        setWorkspaceTheme('')
+        setWorkspaceDescription('')
         dispatch(setOpenCreateWorkspaceModal(false));
         dispatch(setNewWorkspaceStatus(ApiCallStatus.Idle));
 
