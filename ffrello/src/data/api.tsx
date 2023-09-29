@@ -1,4 +1,4 @@
-import { newWorkspace } from "../redux/userSlice";
+import { newWorkspace, removeWorkspace } from "../redux/userSlice";
 
 export const API_HOST_URL = "https://localhost:7135/api"
 
@@ -31,7 +31,7 @@ export const GetWorkspaces = async (userid: string, thunkAPI: any) => {
 };
 
 export const NewWorkspace = async (data: newWorkspace, thunkAPI: any) => {
-    const target = `/${data.userid}/newWorkspace/`;
+    const target = `/${data.userid}/workspace/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
         headers: {
@@ -42,10 +42,29 @@ export const NewWorkspace = async (data: newWorkspace, thunkAPI: any) => {
         signal: thunkAPI.signal
     }).then((res) => {
         if (res.ok) {
-            return res.json();
+            return Promise.resolve();
         }
         else {
             throw new Error('Did not create new workspace');
+        }
+    });
+};
+
+export const RemoveWorkspace = async (data: removeWorkspace, thunkAPI: any) => {
+    const target = `/${data.userid}/workspace/remove/${data.workspaceid}`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return Promise.resolve();
+        }
+        else {
+            throw new Error('Did not delete new workspace');
         }
     });
 };

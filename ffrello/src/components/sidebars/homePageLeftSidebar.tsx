@@ -16,10 +16,12 @@ import PeopleIcon from '@mui/icons-material/People';
 import GridViewIcon from '@mui/icons-material/GridView';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import LetterBox from "../letterBox";
-import { setCurrentWorkspace } from "../../redux/userSlice";
+import { removeWorkspace, setCurrentWorkspace, setRemoveWorkspaceStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
+import { OptionsObject, useSnackbar } from "notistack";
 
 export interface HomePageLeftSidebarProps {
     sticky?: boolean,
@@ -33,6 +35,8 @@ const iconFontSize = '22px';
 
 
 const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const selectedMenu = useAppSelector((state) => state.home.selectedMenu)
     const selectedWorkspaceMenu = useAppSelector((state) => state.home.selectedWorkspaceMenu)
@@ -87,7 +91,14 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
 
     let accordionContent;
     const workspaceStatus = useAppSelector((state) => state.userSlice.workspaceStatus);
-    if (workspaceStatus == ApiCallStatus.Loading) {
+    const removeWorkspaceStatus = useAppSelector((state) => state.userSlice.removeWorkspaceStatus);
+
+    if (removeWorkspaceStatus == ApiCallStatus.Failure) {
+        enqueueSnackbar('error removing workspace', { variant: 'error' });
+        dispatch(setRemoveWorkspaceStatus(ApiCallStatus.Idle))
+    }
+
+    if (workspaceStatus == ApiCallStatus.Loading || removeWorkspaceStatus == ApiCallStatus.Loading) {
         accordionContent =
             <Box justifyContent="center" display="flex">
                 <CircularProgress />
@@ -114,6 +125,9 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                                     <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
                                     <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
                                 </Stack>
+                                <IconButton onClick={() => dispatch(removeWorkspace({ userid: userid, workspaceid: workspace.id, workspace: workspace }))}>
+                                    <DeleteOutlineIcon sx={{ height: "15px", width: "15px" }} />
+                                </IconButton>
                             </AccordionSummary>
                             <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
                                 <Stack direction="column" spacing={1}>
@@ -138,7 +152,7 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                                     })}
                                 </Stack>
                             </AccordionDetails>
-                        </Accordion>
+                        </Accordion >
                     )
                 })}
             </>

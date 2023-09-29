@@ -1,9 +1,10 @@
 import { Box, Button, CircularProgress, Container, Dialog, DialogContent, Grid, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setOpenCreateWorkspaceModal } from "../../redux/homeSlice";
-import { newWorkspace, setNewWorkspaceStatus } from "../../redux/userSlice";
+import { getUserWorkspaces, newWorkspace, setNewWorkspaceStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
+import handofgod from '../../assets/create.gif'
 
 
 const CreateWorkspaceModal = () => {
@@ -14,26 +15,35 @@ const CreateWorkspaceModal = () => {
     const dispatch = useAppDispatch()
 
     const handleClose = () => {
+        setIsClosing(true);
         dispatch(setOpenCreateWorkspaceModal(false));
         dispatch(setNewWorkspaceStatus(ApiCallStatus.Idle));
+
+        if (newWorkspaceStatus == ApiCallStatus.Success) {
+            dispatch(getUserWorkspaces('fwank'));
+        }
     };
 
-    const [workspaceType, setWorkspaceType] = useState('');
+    useEffect(() => {
+        setIsClosing(false);
+    }, [openModal])
 
-    const handleWorkspaceTypeChange = (event: SelectChangeEvent) => {
-        setWorkspaceType(event.target.value as string);
-    };
+
+    const [isClosing, setIsClosing] = useState(false);
+    const [workspaceName, setWorkspaceName] = useState('');
+    const [workspaceTheme, setWorkspaceTheme] = useState('');
+    const [workspaceDescription, setWorkspaceDescription] = useState('');
 
     const createNewWorkspace = async () => {
-        dispatch(newWorkspace({ userid: userId, workspaceName: 'franksworkspacename', theme: 'Otter', description: 'random Description' }))
+        dispatch(newWorkspace({ userid: userId, workspaceName: workspaceName, theme: workspaceTheme, description: workspaceDescription }))
     }
 
     let modalContent;
     const newWorkspaceStatus = useAppSelector((state) => state.userSlice.newWorkspaceStatus);
     if (newWorkspaceStatus == ApiCallStatus.Idle) {
         modalContent = <>
-            <Grid item xs={5} >
-                <Container sx={{ marginLeft: '40px', paddingTop: '40px' }}>
+            <Grid item xs={5} justifyContent={"space-between"} >
+                <Container sx={{ paddingLeft: '40px', paddingTop: '40px', marginRight: '40px' }}>
                     <form>
                         <Stack direction="column" spacing={3}>
                             <Stack direction="column" spacing={1}>
@@ -47,7 +57,7 @@ const CreateWorkspaceModal = () => {
 
                             <Stack direction="column">
                                 <Typography id="workspacename-input-label" fontWeight='600'>Workspace Name</Typography>
-                                <OutlinedInput placeholder="Fwanks Workspace" />
+                                <OutlinedInput placeholder="Fwanks Workspace" value={workspaceName} onChange={(event) => setWorkspaceName(event.target.value as string)} />
                                 <Typography>This is the name of your company, team, or organization</Typography>
                             </Stack>
 
@@ -56,13 +66,13 @@ const CreateWorkspaceModal = () => {
                                 <Select
                                     labelId="workspacetype-select-label"
                                     id="workspacetype-select"
-                                    value={workspaceType}
-                                    onChange={handleWorkspaceTypeChange}
+                                    value={workspaceTheme}
+                                    onChange={(event) => { console.log(event.target.value); setWorkspaceTheme(event.target.value as string) }}
                                     size="small"
                                 >
-                                    <MenuItem value={10}>Otter theme</MenuItem>
-                                    <MenuItem value={20}>Rabbit theme</MenuItem>
-                                    <MenuItem value={30}>Birb theme</MenuItem>
+                                    <MenuItem value={"Otter"}>Otter theme</MenuItem>
+                                    <MenuItem value={"Rabbit"}>Rabbit theme</MenuItem>
+                                    <MenuItem value={"Birb"}>Birb theme</MenuItem>
                                 </Select>
                             </Stack>
 
@@ -71,6 +81,8 @@ const CreateWorkspaceModal = () => {
                                 <TextField
                                     id="workspacedescription-input"
                                     placeholder="Our team organizes everything here"
+                                    value={workspaceDescription}
+                                    onChange={(event) => setWorkspaceDescription(event.target.value as string)}
                                     multiline
                                     rows={4}
                                 >
@@ -89,7 +101,9 @@ const CreateWorkspaceModal = () => {
                 </Container>
             </Grid>
             <Grid item xs={7}>
-                Right side with design grid, should disappear on smaller viewports
+                <Box display="flex" flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height="100%">
+                    <img src={handofgod} alt="loading..." width="80%" />
+                </Box>
             </Grid>
         </>
     }
@@ -113,14 +127,27 @@ const CreateWorkspaceModal = () => {
         </>
     }
 
+    //when we get a sucessful response, wait 5 seconds and then close the modal
+    useEffect(() => {
+        if (newWorkspaceStatus == ApiCallStatus.Success) {
+            const timer = setTimeout(() => {
+                handleClose()
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [newWorkspaceStatus])
+
     return (
         <Dialog onClose={handleClose} open={openModal} maxWidth={"lg"} fullWidth={true}>
             <DialogContent>
                 <Grid container >
-                    {modalContent}
+                    {isClosing ?
+                        <CircularProgress />
+                        :
+                        modalContent
+                    }
                 </Grid>
             </DialogContent>
-
         </Dialog >
     );
 }

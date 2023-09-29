@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Workspace from '../types/Workspace'
 import User from '../types/User';
-import { GetWorkspaces, NewWorkspace } from '../data/api';
+import { GetWorkspaces, NewWorkspace, RemoveWorkspace } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 
 interface UserSliceProps {
@@ -10,11 +10,13 @@ interface UserSliceProps {
     User: User,
     workspaceStatus: ApiCallStatus,
     newWorkspaceStatus: ApiCallStatus,
+    removeWorkspaceStatus: ApiCallStatus,
 }
 
 const initialState: UserSliceProps = {
     workspaceStatus: ApiCallStatus.Idle,
     newWorkspaceStatus: ApiCallStatus.Idle,
+    removeWorkspaceStatus: ApiCallStatus.Idle,
     Workspaces: undefined,
     User: { id: 0, userid: 'frankstestworkspace', name: 'Fwank Misk' }
 }
@@ -24,6 +26,12 @@ export interface newWorkspace {
     workspaceName: string,
     theme: string,
     description: string,
+}
+
+export interface removeWorkspace {
+    userid: string,
+    workspaceid: number,
+    workspace: Workspace,
 }
 
 export const getUserWorkspaces = createAsyncThunk(
@@ -37,6 +45,13 @@ export const newWorkspace = createAsyncThunk(
     '/newWorkspace',
     async (data: newWorkspace, thunkAPI) => {
         return await NewWorkspace(data, thunkAPI);
+    }
+)
+
+export const removeWorkspace = createAsyncThunk(
+    '/removeWorkspace',
+    async (data: removeWorkspace, thunkAPI) => {
+        return await RemoveWorkspace(data, thunkAPI);
     }
 )
 
@@ -54,6 +69,9 @@ export const userSlice = createSlice({
         },
         setNewWorkspaceStatus: (state, action: PayloadAction<ApiCallStatus>) => {
             state.newWorkspaceStatus = action.payload;
+        },
+        setRemoveWorkspaceStatus: (state, action: PayloadAction<ApiCallStatus>) => {
+            state.removeWorkspaceStatus = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -81,9 +99,25 @@ export const userSlice = createSlice({
                 // Add user to the state array
                 state.newWorkspaceStatus = ApiCallStatus.Failure;
             })
+
+        //remove workspace reducers
+        builder.addCase(removeWorkspace.pending, (state, action) => {
+            state.removeWorkspaceStatus = ApiCallStatus.Loading;
+            state.Workspaces = state.Workspaces?.filter(item => item.id !== action.meta.arg.workspaceid);
+        }),
+            builder.addCase(removeWorkspace.fulfilled, (state) => {
+                state.removeWorkspaceStatus = ApiCallStatus.Success;
+            }),
+            builder.addCase(removeWorkspace.rejected, (state, action) => {
+                state.removeWorkspaceStatus = ApiCallStatus.Failure;
+                state.Workspaces = [
+                    ...state.Workspaces as Workspace[],
+                    action.meta.arg.workspace
+                ]
+            })
     },
 })
 
-export const { setCurrentWorkspace, setWorkspaces, setNewWorkspaceStatus } = userSlice.actions
+export const { setCurrentWorkspace, setWorkspaces, setNewWorkspaceStatus, setRemoveWorkspaceStatus } = userSlice.actions
 
 export default userSlice.reducer
