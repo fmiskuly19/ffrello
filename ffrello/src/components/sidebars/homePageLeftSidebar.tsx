@@ -162,9 +162,9 @@ const HomePageLeftSidebar = () => {
     }
     else if (workspaceStatus == ApiCallStatus.Success && workspaces && workspaces.length == 0) {
         accordionContent =
-            <>
-                <MenuItem sx={{ borderRadius: '8px' }} onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>Create a Workspace</MenuItem>
-            </>
+            <Box component={MenuItem} sx={{ borderRadius: '8px' }} onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>
+                <Typography>Create Workspace ...</Typography>
+            </Box>
     }
 
     return (

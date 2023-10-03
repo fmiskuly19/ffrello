@@ -14,7 +14,7 @@ const HomePageRightSidebar = () => {
     const [openBoardAnchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [openNewBoardMenu, setOpenNewBoardMenu] = useState(false);
 
-    const handleNewBoardClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleNewBoardClick = (event: any) => {
         setAnchorEl(event.currentTarget);
         setOpenNewBoardMenu(true);
     };
@@ -75,9 +75,11 @@ const HomePageRightSidebar = () => {
                             <BoardMenuItem id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 1, name: 'Dummy Workspace name', boards: [] }} />
                         </Box>
                         <Typography fontSize="12px">Links</Typography>
-                        <Box component={Button} onClick={handleNewBoardClick}>
+
+                        {/* disable this if there are no workspaces */}
+                        <Box component={MenuItem} onClick={handleNewBoardClick} sx={{ textTransform: 'none' }} disabled={!(workspaces && workspaces?.length > 0)}>
                             <Stack direction="row" alignItems="center" spacing={1} >
-                                <IconButton sx={{ borderRadius: '5px' }} >
+                                <IconButton sx={{ borderRadius: '5px' }} disabled={!(workspaces && workspaces?.length > 0)}>
                                     <AddIcon sx={{ fontSize: '20px' }} />
                                 </IconButton>
                                 <Typography variant="body2">Create a Board</Typography>

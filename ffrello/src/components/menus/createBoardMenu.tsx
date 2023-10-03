@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { newBoard, setNewBoardStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { enqueueSnackbar } from "notistack";
 
 
@@ -35,12 +34,6 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
         newBoardContent =
             <Box display="flex" justifyContent="center">
                 <CircularProgress />
-            </Box>
-    }
-    else if (newBoardStatus == ApiCallStatus.Failure) {
-        newBoardContent =
-            <Box display="flex" justifyContent="center" alignItems="center">
-                <ReportProblemIcon />
             </Box>
     }
     else if (newBoardStatus == ApiCallStatus.Idle) {
@@ -103,6 +96,14 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
             setVisibility('')
             setBoardTitle('')
         }
+        else if (newBoardStatus == ApiCallStatus.Failure) {
+            enqueueSnackbar('Failure creating new board', { variant: 'error' })
+
+            dispatch(setNewBoardStatus(ApiCallStatus.Idle))
+            setWorkspaceId('')
+            setVisibility('')
+            setBoardTitle('')
+        }
     }, [newBoardStatus])
 
     return (
@@ -117,7 +118,8 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
             transformOrigin={{
                 vertical: 'center',
                 horizontal: 'left',
-            }}>
+            }}
+            sx={{ left: '15px' }}>
             <Box display="flex" flexDirection='column' minWidth="350px" minHeight="200px">
                 <Stack direction="row" justifyContent="space-between" alignItems="center" display="flex" p="10px" ml="5px" mr="5px">
                     <>&nbsp;</>
