@@ -7,7 +7,7 @@ const themeOptions: ThemeOptions = createTheme({
     //     drawer: 1100,
     // },
     typography: {
-        fontFamily: 'Roboto',
+        fontFamily: 'Montserrat',
         body1: {
             fontSize: 14,
         },

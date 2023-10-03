@@ -21,10 +21,9 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import LetterBox from "../letterBox";
 import { removeWorkspace, setCurrentWorkspace, setRemoveWorkspaceStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
-import { OptionsObject, useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 
 export interface HomePageLeftSidebarProps {
-    sticky?: boolean,
     selectedMenu?: string,
     selectedWorkspaceMenu?: string,
     expandedAccordions: string[],
@@ -32,9 +31,7 @@ export interface HomePageLeftSidebarProps {
 
 const iconFontSize = '22px';
 
-
-
-const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
+const HomePageLeftSidebar = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -98,6 +95,11 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
         dispatch(setRemoveWorkspaceStatus(ApiCallStatus.Idle))
     }
 
+    if (removeWorkspaceStatus == ApiCallStatus.Success) {
+        enqueueSnackbar('success removing workspace', { variant: 'success' });
+        dispatch(setRemoveWorkspaceStatus(ApiCallStatus.Idle))
+    }
+
     if (workspaceStatus == ApiCallStatus.Loading || removeWorkspaceStatus == ApiCallStatus.Loading) {
         accordionContent =
             <Box justifyContent="center" display="flex">
@@ -110,51 +112,60 @@ const HomePageLeftSidebar = (props: HomePageLeftSidebarProps) => {
                 <ReportProblemIcon />
             </Box >
     }
-    else if (workspaceStatus == ApiCallStatus.Success) {
+    else if (workspaceStatus == ApiCallStatus.Success && workspaces && workspaces.length > 0) {
+        console.log('workspaces');
+        console.log(workspaces);
         accordionContent =
             <>
-                {workspaces?.map((workspace) => {
-                    return (
-                        <Accordion disableGutters sx={{
-                            "&.MuiPaper-root::before": { content: 'none' }
-                        }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
-                            <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
-                                backgroundColor: '#1f1f26', paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
-                            }}>
-                                <Stack direction="row" alignItems="center" spacing={1} sx={{ marginTop: '0px' }}>
-                                    <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
-                                    <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
-                                </Stack>
-                                <IconButton onClick={() => dispatch(removeWorkspace({ userid: userid, workspaceid: workspace.id, workspace: workspace }))}>
-                                    <DeleteOutlineIcon sx={{ height: "15px", width: "15px" }} />
-                                </IconButton>
-                            </AccordionSummary>
-                            <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
-                                <Stack direction="column" spacing={1}>
-                                    {workspaceMenuItems.map((workspaceMenuItem) => {
-                                        return (
-                                            <MenuItem onClick={(e: React.MouseEvent) => {
-                                                dispatch(setCurrentWorkspace(workspace.id))
-                                                dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${workspace.id}`))
-                                                dispatch(setSelectedMenu(''))
-                                            }}
-                                                selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${workspace.id}` && expanded.includes(`accordion${workspace.id}`)}
-                                                sx={{ paddingLeft: '25px', borderRadius: '6px', width: '100%' }}
-                                                component={Link}
-                                                to={`w/${workspace.id}/${workspaceMenuItem.link}`}
-                                            >
-                                                <Stack direction="row" alignItems="center" spacing={1} >
-                                                    {workspaceMenuItem.icon}
-                                                    <Typography variant="body2">{workspaceMenuItem.name}</Typography>
-                                                </Stack>
-                                            </MenuItem>
-                                        )
-                                    })}
-                                </Stack>
-                            </AccordionDetails>
-                        </Accordion >
-                    )
-                })}
+                {
+                    workspaces.map((workspace) => {
+                        return (
+                            <Accordion disableGutters sx={{
+                                "&.MuiPaper-root::before": { content: 'none' }
+                            }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
+                                <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
+                                    backgroundColor: '#1f1f26', paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
+                                }}>
+                                    <Stack direction="row" alignItems="center" spacing={1} sx={{ marginTop: '0px' }}>
+                                        <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
+                                        <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
+                                    </Stack>
+                                    <IconButton onClick={() => dispatch(removeWorkspace({ userid: userid, workspaceid: workspace.id, workspace: workspace }))}>
+                                        <DeleteOutlineIcon sx={{ height: "15px", width: "15px" }} />
+                                    </IconButton>
+                                </AccordionSummary>
+                                <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
+                                    <Stack direction="column" spacing={1}>
+                                        {workspaceMenuItems.map((workspaceMenuItem) => {
+                                            return (
+                                                <MenuItem onClick={(e: React.MouseEvent) => {
+                                                    dispatch(setCurrentWorkspace(workspace.id))
+                                                    dispatch(setSelectedWorkspaceMenu(`${workspaceMenuItem.name}-${workspace.id}`))
+                                                    dispatch(setSelectedMenu(''))
+                                                }}
+                                                    selected={selectedWorkspaceMenu == `${workspaceMenuItem.name}-${workspace.id}` && expanded.includes(`accordion${workspace.id}`)}
+                                                    sx={{ paddingLeft: '25px', borderRadius: '6px', width: '100%' }}
+                                                    component={Link}
+                                                    to={`w/${workspace.id}/${workspaceMenuItem.link}`}
+                                                >
+                                                    <Stack direction="row" alignItems="center" spacing={1} >
+                                                        {workspaceMenuItem.icon}
+                                                        <Typography variant="body2">{workspaceMenuItem.name}</Typography>
+                                                    </Stack>
+                                                </MenuItem>
+                                            )
+                                        })}
+                                    </Stack>
+                                </AccordionDetails>
+                            </Accordion >
+                        )
+                    })}
+            </>
+    }
+    else if (workspaceStatus == ApiCallStatus.Success && workspaces && workspaces.length == 0) {
+        accordionContent =
+            <>
+                <MenuItem sx={{ borderRadius: '8px' }} onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>Create a Workspace</MenuItem>
             </>
     }
 

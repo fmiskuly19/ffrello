@@ -42,7 +42,7 @@ export const NewWorkspace = async (data: newWorkspace, thunkAPI: any) => {
         signal: thunkAPI.signal
     }).then((res) => {
         if (res.ok) {
-            return Promise.resolve();
+            return res.json();
         }
         else {
             throw new Error('Did not create new workspace');
@@ -61,7 +61,7 @@ export const RemoveWorkspace = async (data: removeWorkspace, thunkAPI: any) => {
         signal: thunkAPI.signal
     }).then((res) => {
         if (res.ok) {
-            return Promise.resolve();
+            return res.json();
         }
         else {
             throw new Error('Did not delete new workspace');

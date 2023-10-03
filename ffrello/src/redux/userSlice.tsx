@@ -91,8 +91,9 @@ export const userSlice = createSlice({
         builder.addCase(newWorkspace.pending, (state) => {
             state.newWorkspaceStatus = ApiCallStatus.Loading;
         }),
-            builder.addCase(newWorkspace.fulfilled, (state) => {
-                // Add user to the state array
+            builder.addCase(newWorkspace.fulfilled, (state, action) => {
+                //set updated workspaces that is returned after successfully adding a new workspace
+                state.Workspaces = action.payload
                 state.newWorkspaceStatus = ApiCallStatus.Success;
             }),
             builder.addCase(newWorkspace.rejected, (state) => {
@@ -103,13 +104,19 @@ export const userSlice = createSlice({
         //remove workspace reducers
         builder.addCase(removeWorkspace.pending, (state, action) => {
             state.removeWorkspaceStatus = ApiCallStatus.Loading;
+
+            //temporarily remove workspace from list while api call is loading to make it look like its already deleted 
             state.Workspaces = state.Workspaces?.filter(item => item.id !== action.meta.arg.workspaceid);
         }),
-            builder.addCase(removeWorkspace.fulfilled, (state) => {
+            builder.addCase(removeWorkspace.fulfilled, (state, action) => {
+                //set updated workspaces that is returned after successfully removing
+                state.Workspaces = action.payload
                 state.removeWorkspaceStatus = ApiCallStatus.Success;
             }),
             builder.addCase(removeWorkspace.rejected, (state, action) => {
                 state.removeWorkspaceStatus = ApiCallStatus.Failure;
+
+                //add temporarily removed workspace back to list if we failed to delete, make it look like nothing happened
                 state.Workspaces = [
                     ...state.Workspaces as Workspace[],
                     action.meta.arg.workspace

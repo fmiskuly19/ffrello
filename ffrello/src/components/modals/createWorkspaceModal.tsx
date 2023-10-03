@@ -15,24 +15,16 @@ const CreateWorkspaceModal = () => {
     const dispatch = useAppDispatch()
 
     const handleClose = () => {
-        setIsClosing(true);
         setWorkspaceName('')
         setWorkspaceTheme('')
         setWorkspaceDescription('')
+
+        //how do I prevent it flashing its idle state before closing? 
         dispatch(setOpenCreateWorkspaceModal(false));
         dispatch(setNewWorkspaceStatus(ApiCallStatus.Idle));
-
-        if (newWorkspaceStatus == ApiCallStatus.Success) {
-            dispatch(getUserWorkspaces('fwank'));
-        }
     };
 
-    useEffect(() => {
-        setIsClosing(false);
-    }, [openModal])
 
-
-    const [isClosing, setIsClosing] = useState(false);
     const [workspaceName, setWorkspaceName] = useState('');
     const [workspaceTheme, setWorkspaceTheme] = useState('');
     const [workspaceDescription, setWorkspaceDescription] = useState('');
@@ -44,71 +36,72 @@ const CreateWorkspaceModal = () => {
     let modalContent;
     const newWorkspaceStatus = useAppSelector((state) => state.userSlice.newWorkspaceStatus);
     if (newWorkspaceStatus == ApiCallStatus.Idle) {
-        modalContent = <>
-            <Grid item xs={5} justifyContent={"space-between"} >
-                <Container sx={{ paddingLeft: '40px', paddingTop: '40px', marginRight: '40px' }}>
-                    <form>
-                        <Stack direction="column" spacing={3}>
-                            <Stack direction="column" spacing={1}>
-                                <Typography variant="h4">
-                                    Lets Build a Workspace
-                                </Typography>
-                                <Typography variant="h5">
-                                    Boost your productivity by making it easier for everyone to access boards in one location.
-                                </Typography>
+        modalContent =
+            <Grid container sx={{ paddingLeft: '15px' }}>
+                <Grid item xs={5} justifyContent={"space-between"} sx={{ paddingBottom: '25px', paddingTop: '50px', paddingLeft: '30px' }}>
+                    <Container>
+                        <form>
+                            <Stack direction="column" spacing={3}>
+                                <Stack direction="column" spacing={1}>
+                                    <Typography variant="h4">
+                                        Lets Build a Workspace
+                                    </Typography>
+                                    <Typography variant="h5">
+                                        Boost your productivity by making it easier for everyone to access boards in one location.
+                                    </Typography>
+                                </Stack>
+
+                                <Stack direction="column">
+                                    <Typography id="workspacename-input-label" fontWeight='600'>Workspace Name</Typography>
+                                    <OutlinedInput placeholder="Fwanks Workspace" value={workspaceName} onChange={(event) => setWorkspaceName(event.target.value as string)} />
+                                    <Typography>This is the name of your company, team, or organization</Typography>
+                                </Stack>
+
+                                <Stack direction="column">
+                                    <Typography id="workspacetype-select-label">Workspace Type</Typography>
+                                    <Select
+                                        labelId="workspacetype-select-label"
+                                        id="workspacetype-select"
+                                        value={workspaceTheme}
+                                        onChange={(event) => setWorkspaceTheme(event.target.value as string)}
+                                        size="small"
+                                    >
+                                        <MenuItem value={"Otter"}>Otter theme</MenuItem>
+                                        <MenuItem value={"Rabbit"}>Rabbit theme</MenuItem>
+                                        <MenuItem value={"Birb"}>Birb theme</MenuItem>
+                                    </Select>
+                                </Stack>
+
+                                <Stack direction="column">
+                                    <Typography id="workspacedescription-input-label">Workspace Description</Typography>
+                                    <TextField
+                                        id="workspacedescription-input"
+                                        placeholder="Our team organizes everything here"
+                                        value={workspaceDescription}
+                                        onChange={(event) => setWorkspaceDescription(event.target.value as string)}
+                                        multiline
+                                        rows={4}
+                                    >
+                                    </TextField>
+                                    <Typography variant="subtitle2">
+                                        Get your members on board with a few words about your Workspace.
+                                    </Typography>
+                                </Stack>
+
+                                <Button sx={{ textTransform: 'none' }} fullWidth onClick={createNewWorkspace}>
+                                    Continue
+                                </Button>
+
                             </Stack>
-
-                            <Stack direction="column">
-                                <Typography id="workspacename-input-label" fontWeight='600'>Workspace Name</Typography>
-                                <OutlinedInput placeholder="Fwanks Workspace" value={workspaceName} onChange={(event) => setWorkspaceName(event.target.value as string)} />
-                                <Typography>This is the name of your company, team, or organization</Typography>
-                            </Stack>
-
-                            <Stack direction="column">
-                                <Typography id="workspacetype-select-label">Workspace Type</Typography>
-                                <Select
-                                    labelId="workspacetype-select-label"
-                                    id="workspacetype-select"
-                                    value={workspaceTheme}
-                                    onChange={(event) => { console.log(event.target.value); setWorkspaceTheme(event.target.value as string) }}
-                                    size="small"
-                                >
-                                    <MenuItem value={"Otter"}>Otter theme</MenuItem>
-                                    <MenuItem value={"Rabbit"}>Rabbit theme</MenuItem>
-                                    <MenuItem value={"Birb"}>Birb theme</MenuItem>
-                                </Select>
-                            </Stack>
-
-                            <Stack direction="column">
-                                <Typography id="workspacedescription-input-label">Workspace Description</Typography>
-                                <TextField
-                                    id="workspacedescription-input"
-                                    placeholder="Our team organizes everything here"
-                                    value={workspaceDescription}
-                                    onChange={(event) => setWorkspaceDescription(event.target.value as string)}
-                                    multiline
-                                    rows={4}
-                                >
-                                </TextField>
-                                <Typography variant="subtitle2">
-                                    Get your members on board with a few words about your Workspace.
-                                </Typography>
-                            </Stack>
-
-                            <Button sx={{ textTransform: 'none' }} fullWidth onClick={createNewWorkspace}>
-                                Continue
-                            </Button>
-
-                        </Stack>
-                    </form>
-                </Container>
+                        </form>
+                    </Container>
+                </Grid>
+                <Grid item xs={7} sx={{ background: 'linear-gradient(270deg, rgba(255,255,255,1) 0%, rgba(0,45,77,1) 0%, rgba(0,245,255,0) 100%);', padding: '0px' }}>
+                    <Box display="flex" flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height="100%">
+                        <img src={handofgod} alt="loading..." width="80%" />
+                    </Box>
+                </Grid>
             </Grid>
-            <Grid item xs={7}>
-                <Box display="flex" flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height="100%">
-                    <img src={handofgod} alt="loading..." width="80%" />
-                </Box>
-            </Grid>
-        </>
     }
     else if (newWorkspaceStatus == ApiCallStatus.Loading) {
         modalContent = <>
@@ -125,9 +118,9 @@ const CreateWorkspaceModal = () => {
         </>
     }
     else if (newWorkspaceStatus == ApiCallStatus.Success) {
-        modalContent = <>
-            Little cool animation that shows success
-        </>
+        modalContent = <Box display="flex" justifyContent="center" alignContent="center" sx={{ minHeight: '300px' }}>
+            IT WORKED
+        </Box>
     }
 
     //when we get a sucessful response, wait 5 seconds and then close the modal
@@ -142,14 +135,8 @@ const CreateWorkspaceModal = () => {
 
     return (
         <Dialog onClose={handleClose} open={openModal} maxWidth={"lg"} fullWidth={true}>
-            <DialogContent>
-                <Grid container >
-                    {isClosing ?
-                        <CircularProgress />
-                        :
-                        modalContent
-                    }
-                </Grid>
+            <DialogContent sx={{ padding: '0px' }}>
+                {modalContent}
             </DialogContent>
         </Dialog >
     );
