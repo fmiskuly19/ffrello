@@ -1,8 +1,12 @@
-import { Box, Button, Divider, IconButton, Menu, MenuItem, OutlinedInput, Select, Stack, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, IconButton, Menu, MenuItem, OutlinedInput, Select, Stack, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { newBoard } from "../../redux/userSlice";
+import { newBoard, setNewBoardStatus } from "../../redux/userSlice";
+import { ApiCallStatus } from "../../types/ApiCallStatus";
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { enqueueSnackbar } from "notistack";
+
 
 interface CreateBoardMenuProps {
     open: boolean
@@ -15,20 +19,91 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
     const dispatch = useAppDispatch()
 
     const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
+    const newBoardStatus = useAppSelector((state) => state.userSlice.newBoardStatus)
     const userId = useAppSelector((state) => state.userSlice.User.userid);
 
     const [workspaceId, setWorkspaceId] = useState("");
     const [boardTitle, setBoardTitle] = useState("");
     const [visibility, setVisibility] = useState("");
 
-    useEffect(() => {
-        console.log('workspaceName');
-        console.log(workspaceId);
-    }, [workspaceId])
-
     const createNewBoard = async () => {
         dispatch(newBoard({ boardTitle: boardTitle, visibility: visibility, workspaceid: Number(workspaceId), userid: userId }))
     }
+
+    let newBoardContent;
+    if (newBoardStatus == ApiCallStatus.Loading) {
+        newBoardContent =
+            <Box display="flex" justifyContent="center">
+                <CircularProgress />
+            </Box>
+    }
+    else if (newBoardStatus == ApiCallStatus.Failure) {
+        newBoardContent =
+            <Box display="flex" justifyContent="center" alignItems="center">
+                <ReportProblemIcon />
+            </Box>
+    }
+    else if (newBoardStatus == ApiCallStatus.Idle) {
+        newBoardContent = <>
+            <Stack direction="column" spacing={2} sx={{ padding: '15px' }}>
+                <Stack direction="column">
+                    <Typography id="boardTitle-input-label">Board Title</Typography>
+                    <OutlinedInput placeholder="New Board title" size="small"
+                        id="boardTitle-input" value={boardTitle} onChange={(event) => setBoardTitle(event.target.value as string)} />
+                </Stack>
+
+                <Stack direction="column">
+                    <Typography id="workspace-select-label">Workspace</Typography>
+                    <Select
+                        labelId="workspace-select-label"
+                        id="workspace-select"
+                        value={workspaceId}
+                        onChange={(event) => setWorkspaceId(event.target.value as string)}
+                        size="small"
+                    >
+                        {workspaces?.map((workspace) => {
+                            return (<MenuItem value={workspace.id}>{workspace.name} Workspace</MenuItem>)
+                        })}
+                    </Select>
+                </Stack>
+
+                <Stack direction="column">
+                    <Typography id="visibility-select-label">Visibility</Typography>
+                    <Select
+                        labelId="visibility-select-label"
+                        id="visibility-select"
+                        value={visibility}
+                        onChange={(event) => setVisibility(event.target.value as string)}
+                        size="small"
+                    >
+                        <MenuItem value={'Private'}>Private</MenuItem>
+                        <MenuItem value={'Public'}>Public</MenuItem>
+                        <MenuItem value={'Workspace??'}>Workspace??</MenuItem>
+                    </Select>
+                </Stack>
+
+                <Stack direction="column" spacing={1}>
+                    <Button sx={{ textTransform: 'none' }} onClick={createNewBoard}>Create</Button>
+                    <Button sx={{ textTransform: 'none' }}>Start with a Template</Button>
+                </Stack>
+
+            </Stack>
+        </>
+    }
+
+    //this is probably bad for performance but if I take this out of the useEffect it executes twice
+    useEffect(() => {
+        if (newBoardStatus == ApiCallStatus.Success) {
+            enqueueSnackbar('Success creating new board', { variant: 'success' })
+
+            props.onClose();
+
+            dispatch(setNewBoardStatus(ApiCallStatus.Idle))
+            setWorkspaceId('')
+            setVisibility('')
+            setBoardTitle('')
+        }
+    }, [newBoardStatus])
 
     return (
 
@@ -44,57 +119,15 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
                 horizontal: 'left',
             }}>
             <Box display="flex" flexDirection='column' minWidth="350px" minHeight="200px">
-                <Stack direction="row" justifyContent="space-between" display="flex" p="10px" ml="5px" mr="5px">
-                    <h4>Create Board</h4>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" display="flex" p="10px" ml="5px" mr="5px">
+                    <>&nbsp;</>
+                    <Typography variant="h6">Create Board</Typography>
                     <IconButton onClick={props.onClose}>
                         <CloseIcon height="12px" width="12px" />
                     </IconButton>
                 </Stack>
                 <Divider />
-
-                <Stack direction="column" spacing={2} sx={{ padding: '15px' }}>
-                    <Stack direction="column">
-                        <Typography id="boardTitle-input-label">Board Title</Typography>
-                        <OutlinedInput placeholder="New Board title" size="small"
-                            id="boardTitle-input" value={boardTitle} onChange={(event) => setBoardTitle(event.target.value as string)} />
-                    </Stack>
-
-                    <Stack direction="column">
-                        <Typography id="workspace-select-label">Workspace</Typography>
-                        <Select
-                            labelId="workspace-select-label"
-                            id="workspace-select"
-                            value={workspaceId}
-                            onChange={(event) => setWorkspaceId(event.target.value as string)}
-                            size="small"
-                        >
-                            {workspaces?.map((workspace) => {
-                                return (<MenuItem value={workspace.id}>{workspace.name} Workspace</MenuItem>)
-                            })}
-                        </Select>
-                    </Stack>
-
-                    <Stack direction="column">
-                        <Typography id="visibility-select-label">Visibility</Typography>
-                        <Select
-                            labelId="visibility-select-label"
-                            id="visibility-select"
-                            value={visibility}
-                            onChange={(event) => setVisibility(event.target.value as string)}
-                            size="small"
-                        >
-                            <MenuItem value={'Private'}>Private</MenuItem>
-                            <MenuItem value={'Public'}>Public</MenuItem>
-                            <MenuItem value={'Workspace??'}>Workspace??</MenuItem>
-                        </Select>
-                    </Stack>
-
-                    <Stack direction="column" spacing={1}>
-                        <Button sx={{ textTransform: 'none' }} onClick={createNewBoard}>Create</Button>
-                        <Button sx={{ textTransform: 'none' }}>Start with a Template</Button>
-                    </Stack>
-
-                </Stack>
+                {newBoardContent}
             </Box>
         </Menu>
     )

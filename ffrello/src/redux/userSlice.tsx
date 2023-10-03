@@ -84,6 +84,9 @@ export const userSlice = createSlice({
         setRemoveWorkspaceStatus: (state, action: PayloadAction<ApiCallStatus>) => {
             state.removeWorkspaceStatus = action.payload;
         },
+        setNewBoardStatus: (state, action: PayloadAction<ApiCallStatus>) => {
+            state.newBoardStatus = action.payload;
+        },
     },
     extraReducers: (builder) => {
         //get workspaces reducers
@@ -150,6 +153,6 @@ export const userSlice = createSlice({
     },
 })
 
-export const { setNewWorkspaceStatus, setRemoveWorkspaceStatus, setCurrentWorkspace } = userSlice.actions
+export const { setNewWorkspaceStatus, setRemoveWorkspaceStatus, setCurrentWorkspace, setNewBoardStatus } = userSlice.actions
 
 export default userSlice.reducer
