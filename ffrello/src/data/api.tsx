@@ -1,4 +1,4 @@
-import { newWorkspace, removeWorkspace } from "../redux/userSlice";
+import { newBoard, newWorkspace, removeWorkspace } from "../redux/userSlice";
 
 export const API_HOST_URL = "https://localhost:7135/api"
 
@@ -46,6 +46,26 @@ export const NewWorkspace = async (data: newWorkspace, thunkAPI: any) => {
         }
         else {
             throw new Error('Did not create new workspace');
+        }
+    });
+};
+
+export const NewBoard = async (data: newBoard, thunkAPI: any) => {
+    const target = `/${data.userid}/board/new`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        else {
+            throw new Error('Did not create new board');
         }
     });
 };

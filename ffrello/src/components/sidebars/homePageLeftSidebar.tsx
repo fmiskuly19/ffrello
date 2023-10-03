@@ -113,8 +113,6 @@ const HomePageLeftSidebar = () => {
             </Box >
     }
     else if (workspaceStatus == ApiCallStatus.Success && workspaces && workspaces.length > 0) {
-        console.log('workspaces');
-        console.log(workspaces);
         accordionContent =
             <>
                 {
