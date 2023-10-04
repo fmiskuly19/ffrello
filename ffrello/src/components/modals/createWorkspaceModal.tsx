@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Container, Dialog, DialogContent, Grid, 
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setOpenCreateWorkspaceModal } from "../../redux/homeSlice";
-import { getUserWorkspaces, newWorkspace, setNewWorkspaceStatus } from "../../redux/userSlice";
+import { getUserWorkspaces, newWorkspaceArgs, setNewWorkspaceStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import handofgod from '../../assets/create.gif'
 

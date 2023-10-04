@@ -23,21 +23,31 @@ const initialState: UserSliceProps = {
     User: { id: 0, userid: 'frankstestworkspace', name: 'Fwank Misk' }
 }
 
-export interface newWorkspace {
+export interface newWorkspaceArgs {
     userid: string,
     workspaceName: string,
     theme: string,
     description: string,
 }
 
-export interface newBoard {
+export interface newBoardArgs {
     userid: string,
     workspaceid: number,
     boardTitle: string,
     visibility: string,
 }
 
-export interface removeWorkspace {
+export interface getBoard {
+    userid: string,
+    boardid: number,
+}
+
+export interface getWorkspaceArgs {
+    userid: string,
+    workspaceid: number,
+}
+
+export interface removeWorkspaceArgs {
     userid: string,
     workspaceid: number,
     workspace: Workspace,
@@ -52,21 +62,21 @@ export const getUserWorkspaces = createAsyncThunk(
 
 export const newWorkspace = createAsyncThunk(
     '/newWorkspace',
-    async (data: newWorkspace, thunkAPI) => {
+    async (data: newWorkspaceArgs, thunkAPI) => {
         return await NewWorkspace(data, thunkAPI);
     }
 )
 
 export const newBoard = createAsyncThunk(
     '/newBoard',
-    async (data: newBoard, thunkAPI) => {
+    async (data: newBoardArgs, thunkAPI) => {
         return await NewBoard(data, thunkAPI);
     }
 )
 
 export const removeWorkspace = createAsyncThunk(
     '/removeWorkspace',
-    async (data: removeWorkspace, thunkAPI) => {
+    async (data: removeWorkspaceArgs, thunkAPI) => {
         return await RemoveWorkspace(data, thunkAPI);
     }
 )

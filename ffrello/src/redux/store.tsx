@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import homeReducer from './homeSlice.tsx'
 import themeReducer from './themeSlice.tsx'
 import userReducer from './userSlice.tsx'
+import workspaceViewReducer from './workspaceViewSlice.tsx'
 
 const store = configureStore({
    reducer: {
       home: homeReducer,
       theme: themeReducer,
       userSlice: userReducer,
+      workspaceViewSlice: workspaceViewReducer,
    },
 })
 export default store;

@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Divider, IconButton, Menu, MenuItem, Out
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { newBoard, setNewBoardStatus } from "../../redux/userSlice";
+import { newBoardArgs, setNewBoardStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { enqueueSnackbar } from "notistack";
 
@@ -120,7 +120,7 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
                 horizontal: 'left',
             }}
             sx={{ left: '15px' }}>
-            <Box display="flex" flexDirection='column' minWidth="350px" minHeight="200px">
+            <Box display="flex" flexDirection='column' minWidth="275px" minHeight="200px">
                 <Stack direction="row" justifyContent="space-between" alignItems="center" display="flex" p="10px" ml="5px" mr="5px">
                     <>&nbsp;</>
                     <Typography variant="h6">Create Board</Typography>

@@ -1,4 +1,4 @@
-import { newBoard, newWorkspace, removeWorkspace } from "../redux/userSlice";
+import { getBoard, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
 
 export const API_HOST_URL = "https://localhost:7135/api"
 
@@ -30,7 +30,7 @@ export const GetWorkspaces = async (userid: string, thunkAPI: any) => {
     });
 };
 
-export const NewWorkspace = async (data: newWorkspace, thunkAPI: any) => {
+export const NewWorkspace = async (data: newWorkspaceArgs, thunkAPI: any) => {
     const target = `/${data.userid}/workspace/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
@@ -50,7 +50,7 @@ export const NewWorkspace = async (data: newWorkspace, thunkAPI: any) => {
     });
 };
 
-export const NewBoard = async (data: newBoard, thunkAPI: any) => {
+export const NewBoard = async (data: newBoardArgs, thunkAPI: any) => {
     const target = `/${data.userid}/board/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
@@ -70,7 +70,35 @@ export const NewBoard = async (data: newBoard, thunkAPI: any) => {
     });
 };
 
-export const RemoveWorkspace = async (data: removeWorkspace, thunkAPI: any) => {
+export const GetBoardPage = async (data: getBoard, thunkAPI: any) => {
+    const target = `/${data.userid}/getBoardPage/${data.boardid}`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        signal: thunkAPI.signal,
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        else {
+            throw new Error('Did not get board page');
+        }
+    });
+};
+
+export const GetWorkspace = async (data: getWorkspaceArgs, thunkAPI: any) => {
+    const target = `/${data.userid}/workspace/${data.workspaceid}`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        signal: thunkAPI.signal,
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        else {
+            throw new Error('Did not get workspace');
+        }
+    });
+};
+
+export const RemoveWorkspace = async (data: removeWorkspaceArgs, thunkAPI: any) => {
     const target = `/${data.userid}/workspace/remove/${data.workspaceid}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'DELETE',

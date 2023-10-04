@@ -37,7 +37,7 @@ const HighlightCard = (props: HighlightCardProps) => {
                                         </Stack>
                                     </Stack>
                                     <IconButton>
-                                        <MoreHorizIcon />
+                                        <MoreHorizIcon color="primary" />
                                     </IconButton>
                                 </Stack>
                                 <Box>
@@ -63,8 +63,8 @@ const HighlightCard = (props: HighlightCardProps) => {
 }
 
 export const SkeletonHighlightCard = () => {
-    return(
-<Paper sx={{ borderRadius: '8px' }} square={false}>
+    return (
+        <Paper sx={{ borderRadius: '8px' }} square={false}>
             <Stack direction="column">
                 <Box p={"12px"} >
                     {/* <IssueCard {...props.issue} /> replace this with skeleton */}
@@ -76,10 +76,10 @@ export const SkeletonHighlightCard = () => {
                             <Stack direction="column" spacing={1}>
                                 <Stack direction="row" justifyContent="space-between">
                                     {/* set full width here so that we can expand the skeleton  */}
-                                    <Stack direction="row" spacing={1} sx={{ width: '100%'}}>
-                                        <Skeleton variant="circular" width="34px" height="34px" sx={{minHeight: '34px', minWidth: '34px'}} />
+                                    <Stack direction="row" spacing={1} sx={{ width: '100%' }}>
+                                        <Skeleton variant="circular" width="34px" height="34px" sx={{ minHeight: '34px', minWidth: '34px' }} />
                                         {/* set full width here so that we can expand the skeleton  */}
-                                        <Stack direction="column" spacing={0} sx={{width: '100%'}}> 
+                                        <Stack direction="column" spacing={0} sx={{ width: '100%' }}>
                                             <Skeleton width="40%" animation="wave">
                                                 <Typography fontSize={"14px"}>Hello</Typography>
                                             </Skeleton>
@@ -108,6 +108,6 @@ export const SkeletonHighlightCard = () => {
 
         </Paper>
     )
-} 
+}
 
 export default HighlightCard;

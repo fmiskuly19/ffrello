@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import CreateWorkspaceModal from "../components/modals/createWorkspaceModal";
 import { getUserWorkspaces } from "../redux/userSlice";
 import { ApiCallStatus } from "../types/ApiCallStatus";
+import { Box } from "@mui/material";
 
 const MainPage = () => {
 

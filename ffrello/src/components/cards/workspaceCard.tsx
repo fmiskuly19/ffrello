@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import Workspace from "../../types/Workspace";
-import BoardCard, { BoardCardHeight } from "./boardCard";
+import BoardCard from "./boardCard";
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
