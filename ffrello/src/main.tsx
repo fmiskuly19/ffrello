@@ -16,7 +16,7 @@ import theme from './themes/theme.tsx'
 
 import HighlightsPage from './routes/homeView/homeHighlightsPage.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
-import BoardPage from './routes/boardView/board.tsx';
+import BoardPage from './routes/boardView/boardPage.tsx';
 import WorkspaceTablePage from './routes/workspaceView/workspaceTablePage.tsx';
 import WorkspaceCalendarPage from './routes/workspaceView/workspaceCalendarPage.tsx';
 import WorkspaceSettingsPage from './routes/workspaceView/workspaceSettingsPage.tsx';

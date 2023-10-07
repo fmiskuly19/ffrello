@@ -13,11 +13,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 import LetterBox from "../letterBox";
-import Workspace from "../../types/Workspace";
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { useAppSelector } from "../../hooks";
 
 interface WorkspaceLeftSidebarProps {
-    workspace?: Workspace,
+    workspaceId: number,
 }
 
 
@@ -25,6 +25,8 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
 
     const [workspaceSettingsAnchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const workspaceSettingsOpen = Boolean(workspaceSettingsAnchorEl);
+
+    const workspaceFromUserSlice = useAppSelector((state) => state.userSlice.Workspaces?.find((workspace) => workspace.id == props.workspaceId))
 
     const handleWorkspaceSettingsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -39,10 +41,10 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
             <Stack direction="column" spacing={2}>
                 <Stack direction="row" justifyContent="space-between" alignItems='center' sx={{ paddingLeft: '10px', paddingRight: '10px', paddingBottom: '5px' }}>
                     <Stack direction='row' justifyContent='center' spacing={1} alignItems={'center'}>
-                        <LetterBox backgroundColor={'lightpink'} size={32} letter={'E'} />
+                        <LetterBox backgroundColor={'lightgreen'} size={32} letter={workspaceFromUserSlice?.name.substring(0, 1) as string} />
                         <Stack direction='column'>
-                            <Typography variant="h6" sx={{ wordBreak: "break-word" }}>{props.workspace?.name}</Typography>
-                            <Typography variant="body2">Free?</Typography>
+                            <Typography variant="h6" sx={{ wordBreak: "break-word" }}>{workspaceFromUserSlice?.name}</Typography>
+                            <Typography variant="body2">{workspaceFromUserSlice?.name} Workspace</Typography>
                         </Stack>
                     </Stack>
                     <IconButton color="primary" size='small' sx={{ borderRadius: '5px' }}>
@@ -56,9 +58,9 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                     selected={selectedMenu === x.name} */}
                     <MenuItem
                         component={Link}
-                        to={`/w/${props.workspace?.id}/`}
+                        to={`/w/${workspaceFromUserSlice?.id}/`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px', height: '44px' }}
-                        disabled={props.workspace == undefined}
+                        disabled={workspaceFromUserSlice == undefined}
                     >
                         <Stack direction="row" spacing={1} alignItems="center" ml='10px'>
                             <LogoDevIcon sx={{ fontSize: '16px' }} />
@@ -68,9 +70,9 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
 
                     <MenuItem
                         component={Link}
-                        to={`/w/${props.workspace?.id}/members`}
+                        to={`/w/${workspaceFromUserSlice?.id}/members`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px' }}
-                        disabled={props.workspace == undefined}
+                        disabled={workspaceFromUserSlice == undefined}
                     >
                         <Stack direction='row' ml='10px' justifyContent='space-between' width='100%' >
                             <Stack direction="row" spacing={1} alignItems="center">
@@ -86,7 +88,7 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                         component={Button} //set as button to get onClick handler
                         sx={{ paddingLeft: '3px', marginBottom: '2px', textTransform: 'none' }} //textTransform to none to get rid of button styling
                         onClick={handleWorkspaceSettingsClick}
-                        disabled={props.workspace == undefined}
+                        disabled={workspaceFromUserSlice == undefined}
                     >
                         <Stack direction='row' ml='10px' width='100%' justifyContent='space-between'>
                             <Stack direction="row" spacing={1} alignItems="center">
@@ -135,9 +137,9 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                     </Typography>
                     <MenuItem
                         component={Link}
-                        to={`/w/${props.workspace?.id}/views/table`}
+                        to={`/w/${workspaceFromUserSlice?.id}/views/table`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px' }}
-                        disabled={props.workspace == undefined}
+                        disabled={workspaceFromUserSlice == undefined}
                     >
                         <Stack direction='row' ml='10px' justifyContent='space-between'>
                             <Stack direction="row" spacing={1} alignItems="center">
@@ -148,9 +150,9 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                     </MenuItem>
                     <MenuItem
                         component={Link}
-                        to={`/w/${props.workspace?.id}/views/calendar`}
+                        to={`/w/${workspaceFromUserSlice?.id}/views/calendar`}
                         sx={{ paddingLeft: '3px', marginBottom: '2px' }}
-                        disabled={props.workspace == undefined}
+                        disabled={workspaceFromUserSlice == undefined}
                     >
                         <Stack direction='row' ml='10px' justifyContent='space-between'>
                             <Stack direction="row" spacing={1} alignItems="center">
@@ -164,8 +166,8 @@ const WorkspaceViewLeftSidebar = (props: WorkspaceLeftSidebarProps) => {
                     <Typography variant='body1' fontWeight='600' pl='10px' pb='5px'>
                         Your Boards
                     </Typography>
-                    {props.workspace ?
-                        props.workspace?.boards.map((board) => {
+                    {workspaceFromUserSlice ?
+                        workspaceFromUserSlice?.boards.map((board) => {
                             return (
                                 <MenuItem
                                     component={Link}

@@ -1,4 +1,3 @@
-import Navbar from "../../components/nav/navbar";
 import { Container } from "@mui/material";
 
 const WorkspaceTablePage = () => {

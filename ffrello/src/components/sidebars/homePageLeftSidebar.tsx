@@ -19,7 +19,7 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import LetterBox from "../letterBox";
-import { removeWorkspaceArgs, setCurrentWorkspace, setRemoveWorkspaceStatus } from "../../redux/userSlice";
+import { removeWorkspace, removeWorkspaceArgs, setCurrentWorkspace, setRemoveWorkspaceStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { useSnackbar } from "notistack";
 

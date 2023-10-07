@@ -1,4 +1,5 @@
 import { getBoard, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
+import { newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
 
 export const API_HOST_URL = "https://localhost:7135/api"
 
@@ -66,6 +67,66 @@ export const NewBoard = async (data: newBoardArgs, thunkAPI: any) => {
         }
         else {
             throw new Error('Did not create new board');
+        }
+    });
+};
+
+export const NewBoardList = async (data: newBoardListArgs, thunkAPI: any) => {
+    const target = `/${data.userid}/newBoardList/`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        else {
+            throw new Error('Did not create new Board');
+        }
+    });
+};
+
+export const RemoveBoardList = async (data: removeBoardListArgs, thunkAPI: any) => {
+    const target = `/${data.userId}/boardList/remove/${data.boardListId}`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return Promise.resolve();
+        }
+        else {
+            throw new Error('Did remove Board');
+        }
+    });
+};
+
+export const StarBoard = async (data: starBoardArgs, thunkAPI: any) => {
+    const target = `/${data.userId}/board/star/${data.boardId}`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return Promise.resolve();
+        }
+        else {
+            throw new Error('Did not star Board');
         }
     });
 };

@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Divider, IconButton, Menu, MenuItem, Out
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { newBoardArgs, setNewBoardStatus } from "../../redux/userSlice";
+import { newBoard, setNewBoardStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { enqueueSnackbar } from "notistack";
 
