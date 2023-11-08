@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Skeleton, Stack, Typography } from "@mui/material";
 import Workspace from "../../types/Workspace";
-import BoardCard from "./boardCard";
+import BoardCard from "./boardInfoCard";
 import LogoDevIcon from '@mui/icons-material/LogoDev';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PeopleIcon from '@mui/icons-material/People';
@@ -62,7 +62,7 @@ export const SkeletonWorkspaceCard = () => {
         <Stack direction="column" spacing={1}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Stack direction="row" alignItems="center" spacing={1} justifyContent={'center'}>
-                    <Skeleton variant="rounded" height={`${BOXHEIGHT}px`} width={`${BOXHEIGHT}px`} sx={{ borderRadius: '8px' }}/>
+                    <Skeleton variant="rounded" height={`${BOXHEIGHT}px`} width={`${BOXHEIGHT}px`} sx={{ borderRadius: '8px' }} />
                     {/* this is the workspace title  */}
                     <Skeleton width="150px" animation="wave" />
                 </Stack>

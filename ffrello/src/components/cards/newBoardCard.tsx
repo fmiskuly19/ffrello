@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 
-import { BoardCardHeight } from "./boardCard";
+import { BoardCardHeight } from "./boardInfoCard";
 import CreateBoardMenu from "../menus/createBoardMenu";
 import { useState } from "react";
 
@@ -22,23 +22,23 @@ const NewBoardCard = () => {
 
     return (
         <>
-            <Box component={Button} 
+            <Box component={Button}
                 onClick={handleNewBoardClick}
                 sx={{
-                width: '100%',
-                height: BoardCardHeight,
-                minHeight: BoardCardHeight,
-                maxHeight: BoardCardHeight,
-                borderRadius: '5px',
-                textDecoration: 'none',
-                textTransform: 'none',
-                justifyContent: 'center'
-            }}>
+                    width: '100%',
+                    height: BoardCardHeight,
+                    minHeight: BoardCardHeight,
+                    maxHeight: BoardCardHeight,
+                    borderRadius: '5px',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    justifyContent: 'center'
+                }}>
                 Create new board
             </Box>
             <CreateBoardMenu open={openNewBoardMenu} anchorEl={openBoardAnchorEl} onClose={handleNewBoardClose} />
         </>
-        
+
     )
 }
 

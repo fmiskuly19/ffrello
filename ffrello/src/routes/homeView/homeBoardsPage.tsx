@@ -8,8 +8,8 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import HistoryIcon from '@mui/icons-material/History';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
-import BoardCard, { BoardCardHeight } from "../../components/cards/boardCard";
-import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/cards/workspaceCard";
+import BoardCard, { BoardCardHeight } from "../../components/cards/boardInfoCard";
+import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/cards/homepageWorkspaceCard";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { useSnackbar } from "notistack";
 import { getUserWorkspaces } from "../../redux/userSlice";

@@ -3,7 +3,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Highlight from "../../types/HomePageHighlight";
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import IssueCard from "./IssueCard";
+import BoardListCard from "./boardListCard";
 
 interface HighlightCardProps extends Highlight {
 
@@ -22,7 +22,7 @@ const HighlightCard = (props: HighlightCardProps) => {
         <Paper sx={{ borderRadius: '8px' }} square={false} key={props.id}>
             <Stack direction="column">
                 <Box p={"12px"} sx={{ backgroundColor: `rgb(${getRand()}, ${getRand()}, ${getRand()})` }}>
-                    <IssueCard {...props.issue} />
+                    <BoardListCard {...props.issue} />
                 </Box>
                 <Box m={"12px"} mt={"16px"}>
                     <Stack direction="column" spacing={1} justifyContent="center">

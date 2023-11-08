@@ -1,9 +1,9 @@
-import BoardIssueCard from './BoardIssueCard'
+import FCard from './FCard'
 import User from './User';
 
 interface HomePageHighlight {
     id?: number,
-    issue: BoardIssueCard,
+    issue: FCard,
     author?: User,
     comment?: string,
     timestamp?: string

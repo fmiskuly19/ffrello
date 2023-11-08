@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
 import { Grid, Skeleton, Stack, Typography } from "@mui/material";
-import BoardCard, { BoardCardHeight } from "../../components/cards/boardCard";
+import BoardCard, { BoardCardHeight } from "../../components/cards/boardInfoCard";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import HistoryIcon from '@mui/icons-material/History';
 import PeopleIcon from '@mui/icons-material/People';

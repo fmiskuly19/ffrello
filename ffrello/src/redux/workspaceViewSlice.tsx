@@ -1,56 +1,17 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { GetBoardPage, NewBoardList, RemoveBoardList, StarBoard } from '../data/api';
+import { createAsyncThunk, createSlice, current, PayloadAction } from '@reduxjs/toolkit'
+import { GetBoardPage, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 import Board from '../types/Board';
 import { getBoard as getBoardPageArgs } from './userSlice';
 import Workspace from '../types/Workspace';
 import { BoardList } from '../types/BoardList';
+import FCard from '../types/FCard';
 
-interface WorkspaceViewSliceProps {
-    currentBoard?: Board,
-    workspace?: Workspace,
-    getBoardPageStatus: ApiCallStatus,
-    removeBoardListStatus: ApiCallStatus,
-    addBoardListStatus: ApiCallStatus,
-    starBoardStatus: ApiCallStatus,
+export interface addNewCardArgs {
+    userid: string,
+    boardListId: number,
+    title: string,
 }
-
-const initialState: WorkspaceViewSliceProps = {
-    getBoardPageStatus: ApiCallStatus.Idle,
-    removeBoardListStatus: ApiCallStatus.Idle,
-    addBoardListStatus: ApiCallStatus.Idle,
-    starBoardStatus: ApiCallStatus.Idle,
-}
-
-export const getBoardPageThunk = createAsyncThunk(
-    '/getBoard',
-    async (data: getBoardPageArgs, thunkAPI) => {
-        return await GetBoardPage(data, thunkAPI);
-    }
-)
-
-export const starBoardThunk = createAsyncThunk(
-    '/starBoard',
-    async (data: starBoardArgs, thunkAPI) => {
-        return await StarBoard(data, thunkAPI);
-    }
-)
-
-//boardlists
-
-export const newBoardListThunk = createAsyncThunk(
-    '/newBoardList',
-    async (data: newBoardListArgs, thunkAPI) => {
-        return await NewBoardList(data, thunkAPI);
-    }
-)
-
-export const removeBoardListThunk = createAsyncThunk(
-    '/removeBoardList',
-    async (data: removeBoardListArgs, thunkAPI) => {
-        return await RemoveBoardList(data, thunkAPI);
-    }
-)
 
 export interface newBoardListArgs {
     userid: string,
@@ -69,6 +30,62 @@ export interface starBoardArgs {
     boardId: number,
     isStarred: boolean,
 }
+
+interface WorkspaceViewSliceProps {
+    currentBoard?: Board,
+    workspace?: Workspace,
+    getBoardPageStatus: ApiCallStatus,
+    removeBoardListStatus: ApiCallStatus,
+    addBoardListStatus: ApiCallStatus,
+    starBoardStatus: ApiCallStatus,
+    newCardStatus: ApiCallStatus,
+}
+
+const initialState: WorkspaceViewSliceProps = {
+    getBoardPageStatus: ApiCallStatus.Idle,
+    removeBoardListStatus: ApiCallStatus.Idle,
+    addBoardListStatus: ApiCallStatus.Idle,
+    starBoardStatus: ApiCallStatus.Idle,
+    newCardStatus: ApiCallStatus.Idle,
+}
+
+export const getBoardPageThunk = createAsyncThunk(
+    '/getBoard',
+    async (data: getBoardPageArgs, thunkAPI) => {
+        return await GetBoardPage(data, thunkAPI);
+    }
+)
+
+export const starBoardThunk = createAsyncThunk(
+    '/starBoard',
+    async (data: starBoardArgs, thunkAPI) => {
+        return await StarBoardApiCall(data, thunkAPI);
+    }
+)
+
+//boardlists
+
+export const newBoardListThunk = createAsyncThunk(
+    '/newBoardList',
+    async (data: newBoardListArgs, thunkAPI) => {
+        return await NewBoardListApiCall(data, thunkAPI);
+    }
+)
+
+export const removeBoardListThunk = createAsyncThunk(
+    '/removeBoardList',
+    async (data: removeBoardListArgs, thunkAPI) => {
+        return await RemoveBoardListApiCall(data, thunkAPI);
+    }
+)
+
+//cards
+export const newCardThunk = createAsyncThunk(
+    '/newCard',
+    async (data: addNewCardArgs, thunkAPI) => {
+        return await NewCardApiCall(data, thunkAPI);
+    }
+)
 
 export const workspaceViewSlice = createSlice({
     name: 'workspaceView',
@@ -92,6 +109,7 @@ export const workspaceViewSlice = createSlice({
             builder.addCase(getBoardPageThunk.rejected, (state) => {
                 state.getBoardPageStatus = ApiCallStatus.Failure;
             })
+
 
 
         //add new board list ***************************************************************************
@@ -134,6 +152,7 @@ export const workspaceViewSlice = createSlice({
             })
 
 
+
         //remove board list *****************************************************************************************
         builder.addCase(removeBoardListThunk.pending, (state, action) => {
             state.removeBoardListStatus = ApiCallStatus.Loading;
@@ -160,11 +179,10 @@ export const workspaceViewSlice = createSlice({
                 }
             }),
             builder.addCase(removeBoardListThunk.fulfilled, (state) => {
-
-                console.log("removeBoardThunk succeeded")
-
                 state.removeBoardListStatus = ApiCallStatus.Success;
             })
+
+
 
         //star board list *****************************************************************************************
         builder.addCase(starBoardThunk.pending, (state, action) => {
@@ -178,6 +196,7 @@ export const workspaceViewSlice = createSlice({
             state.starBoardStatus = ApiCallStatus.Loading;
         }),
             builder.addCase(starBoardThunk.rejected, (state, action) => {
+                //change star back to what it was if the api call did not succeed
                 if (state.currentBoard) {
                     state.currentBoard = {
                         ...state.currentBoard,
@@ -190,6 +209,46 @@ export const workspaceViewSlice = createSlice({
                 state.starBoardStatus = ApiCallStatus.Success;
             })
 
+
+
+        //new card *****************************************************************************************
+        builder.addCase(newCardThunk.pending, (state, action) => {
+
+            console.log('PENding')
+
+            //this is not right, we should not mutate state directly
+            if (state.currentBoard) {
+                var currentBoardList = state.currentBoard.boardLists.find(x => x.id == action.meta.arg.boardListId);
+                if (!currentBoardList?.cards) {
+                    currentBoardList!.cards = [] as FCard[];
+                }
+                currentBoardList?.cards.push({ boardListId: action.meta.arg.boardListId, title: action.meta.arg.title });
+            }
+
+            state.newCardStatus = ApiCallStatus.Loading;
+        }),
+            builder.addCase(newCardThunk.rejected, (state, action) => {
+                //remove card from list because it did not successfully create in db
+                if (state.currentBoard) {
+                    var currentBoardList = state.currentBoard.boardLists.find(x => x.id == action.meta.arg.boardListId);
+                    var index = currentBoardList?.cards?.findIndex(x => x.id == 0 && x.title == action.meta.arg.title);
+                    currentBoardList?.cards.splice(Number(index), 1);
+                }
+
+                state.newCardStatus = ApiCallStatus.Failure;
+            }),
+            builder.addCase(newCardThunk.fulfilled, (state, action) => {
+                //this is not right, we should not mutate state directly
+                if (state.currentBoard) {
+                    var currentBoardList = state.currentBoard.boardLists.find(x => x.id == action.meta.arg.boardListId);
+                    var index = currentBoardList?.cards.findIndex(x => x.id == 0 && x.title == action.meta.arg.title);
+                    if (currentBoardList && index) {
+                        currentBoardList.cards[Number(index)] = action.payload;
+                    }
+                }
+
+                state.newCardStatus = ApiCallStatus.Success;
+            })
     },
 })
 

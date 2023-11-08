@@ -1,9 +1,9 @@
 import { getBoard, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
+import { addNewCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
 
 export const API_HOST_URL = "https://localhost:7135/api"
 
-export const Dummy = async () => {
+export const DummyApiCall = async () => {
     const target = "/api/dummy/";
     return await fetch(`${API_HOST_URL}${target}`)
         .then((response) => {
@@ -17,7 +17,7 @@ export const Dummy = async () => {
         );
 }
 
-export const GetWorkspaces = async (userid: string, thunkAPI: any) => {
+export const GetWorkspacesApiCall = async (userid: string, thunkAPI: any) => {
     const target = `/${userid}/workspaces/`;
     return await fetch(`${API_HOST_URL}${target}`, {
         signal: thunkAPI.signal,
@@ -31,7 +31,7 @@ export const GetWorkspaces = async (userid: string, thunkAPI: any) => {
     });
 };
 
-export const NewWorkspace = async (data: newWorkspaceArgs, thunkAPI: any) => {
+export const NewWorkspaceApiCall = async (data: newWorkspaceArgs, thunkAPI: any) => {
     const target = `/${data.userid}/workspace/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
@@ -51,7 +51,7 @@ export const NewWorkspace = async (data: newWorkspaceArgs, thunkAPI: any) => {
     });
 };
 
-export const NewBoard = async (data: newBoardArgs, thunkAPI: any) => {
+export const NewBoardApiCall = async (data: newBoardArgs, thunkAPI: any) => {
     const target = `/${data.userid}/board/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
@@ -71,7 +71,7 @@ export const NewBoard = async (data: newBoardArgs, thunkAPI: any) => {
     });
 };
 
-export const NewBoardList = async (data: newBoardListArgs, thunkAPI: any) => {
+export const NewBoardListApiCall = async (data: newBoardListArgs, thunkAPI: any) => {
     const target = `/${data.userid}/newBoardList/`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'PUT',
@@ -91,7 +91,7 @@ export const NewBoardList = async (data: newBoardListArgs, thunkAPI: any) => {
     });
 };
 
-export const RemoveBoardList = async (data: removeBoardListArgs, thunkAPI: any) => {
+export const RemoveBoardListApiCall = async (data: removeBoardListArgs, thunkAPI: any) => {
     const target = `/${data.userId}/boardList/remove/${data.boardListId}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'DELETE',
@@ -111,7 +111,27 @@ export const RemoveBoardList = async (data: removeBoardListArgs, thunkAPI: any) 
     });
 };
 
-export const StarBoard = async (data: starBoardArgs, thunkAPI: any) => {
+export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
+    const target = `/${data.userid}/card/new`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        else {
+            throw new Error('Did not create new card');
+        }
+    });
+};
+
+export const StarBoardApiCall = async (data: starBoardArgs, thunkAPI: any) => {
     const target = `/${data.userId}/board/star/${data.boardId}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'PUT',
@@ -179,19 +199,19 @@ export const RemoveWorkspace = async (data: removeWorkspaceArgs, thunkAPI: any) 
 };
 
 export const GetWorkspaceHighlights = async () => {
-    return Dummy();
+    return DummyApiCall();
 };
 
 export const GetHomepageHighlights = async () => {
-    return Dummy();
+    return DummyApiCall();
 };
 
 export const GetWorkspaceMembers = async () => {
-    return Dummy();
+    return DummyApiCall();
 };
 
 export const GetWorkspaceSettings = async () => {
-    return Dummy();
+    return DummyApiCall();
 };
 
 

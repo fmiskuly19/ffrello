@@ -1,21 +1,29 @@
-import { Box, Button, Divider, Grid, IconButton, Menu, MenuItem, OutlinedInput, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Divider, Grid, IconButton, Menu, MenuItem, OutlinedInput, Paper, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import WorkspaceViewLeftSidebar from "../../components/sidebars/workspaceViewLeftSidebar";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
-import { getBoardPageThunk, newBoardListThunk, starBoardThunk } from "../../redux/workspaceViewSlice";
+import { getBoardPageThunk, newBoardListThunk, newCardThunk, starBoardThunk } from "../../redux/workspaceViewSlice";
 import StarIcon from '@mui/icons-material/Star';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 import PeopleIcon from '@mui/icons-material/People';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useEffect, useState } from "react";
 import { BoardList } from "../../types/BoardList";
-import BoardListActionMenu from "../../components/boardListActionMenu";
+import BoardListActionMenu from "../../components/menus/boardListActionMenu";
 import { enqueueSnackbar } from "notistack";
 import AddIcon from '@mui/icons-material/Add';
+import BoardListCard from "../../components/cards/boardListCard";
 
+export interface newBoardListCard {
+    boardListId: number,
+    open: boolean,
+    value: string
+}
 
+const newCardActionsDefault = { boardListId: 0, open: false, value: '' }
 
 const MINCOLUMNWIDTH = '250px';
 
@@ -23,7 +31,8 @@ const BoardPage = () => {
 
     const dispatch = useAppDispatch()
 
-    const [thing, setThing] = useState(false);
+    const [openNewBoardList, setOpenNewBoardList] = useState(false);
+    const [newCardActions, setNewCardActions] = useState<newBoardListCard>(newCardActionsDefault);
 
     let { boardid } = useParams();
     const userid = useAppSelector((state) => state.userSlice.User.userid)
@@ -39,7 +48,7 @@ const BoardPage = () => {
 
     const reset = () => {
         setNewBoardListName('');
-        setThing(false);
+        setOpenNewBoardList(false);
     }
 
     useEffect(() => {
@@ -60,18 +69,18 @@ const BoardPage = () => {
 
     let pageContent;
     if (getBoardStatus == ApiCallStatus.Loading) {
-        pageContent = <>Loading!!!</>
+        pageContent = <>
+            Loading!!!
+            <CircularProgress />
+        </>
     }
     else if (getBoardStatus == ApiCallStatus.Failure) {
         pageContent = <>Error!!!</>
     }
     else if (getBoardStatus == ApiCallStatus.Success && board) {
-
-        console.log('board')
-        console.log(board)
-
         pageContent =
             <>
+                {/* top bar */}
                 <Box display="flex" width="100%" justifyContent="space-between" p="15px" sx={{ borderBottom: '1px solid gray' }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <Typography variant="h5" fontWeight="700">{board?.name}</Typography>
@@ -95,6 +104,9 @@ const BoardPage = () => {
                     </Box>
                 </Box >
 
+
+
+                {/* board lists of cards */}
                 <Stack direction="row" spacing={2} sx={{ padding: '15px', overflowX: 'auto' }}>
 
                     {
@@ -103,29 +115,53 @@ const BoardPage = () => {
 
                                 return (
                                     <>
-                                        <Paper sx={{ minWidth: MINCOLUMNWIDTH, padding: '10px', height: 'max-content', borderRadius: '15px' }}>
+                                        <Paper sx={{ minWidth: MINCOLUMNWIDTH, maxWidth: MINCOLUMNWIDTH, padding: '10px', height: 'max-content', borderRadius: '15px' }}>
                                             <Stack direction="column" spacing={1}>
                                                 <Stack direction="row" justifyContent="space-between" alignItems="center" ml="5px">
-                                                    {list.name}
-                                                    <BoardListActionMenu boardList={list} />
+                                                    <Typography variant="h6">{list.name}</Typography>
+                                                    <BoardListActionMenu boardList={list} openAddCard={setNewCardActions} />
                                                 </Stack>
 
 
                                                 {list.cards ?
-
-                                                    list.cards.map((card) => {
-                                                        return (<>Hello</>)
-                                                    })
+                                                    <>
+                                                        {list.cards.map((card) => {
+                                                            return (
+                                                                <Stack direction="column">
+                                                                    <BoardListCard {...card} />
+                                                                </Stack>
+                                                            )
+                                                        })}
+                                                    </>
                                                     :
                                                     <>
-
                                                     </>
                                                 }
 
-
-                                                <MenuItem sx={{ paddingLeft: '0px', borderRadius: '8px' }}><Box display="flex" flexDirection="row" alignItems="center"><AddIcon sx={{ height: '18px', width: '18px', marginRight: '5px' }} />Add a Card</Box></MenuItem>
+                                                {newCardActions.boardListId == list.id && newCardActions.open ?
+                                                    <>
+                                                        <OutlinedInput multiline rows={2} value={newCardActions.value} onChange={(e) => setNewCardActions({ ...newCardActions, value: e.target.value })} />
+                                                        <Stack direction="row" display="flex" alignItems="center">
+                                                            <Button sx={{ textTransform: 'none' }} onClick={() => { dispatch(newCardThunk({ userid: userid, boardListId: list.id, title: newCardActions.value })); setNewCardActions(newCardActionsDefault) }} >
+                                                                Add Card
+                                                            </Button>
+                                                            <IconButton onClick={() => setNewCardActions({ boardListId: 0, open: false, value: '' })}>
+                                                                <CloseIcon sx={{ height: '18px', width: '18px' }} color='primary' />
+                                                            </IconButton>
+                                                        </Stack>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <MenuItem sx={{ paddingLeft: '0px', borderRadius: '8px' }} onClick={() => { setNewCardActions({ boardListId: list.id, open: true, value: '' }) }}>
+                                                            <Box display="flex" flexDirection="row" alignItems="center">
+                                                                <AddIcon sx={{ height: '18px', width: '18px', marginRight: '5px' }} />
+                                                                Add a Card
+                                                            </Box>
+                                                        </MenuItem>
+                                                    </>
+                                                }
                                             </Stack>
-                                        </Paper>
+                                        </Paper >
 
 
                                     </>
@@ -136,21 +172,24 @@ const BoardPage = () => {
 
                     }
 
-                    {thing ?
+
+                    {/* new board list button */}
+                    {openNewBoardList ?
                         <>
                             <Paper sx={{ minWidth: MINCOLUMNWIDTH, padding: '10px', height: 'max-content', borderRadius: '15px' }}>
                                 <Stack direction="column" spacing={1}>
-                                    <OutlinedInput inputRef={input => input && input.focus()} size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} />
+                                    {/* <OutlinedInput inputRef={input => input && input.focus()} size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} /> */}
+                                    <OutlinedInput size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} />
                                     <Stack direction="row">
                                         <Button onClick={() => { dispatch(newBoardListThunk({ userid: userid, name: newBoardListName, boardId: board.id })); reset() }} sx={{ textTransform: 'none' }}>Add List</Button>
-                                        <Button onClick={() => reset()}>Icon</Button>
+                                        <IconButton onClick={() => reset()}><CloseIcon sx={{ height: '18px', width: '18px' }} color='primary' /></IconButton>
                                     </Stack>
                                 </Stack>
                             </Paper>
                         </>
                         :
                         <>
-                            <MenuItem sx={{ borderRadius: '8px', minWidth: MINCOLUMNWIDTH, height: 'max-content' }} onClick={() => { setThing(true); }}>
+                            <MenuItem sx={{ borderRadius: '8px', minWidth: MINCOLUMNWIDTH, height: 'max-content' }} onClick={() => { setOpenNewBoardList(true); }}>
                                 <Stack direction="row" >
                                     Create New Board List
                                     <AddIcon sx={{ width: '18px', height: '22px', ml: '5px' }} />

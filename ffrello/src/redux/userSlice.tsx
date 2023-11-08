@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import Workspace from '../types/Workspace'
 import User from '../types/User';
-import { GetWorkspaces, NewBoard, NewWorkspace, RemoveBoardList, RemoveWorkspace } from '../data/api';
+import { GetWorkspacesApiCall, NewBoardApiCall, NewWorkspaceApiCall, RemoveBoardListApiCall, RemoveWorkspace } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 
 interface UserSliceProps {
@@ -58,14 +58,14 @@ export interface removeWorkspaceArgs {
 export const getUserWorkspaces = createAsyncThunk(
     '/getUserWorkspaces',
     async (userId: string, thunkAPI) => {
-        return await GetWorkspaces(userId, thunkAPI);
+        return await GetWorkspacesApiCall(userId, thunkAPI);
     }
 )
 
 export const newWorkspace = createAsyncThunk(
     '/newWorkspace',
     async (data: newWorkspaceArgs, thunkAPI) => {
-        return await NewWorkspace(data, thunkAPI);
+        return await NewWorkspaceApiCall(data, thunkAPI);
     }
 )
 
@@ -81,7 +81,7 @@ export const removeWorkspace = createAsyncThunk(
 export const newBoard = createAsyncThunk(
     '/newBoard',
     async (data: newBoardArgs, thunkAPI) => {
-        return await NewBoard(data, thunkAPI);
+        return await NewBoardApiCall(data, thunkAPI);
     }
 )
 

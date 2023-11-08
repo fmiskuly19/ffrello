@@ -20,12 +20,6 @@ const InteractiveStarIcon = (props: InteractiveStarIconProps) => {
         setIsHoveringOnStar(false);
     }
 
-    // const getStar = () => {
-    //     if(){
-
-    //     }
-    // }
-
     return (
         <Box onMouseOver={handleStarHoverOver} onMouseOut={handleStarHoverOut} display="flex" alignItems="center" sx={{ height: '20px', width: '20px' }}>
             {props.isStarred ? <StarIcon htmlColor="#F8C021" sx={{ fontSize: '20px' }} /> : isHoveringOnStar ? <StarBorderIcon sx={{ fontSize: '24px', color: '#F8C021' }} /> : <Box />}
