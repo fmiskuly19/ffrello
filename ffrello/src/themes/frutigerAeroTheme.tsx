@@ -21,6 +21,33 @@ const FrutigerAeroTheme: ThemeOptions = createTheme({
             disabled: '#181d23',
         },
     },
+    typography: {
+        fontFamily: 'Montserrat',
+        body1: {
+            fontSize: 14,
+        },
+        body2: {
+            fontSize: 12,
+        },
+        h6: {
+            fontSize: 16
+        },
+        h5: {
+            fontSize: 18
+        },
+        h4: {
+            fontSize: 20
+        },
+        h3: {
+            fontSize: 22
+        },
+        h2: {
+            fontSize: 24
+        },
+        h1: {
+            fontSize: 28
+        },
+    },
 });
 
 const theme: FFrelloTheme = {

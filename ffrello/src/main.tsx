@@ -10,9 +10,6 @@ import {
 import { ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline';
 
-import store from './redux/store.tsx'
-import FruitgerAeroTheme from './themes/defaultTheme.tsx'
-
 import HighlightsPage from './routes/homeView/homeHighlightsPage.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
 import BoardPage from './routes/boardView/boardPage.tsx';
@@ -99,17 +96,26 @@ const router = createBrowserRouter([
 
 const Main = () => {
 
-  // const theme = useAppSelector((state) => state.themeSlice.theme);
+  const theme = useAppSelector((state) => state.themeSlice.theme);
+
+  const getTheme = () => {
+    switch (theme) {
+      case 'Frutiger Aero':
+        return Themes.FrutigerAero.theme;
+      case 'Default':
+        return Themes.Default.theme;
+      default:
+        return Themes.Default.theme;
+    }
+  }
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={Themes.FrutigerAero.theme}>
-        <CssBaseline />
-        <SnackbarProvider maxSnack={4}>
-          <RouterProvider router={router} />
-        </SnackbarProvider>
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider theme={getTheme()}>
+      <CssBaseline />
+      <SnackbarProvider maxSnack={4}>
+        <RouterProvider router={router} />
+      </SnackbarProvider>
+    </ThemeProvider>
   )
 }
 
