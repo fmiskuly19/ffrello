@@ -1,8 +1,8 @@
 import { Box, MenuItem, Radio, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { setTheme } from "../../../redux/themeSlice";
-import * as Themes from '../../../themes/themeIndex';
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setTheme } from "../../redux/themeSlice";
+import * as Themes from '../../themes/themeIndex';
 
 const ThemeDropdown = () => {
 

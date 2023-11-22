@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAppDispatch, useAppSelector } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Link } from 'react-router-dom';
 
 import { Box, CircularProgress, Divider, Stack, Typography } from '@mui/material';
@@ -7,10 +7,10 @@ import MenuItem from '@mui/material/MenuItem';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import AddIcon from '@mui/icons-material/Add';
 
-import LetterBox from '../../letterBox';
-import { setCurrentWorkspace } from '../../../redux/userSlice';
-import { ApiCallStatus } from '../../../types/ApiCallStatus';
-import { setOpenCreateWorkspaceModal } from '../../../redux/homeSlice';
+import LetterBox from '../letterBox';
+import { setCurrentWorkspace } from '../../redux/userSlice';
+import { ApiCallStatus } from '../../types/ApiCallStatus';
+import { setOpenCreateWorkspaceModal } from '../../redux/homeSlice';
 
 const WorkspaceDropdown = () => {
 

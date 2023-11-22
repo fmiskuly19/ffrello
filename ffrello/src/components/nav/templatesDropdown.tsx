@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Button, MenuItem, S
 import BackupTableIcon from '@mui/icons-material/BackupTable';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link } from "react-router-dom";
-import { templateNames } from '../../../data/hardcodes'
+import { templateNames } from '../../data/hardcodes'
 
 const TemplateDropdown = () => {
     return (

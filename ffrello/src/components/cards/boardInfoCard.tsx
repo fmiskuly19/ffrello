@@ -1,4 +1,4 @@
-import { MenuItem, Stack, Typography } from "@mui/material";
+import { MenuItem, Stack, Typography, useTheme } from "@mui/material";
 import Board from "../../types/Board";
 import InteractiveStarIcon from "../interactiveStarIcon";
 import { useEffect, useState } from "react";
@@ -11,6 +11,8 @@ interface BoardCardProps extends Board {
 export const BoardCardHeight = '96px';
 
 const BoardCard = (props: BoardCardProps) => {
+
+    const theme = useTheme();
 
     const [randomColor1, setRandomColor1] = useState(50);
     const [randomColor2, setRandomColor2] = useState(50);
@@ -37,12 +39,12 @@ const BoardCard = (props: BoardCardProps) => {
                 borderRadius: '5px',
                 textDecoration: 'none',
             }}>
-            <Typography color="textSecondary" variant="h5" fontWeight="600">{props.name}</Typography>
+            <Typography variant="h5" fontWeight="600" sx={{ color: theme.palette.primary.contrastText }}>{props.name}</Typography>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Typography color="textSecondary" variant="body1" noWrap>{props.Workspace?.name}</Typography>
+                <Typography variant="body1" sx={{ color: theme.palette.primary.contrastText }} noWrap>{props.Workspace?.name}</Typography>
                 <InteractiveStarIcon isStarred={props.isStarred} />
             </Stack>
-        </Stack>
+        </Stack >
     )
 }
 

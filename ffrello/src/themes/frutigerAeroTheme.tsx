@@ -9,20 +9,20 @@ const FrutigerAeroTheme: ThemeOptions = createTheme({
             contrastText: '#f9f9f9',
         },
         secondary: {
-            main: '#036ddd',
+            main: '#2dc7ff',
         },
         background: {
             default: '#e8e8e8',
-            paper: '#f9f9f9',
+            paper: '#d9d9d9',
         },
         text: {
-            primary: '#819ab7',
+            primary: '#014492',
             secondary: '#252c35',
             disabled: '#181d23',
         },
     },
     typography: {
-        fontFamily: 'Montserrat',
+        fontFamily: 'Segoe UI',
         body1: {
             fontSize: 14,
         },

@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import Board from '../../../types/Board'
-import BoardMenuItem from "../../boardMenuItem";
-import * as data from '../../../data/hardcodes'
-import { useAppDispatch, useAppSelector } from "../../../hooks";
+import Board from '../../types/Board'
+import BoardMenuItem from "../boardMenuItem";
+import * as data from '../../data/hardcodes'
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
 const StarredDropdown = () => {
 

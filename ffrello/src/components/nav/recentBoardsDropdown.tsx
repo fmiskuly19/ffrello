@@ -1,8 +1,8 @@
 import { Box, MenuItem, MenuList, Stack, Typography } from "@mui/material";
-import Board from '../../../types/Board'
+import Board from '../../types/Board'
 import { useState } from "react";
-import BoardMenuItem from "../../boardMenuItem";
-import * as data from '../../../data/hardcodes'
+import BoardMenuItem from "../boardMenuItem";
+import * as data from '../../data/hardcodes'
 
 const RecentBoardsDropdown = () => {
 
