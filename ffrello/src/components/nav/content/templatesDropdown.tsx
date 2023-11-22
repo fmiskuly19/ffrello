@@ -4,7 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link } from "react-router-dom";
 import { templateNames } from '../../../data/hardcodes'
 
-const TemplateDropdownContent = () => {
+const TemplateDropdown = () => {
     return (
         <>
             <Box sx={{ maxWidth: '300px' }}>
@@ -50,4 +50,4 @@ const TemplateDropdownContent = () => {
     )
 }
 
-export default TemplateDropdownContent;
+export default TemplateDropdown;

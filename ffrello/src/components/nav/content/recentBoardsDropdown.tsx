@@ -4,7 +4,7 @@ import { useState } from "react";
 import BoardMenuItem from "../../boardMenuItem";
 import * as data from '../../../data/hardcodes'
 
-const RecentBoardsDropdownContent = () => {
+const RecentBoardsDropdown = () => {
 
     const min = 1;
     const max = 100;
@@ -27,4 +27,4 @@ const RecentBoardsDropdownContent = () => {
     )
 }
 
-export default RecentBoardsDropdownContent;
+export default RecentBoardsDropdown;

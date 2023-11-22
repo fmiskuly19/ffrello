@@ -23,6 +23,8 @@ import { removeWorkspace, removeWorkspaceArgs, setCurrentWorkspace, setRemoveWor
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { useSnackbar } from "notistack";
 
+import { useTheme } from '@mui/material/styles';
+
 export interface HomePageLeftSidebarProps {
     selectedMenu?: string,
     selectedWorkspaceMenu?: string,
@@ -33,19 +35,21 @@ const iconFontSize = '22px';
 
 const HomePageLeftSidebar = () => {
 
+    const theme = useTheme();
+
     const { enqueueSnackbar } = useSnackbar();
 
-    const selectedMenu = useAppSelector((state) => state.home.selectedMenu)
-    const selectedWorkspaceMenu = useAppSelector((state) => state.home.selectedWorkspaceMenu)
-    const expanded = useAppSelector((state) => state.home.expandedAccordions)
+    const selectedMenu = useAppSelector((state) => state.homeSlice.selectedMenu)
+    const selectedWorkspaceMenu = useAppSelector((state) => state.homeSlice.selectedWorkspaceMenu)
+    const expanded = useAppSelector((state) => state.homeSlice.expandedAccordions)
     const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
     const userid = useAppSelector((state) => state.userSlice.User.userid)
     const dispatch = useAppDispatch()
 
     const links = [
-        { name: "Boards", logo: <LogoDevIcon sx={{ fontSize: iconFontSize }} />, link: `/u/${userid}/boards` },
-        { name: "Templates", logo: <DvrIcon sx={{ fontSize: iconFontSize }} />, link: `/templates` },
-        { name: "Home", logo: <HomeIcon sx={{ fontSize: iconFontSize }} />, link: `/` }
+        { name: "Boards", logo: <LogoDevIcon sx={{ fontSize: iconFontSize, color: theme.palette.text.primary }} />, link: `/u/${userid}/boards` },
+        { name: "Templates", logo: <DvrIcon sx={{ fontSize: iconFontSize, color: theme.palette.text.primary }} />, link: `/templates` },
+        { name: "Home", logo: <HomeIcon sx={{ fontSize: iconFontSize, color: theme.palette.text.primary }} />, link: `/` }
     ]
 
     const workspaceMenuItems = [
@@ -86,7 +90,7 @@ const HomePageLeftSidebar = () => {
         setColor3(getRand());
     }, [])
 
-    let accordionContent;
+    let accordionAreaContent;
     const workspaceStatus = useAppSelector((state) => state.userSlice.workspaceStatus);
     const removeWorkspaceStatus = useAppSelector((state) => state.userSlice.removeWorkspaceStatus);
 
@@ -101,19 +105,19 @@ const HomePageLeftSidebar = () => {
     }
 
     if (workspaceStatus == ApiCallStatus.Loading || removeWorkspaceStatus == ApiCallStatus.Loading) {
-        accordionContent =
+        accordionAreaContent =
             <Box justifyContent="center" display="flex">
                 <CircularProgress />
             </Box >
     }
     if (workspaceStatus == ApiCallStatus.Failure) {
-        accordionContent =
+        accordionAreaContent =
             <Box justifyContent="center" display="flex">
                 <ReportProblemIcon />
             </Box >
     }
     else if (workspaceStatus == ApiCallStatus.Success && workspaces && workspaces.length > 0) {
-        accordionContent =
+        accordionAreaContent =
             <>
                 {
                     workspaces.map((workspace) => {
@@ -122,7 +126,7 @@ const HomePageLeftSidebar = () => {
                                 "&.MuiPaper-root::before": { content: 'none' }
                             }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
                                 <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
-                                    backgroundColor: '#1f1f26', paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
+                                    backgroundColor: theme.palette.background.default, paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
                                 }}>
                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ marginTop: '0px' }}>
                                         <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
@@ -132,7 +136,7 @@ const HomePageLeftSidebar = () => {
                                         <DeleteOutlineIcon sx={{ height: "15px", width: "15px" }} />
                                     </IconButton>
                                 </AccordionSummary>
-                                <AccordionDetails sx={{ backgroundColor: '#1f1f26', paddingLeft: '0px', paddingRight: '0px' }}>
+                                <AccordionDetails sx={{ backgroundColor: theme.palette.background.default, paddingLeft: '0px', paddingRight: '0px' }}>
                                     <Stack direction="column" spacing={1}>
                                         {workspaceMenuItems.map((workspaceMenuItem) => {
                                             return (
@@ -161,7 +165,7 @@ const HomePageLeftSidebar = () => {
             </>
     }
     else if (workspaceStatus == ApiCallStatus.Success && workspaces && workspaces.length == 0) {
-        accordionContent =
+        accordionAreaContent =
             <Box component={MenuItem} sx={{ borderRadius: '8px' }} onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>
                 <Typography>Create Workspace ...</Typography>
             </Box>
@@ -197,7 +201,7 @@ const HomePageLeftSidebar = () => {
                             </IconButton>
                         </Stack>
                         <Stack direction='column'>
-                            {accordionContent}
+                            {accordionAreaContent}
                         </Stack>
                     </Stack>
                 </Box >

@@ -1,21 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import * as Themes from '../themes/themeIndex'
+import { ThemeOptions } from '@mui/material'
+
+interface ThemeState {
+  theme: string
+}
 
 // Define the initial state using that type
-const initialState = {
-  mode: 'Home'
+const initialState: ThemeState = {
+  theme: Themes.Default.name
 }
 
 export const themeSlice = createSlice({
-  name: 'counter',
-  // `createSlice` will infer the state type from the `initialState` argument
+  name: 'themeSlice',
   initialState,
   reducers: {
-    setMode: (state, action: PayloadAction<string>) => {
-      state.mode = action.payload
+    setTheme: (state, action: PayloadAction<string>) => {
+      state.theme = action.payload
     },
   },
 })
 
-export const { setMode } = themeSlice.actions
+export const { setTheme } = themeSlice.actions
 
 export default themeSlice.reducer

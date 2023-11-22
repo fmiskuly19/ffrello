@@ -12,7 +12,7 @@ import { setCurrentWorkspace } from '../../../redux/userSlice';
 import { ApiCallStatus } from '../../../types/ApiCallStatus';
 import { setOpenCreateWorkspaceModal } from '../../../redux/homeSlice';
 
-const WorkspaceDropdownContent = () => {
+const WorkspaceDropdown = () => {
 
     const dispatch = useAppDispatch()
 
@@ -92,4 +92,4 @@ const WorkspaceDropdownContent = () => {
     )
 }
 
-export default WorkspaceDropdownContent;
+export default WorkspaceDropdown;

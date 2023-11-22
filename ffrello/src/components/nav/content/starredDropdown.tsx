@@ -1,11 +1,11 @@
-import { Box, CircularProgress, Container, Grid, MenuItem, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Board from '../../../types/Board'
 import BoardMenuItem from "../../boardMenuItem";
 import * as data from '../../../data/hardcodes'
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 
-const StarredDropdownContent = () => {
+const StarredDropdown = () => {
 
     useEffect(() => {
         const min = 1;
@@ -59,4 +59,4 @@ const StarredDropdownContent = () => {
     )
 }
 
-export default StarredDropdownContent;
+export default StarredDropdown;

@@ -6,8 +6,8 @@ import workspaceViewReducer from './workspaceViewSlice.tsx'
 
 const store = configureStore({
    reducer: {
-      home: homeReducer,
-      theme: themeReducer,
+      homeSlice: homeReducer,
+      themeSlice: themeReducer,
       userSlice: userReducer,
       workspaceViewSlice: workspaceViewReducer,
    },

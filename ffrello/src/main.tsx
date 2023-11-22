@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux';
 
 import './index.css'
@@ -12,7 +11,7 @@ import { ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline';
 
 import store from './redux/store.tsx'
-import theme from './themes/theme.tsx'
+import FruitgerAeroTheme from './themes/defaultTheme.tsx'
 
 import HighlightsPage from './routes/homeView/homeHighlightsPage.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
@@ -29,7 +28,9 @@ import WorkspaceBoardsPage from './routes/workspaceView/workspaceBoardsPage.tsx'
 import WorkspaceHighlightsPage from './routes/homeView/workspaceHighlightsPage.tsx';
 import WorkspaceHomePage from './routes/homeView/workspaceBoardsPage.tsx';
 import { SnackbarProvider } from 'notistack';
+import { useAppSelector } from './hooks.tsx';
 
+import * as Themes from './themes/themeIndex.tsx'
 
 const router = createBrowserRouter([
   {
@@ -96,17 +97,20 @@ const router = createBrowserRouter([
 
 ]);
 
+const Main = () => {
 
+  // const theme = useAppSelector((state) => state.themeSlice.theme);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <>
+  return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={Themes.FrutigerAero.theme}>
         <CssBaseline />
         <SnackbarProvider maxSnack={4}>
           <RouterProvider router={router} />
         </SnackbarProvider>
       </ThemeProvider>
     </Provider>
-  </>,
-)
+  )
+}
+
+export default Main;

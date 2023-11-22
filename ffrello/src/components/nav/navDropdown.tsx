@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { IconButton, Typography } from '@mui/material';
-import theme from '../../themes/theme'
+import { useTheme } from '@mui/material/styles';
 
 interface NavDropdownProps {
     label: string, //need label for ids of button and menu for anchor
@@ -13,6 +13,8 @@ interface NavDropdownProps {
 }
 
 const NavDropdown = (props: NavDropdownProps) => {
+
+    const theme = useTheme();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -25,7 +27,7 @@ const NavDropdown = (props: NavDropdownProps) => {
     };
 
     const getEndIcon = () => {
-        return (open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />)
+        return (open ? <KeyboardArrowUpIcon sx={{ color: theme.palette.primary.contrastText }} /> : <KeyboardArrowDownIcon sx={{ color: theme.palette.primary.contrastText }} />)
     }
 
     return (
@@ -51,7 +53,7 @@ const NavDropdown = (props: NavDropdownProps) => {
                     endIcon={getEndIcon()}
                     sx={{ textTransform: 'none', ":hover": { background: 'rgba(255, 255, 255, .1)' } }}
                 >
-                    <Typography>{props.label}</Typography>
+                    <Typography sx={{ color: theme.palette?.primary?.contrastText }}>{props.label}</Typography>
                 </Button>
             }
             <Menu

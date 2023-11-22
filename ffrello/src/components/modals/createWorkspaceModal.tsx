@@ -10,7 +10,7 @@ import handofgod from '../../assets/create.gif'
 const CreateWorkspaceModal = () => {
 
     //get these from the nav state slice so we dont have to duplicate the modal many times, as its opened from 3 different locations
-    const openModal = useAppSelector((state) => state.home.openCreateWorkspaceModal);
+    const openModal = useAppSelector((state) => state.homeSlice.openCreateWorkspaceModal);
     const userId = useAppSelector((state) => state.userSlice.User.userid);
     const dispatch = useAppDispatch()
 

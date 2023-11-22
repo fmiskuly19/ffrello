@@ -14,8 +14,12 @@ import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { useSnackbar } from "notistack";
 import { getUserWorkspaces } from "../../redux/userSlice";
 
+import { useTheme } from '@mui/material/styles';
+
 
 const HomeBoardsPage = () => {
+
+    const theme = useTheme();
 
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useAppDispatch()
