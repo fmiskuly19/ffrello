@@ -5,11 +5,11 @@ const FrutigerAeroTheme: ThemeOptions = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#036ddd',
+            main: '#acba0a',
             contrastText: '#f9f9f9',
         },
         secondary: {
-            main: '#acba0a',
+            main: '#036ddd',
         },
         background: {
             default: '#e8e8e8',

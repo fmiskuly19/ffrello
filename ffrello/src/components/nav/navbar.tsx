@@ -32,27 +32,27 @@ const Navbar = () => {
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Toolbar variant="dense" disableGutters>
               <Stack direction="row" alignItems="center" spacing={1} pl='5px'>
-                <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdown />} icon={<AppsIcon style={{ fontSize: '20px', color: theme.palette.primary.contrastText }} />} />
+                <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdown />} icon={<AppsIcon style={{ fontSize: '20px', color: theme.palette.primary.contrastText }} />} closeOnClick={true} />
                 <Stack direction='row'>
                   {/* logo goes here */}
                   <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.contrastText }}>
                     <Typography variant="h4" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none' }} >FFrello</Typography>
                   </Link>
                 </Stack>
-                <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdown />} />
-                <NavDropdown label="Recent" menuContent={<RecentBoardsDropdown />} />
-                <NavDropdown label="Starred" menuContent={<StarredDropdown />} />
-                <NavDropdown label="Templates" menuContent={<TemplatesDropdownContent />} />
+                <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdown />} closeOnClick={true} />
+                <NavDropdown label="Recent" menuContent={<RecentBoardsDropdown />} closeOnClick={true} />
+                <NavDropdown label="Starred" menuContent={<StarredDropdown />} closeOnClick={true} />
+                <NavDropdown label="Templates" menuContent={<TemplatesDropdownContent />} closeOnClick={false} />
                 <CreateButtonDropdown />
               </Stack>
             </Toolbar>
             <Toolbar variant="dense">
               <Stack direction="row" alignItems="center" spacing={1}>
                 <TextField id="outlined-basic" label="Search" size="small" color="primary" InputLabelProps={{ color: 'primary' }} />
-                <NavDropdown label="Notifications" menuContent={<ThemeDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)' }} />} />
-                <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon />} />
-                <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon />} />
-                <NavDropdown label="Avatar" menuContent={<ThemeDropdown />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} />
+                <NavDropdown label="Notifications" menuContent={<ThemeDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)' }} />} closeOnClick={true} />
+                <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon />} closeOnClick={true} />
+                <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon />} closeOnClick={false} />
+                <NavDropdown label="Avatar" menuContent={<ThemeDropdown />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} closeOnClick={true} />
               </Stack>
             </Toolbar>
           </Box>

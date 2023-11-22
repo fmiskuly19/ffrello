@@ -9,7 +9,8 @@ import { useTheme } from '@mui/material/styles';
 interface NavDropdownProps {
     label: string, //need label for ids of button and menu for anchor
     menuContent: JSX.Element,
-    icon?: JSX.Element //sending an iconbutton as a prop will render the iconbutton instead of the label
+    icon?: JSX.Element, //sending an iconbutton as a prop will render the iconbutton instead of the label
+    closeOnClick: boolean
 }
 
 const NavDropdown = (props: NavDropdownProps) => {
@@ -25,6 +26,12 @@ const NavDropdown = (props: NavDropdownProps) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleClickClose = () => {
+        if (props.closeOnClick) {
+            setAnchorEl(null);
+        }
+    }
 
     const getEndIcon = () => {
         return (open ? <KeyboardArrowUpIcon sx={{ color: theme.palette.primary.contrastText }} /> : <KeyboardArrowDownIcon sx={{ color: theme.palette.primary.contrastText }} />)
@@ -61,7 +68,7 @@ const NavDropdown = (props: NavDropdownProps) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                onClick={handleClose}
+                onClick={handleClickClose}
                 MenuListProps={{
                     'aria-labelledby': props.label + '-dropdown-button',
                     'disablePadding': true,
