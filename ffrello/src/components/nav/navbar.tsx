@@ -21,6 +21,8 @@ const Navbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const iconColor = theme.palette.mode == 'dark' ? theme.palette.primary.main : theme.palette.primary.contrastText;
+
   return (
     <MuiAppBar position="sticky">
       {isMobile ? (
@@ -33,11 +35,11 @@ const Navbar = () => {
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Toolbar variant="dense" disableGutters>
               <Stack direction="row" alignItems="center" spacing={1} pl='5px'>
-                <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdown />} icon={<AppsIcon style={{ fontSize: '20px', color: theme.palette.primary.light }} />} closeOnClick={true} />
+                <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdown />} icon={<AppsIcon style={{ fontSize: '20px', color: iconColor }} />} closeOnClick={true} />
                 <Stack direction='row'>
                   {/* logo goes here */}
                   <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.contrastText }}>
-                    <Typography variant="h4" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none' }} >FFrello</Typography>
+                    <Typography variant="h5" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none', color: iconColor }} >FFrello</Typography>
                   </Link>
                 </Stack>
                 <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdown />} closeOnClick={true} />
@@ -49,10 +51,10 @@ const Navbar = () => {
             </Toolbar>
             <Toolbar variant="dense">
               <Stack direction="row" alignItems="center" spacing={1}>
-                <TextField id="outlined-basic" label="Search" size="small" color="primary" InputLabelProps={{ color: 'primary' }} />
-                <NavDropdown label="Notifications" menuContent={<NotificationsDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)' }} />} closeOnClick={false} />
-                <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon />} closeOnClick={true} />
-                <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon />} closeOnClick={false} />
+                <TextField id="outlined-basic" label="Search" size="small" sx={{ color: iconColor }} InputLabelProps={{ color: 'primary' }} />
+                <NavDropdown label="Notifications" menuContent={<NotificationsDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)', color: iconColor }} />} closeOnClick={false} />
+                <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon sx={{ color: iconColor }} />} closeOnClick={true} />
+                <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon sx={{ color: iconColor }} />} closeOnClick={false} />
                 <NavDropdown label="Avatar" menuContent={<ThemeDropdown />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} closeOnClick={true} />
               </Stack>
             </Toolbar>

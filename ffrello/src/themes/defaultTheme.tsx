@@ -3,40 +3,11 @@ import { FFrelloTheme } from '../types/FFrelloTheme';
 import { blueGrey, green } from "@mui/material/colors";
 
 const defaultTheme: ThemeOptions = createTheme({
-    // zIndex: {
-    //     appBar: 1200,
-    //     drawer: 1100,
-    // },
     typography: {
         fontFamily: 'Montserrat',
-        body1: {
-            fontSize: 14,
-        },
-        body2: {
-            fontSize: 12,
-        },
-        h6: {
-            fontSize: 16
-        },
-        h5: {
-            fontSize: 18
-        },
-        h4: {
-            fontSize: 20
-        },
-        h3: {
-            fontSize: 22
-        },
-        h2: {
-            fontSize: 24
-        },
-        h1: {
-            fontSize: 28
-        },
     },
     palette: {
         mode: 'dark',
-        // type: 'dark',
         primary: {
             main: '#9aa1b2',
             dark: '#090a09',

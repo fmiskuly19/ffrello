@@ -6,47 +6,23 @@ const FrutigerAeroTheme: ThemeOptions = createTheme({
         mode: 'light',
         primary: {
             main: '#acba0a',
-            contrastText: '#f9f9f9',
+            contrastText: '#fbfaee',
         },
         secondary: {
-            main: '#2dc7ff',
+            main: '#007e7b',
         },
         background: {
             default: '#e8e8e8',
             paper: '#d9d9d9',
         },
         text: {
-            primary: '#014492',
+            primary: '#006374',
             secondary: '#252c35',
             disabled: '#181d23',
         },
     },
     typography: {
         fontFamily: 'Segoe UI',
-        body1: {
-            fontSize: 14,
-        },
-        body2: {
-            fontSize: 12,
-        },
-        h6: {
-            fontSize: 16
-        },
-        h5: {
-            fontSize: 18
-        },
-        h4: {
-            fontSize: 20
-        },
-        h3: {
-            fontSize: 22
-        },
-        h2: {
-            fontSize: 24
-        },
-        h1: {
-            fontSize: 28
-        },
     },
 });
 

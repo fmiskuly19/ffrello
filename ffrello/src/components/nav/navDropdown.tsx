@@ -16,6 +16,7 @@ interface NavDropdownProps {
 const NavDropdown = (props: NavDropdownProps) => {
 
     const theme = useTheme();
+    const textColor = theme.palette.mode == 'dark' ? theme.palette.primary.main : theme.palette.primary.contrastText;
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -34,7 +35,7 @@ const NavDropdown = (props: NavDropdownProps) => {
     }
 
     const getEndIcon = () => {
-        return (open ? <KeyboardArrowUpIcon sx={{ color: theme.palette.primary.contrastText }} /> : <KeyboardArrowDownIcon sx={{ color: theme.palette.primary.contrastText }} />)
+        return (open ? <KeyboardArrowUpIcon sx={{ color: textColor }} /> : <KeyboardArrowDownIcon sx={{ color: textColor }} />)
     }
 
     return (
@@ -60,7 +61,7 @@ const NavDropdown = (props: NavDropdownProps) => {
                     endIcon={getEndIcon()}
                     sx={{ textTransform: 'none', ":hover": { background: 'rgba(255, 255, 255, .1)' } }}
                 >
-                    <Typography sx={{ color: theme.palette?.primary?.contrastText }}>{props.label}</Typography>
+                    <Typography sx={{ color: textColor }}>{props.label}</Typography>
                 </Button>
             }
             <Menu
