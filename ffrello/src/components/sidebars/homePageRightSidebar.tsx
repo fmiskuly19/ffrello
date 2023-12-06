@@ -7,7 +7,7 @@ import { useAppSelector } from "../../hooks";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { useState } from "react";
-import CreateBoardMenu from "../menus/createBoardMenu";
+import CreateBoardMenu from "../popups/createBoardPopup";
 
 const HomePageRightSidebar = () => {
 

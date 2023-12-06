@@ -1,8 +1,8 @@
-import { Button, Menu, MenuItem, Typography } from "@mui/material";
+import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { setOpenCreateWorkspaceModal } from "../../redux/homeSlice";
 import { useAppDispatch } from "../../hooks";
-import CreateBoardMenu from "../menus/createBoardMenu";
+import CreateBoardMenu from "../popups/createBoardPopup";
 
 const CreateButtonDropdown = () => {
 
@@ -40,7 +40,9 @@ const CreateButtonDropdown = () => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleCreateButtonClick}
-                sx={{ textTransform: 'none', ":hover": { background: 'rgba(255, 255, 255, .1)' } }}
+                sx={{ textTransform: 'none' }}
+                variant="contained"
+                color="secondary"
             >
                 <Typography>Create</Typography>
             </Button>
@@ -56,15 +58,17 @@ const CreateButtonDropdown = () => {
                 }}
                 sx={{ top: '10px' }}
             >
-                <MenuItem onClick={handleNewBoardClick} sx={{ textTransform: 'none' }}>
-                    Create Board
-                </MenuItem>
-                <MenuItem>
-                    Start with a Template
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>
-                    Create Workspace
-                </MenuItem>
+                <Box sx={{ paddingTop: '10px', paddingBottom: '10px' }}>
+                    <MenuItem onClick={handleNewBoardClick} sx={{ textTransform: 'none' }}>
+                        Create Board
+                    </MenuItem>
+                    <MenuItem>
+                        Start with a Template
+                    </MenuItem>
+                    <MenuItem onClick={() => dispatch(setOpenCreateWorkspaceModal(true))}>
+                        Create Workspace
+                    </MenuItem>
+                </Box>
             </Menu>
             <CreateBoardMenu open={openNewBoardMenu} anchorEl={openBoardAnchorEl} onClose={handleNewBoardClose} />
         </>

@@ -12,7 +12,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useEffect, useState } from "react";
 import { BoardList } from "../../types/BoardList";
-import BoardListActionMenu from "../../components/menus/boardListActionMenu";
+import BoardListActionMenu from "../../components/popups/boardListActionPopup";
 import { enqueueSnackbar } from "notistack";
 import AddIcon from '@mui/icons-material/Add';
 import BoardListCard from "../../components/cards/boardListCard";

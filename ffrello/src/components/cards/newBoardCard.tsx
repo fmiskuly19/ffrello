@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 
 import { BoardCardHeight } from "./boardInfoCard";
-import CreateBoardMenu from "../menus/createBoardMenu";
+import CreateBoardMenu from "../popups/createBoardPopup";
 import { useState } from "react";
 
 const NewBoardCard = () => {

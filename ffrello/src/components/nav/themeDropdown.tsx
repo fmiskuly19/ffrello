@@ -3,12 +3,20 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setTheme } from "../../redux/themeSlice";
 import * as Themes from '../../themes/themeIndex';
+import ThemeEditorModal from "../modals/themeEditorModal";
+
 
 const ThemeDropdown = () => {
 
     const dispatch = useAppDispatch()
 
     const theme = useAppSelector((state) => state.themeSlice.theme);
+
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleModalClose = () => {
+        setOpenModal(false);
+    }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setTheme(event.target.value))
@@ -41,8 +49,15 @@ const ThemeDropdown = () => {
                             </>
                         )
                     })}
+
+                    {/* Create Theme Menu Item */}
+                    <MenuItem onClick={() => setOpenModal(true)}>
+                        <Typography>Edit/Create Theme</Typography>
+                    </MenuItem >
                 </Stack>
             </Box >
+
+            <ThemeEditorModal openModal={openModal} parentHandleClose={handleModalClose} />
         </>
     )
 }
