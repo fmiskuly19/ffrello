@@ -15,6 +15,8 @@ import { CompactPicker } from 'react-color';
 import { useAppDispatch } from "../../hooks";
 import { addTheme } from "../../redux/themeSlice";
 
+import { useAppSelector } from './hooks.tsx';
+
 interface ThemeEditorModalProps {
     openModal: boolean,
     parentHandleClose: any
@@ -29,23 +31,30 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
     ]
 
     const dispatch = useAppDispatch()
+    
 
     const theme = useTheme();
 
     const [openModal, setOpenModal] = useState(false);
     const [isLivePreview, setIsLivePreview] = useState(false);
 
+    //TODO
+    //put all of these into a single state object called formValues
     const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main)
     const [primaryContrastTextColor, setPrimaryContrastTextColor] = useState(theme.palette.primary.contrastText)
     const [secondaryColor, setSecondaryColor] = useState(theme.palette.secondary.main)
     const [secondaryContrastTextColor, setSecondaryContrastTextColor] = useState(theme.palette.secondary.contrastText)
+
     const [backgroundColor, setBackgroundColor] = useState(theme.palette.background.default)
+    const [paperColor, setPaperColor] = useState(theme.palette.background.paper)
+
     const [primaryTextColor, setPrimaryTextColor] = useState(theme.palette.text.primary)
     const [secondaryTextColor, setSecondaryTextColor] = useState(theme.palette.text.secondary)
 
-
     const [fontName, setFontName] = useState('Roboto')
     const [themeName, setThemeName] = useState('')
+
+    const [isDarkTheme, setIsDarkTheme] = useState(theme.palette.mode == 'dark')
 
     const reset = () => {
         setOpenModal(false);
@@ -56,28 +65,34 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         setSecondaryContrastTextColor(theme.palette.secondary.contrastText)
 
         setBackgroundColor(theme.palette.background.default)
+        setPaperColor(theme.palette.background.paper)
+
         setPrimaryTextColor(theme.palette.text.primary)
         setSecondaryTextColor(theme.palette.text.secondary)
 
         setFontName('Roboto');
         setThemeName('');
+
+        setIsDarkTheme(theme.palette.mode == 'dark')
     }
 
     //generic useEffect that will execute each time ANYTHING changes
     //do this for live preview of theme, if we want live preview, anytime anything changes save it as current theme
     // useEffect(() => {
     //     console.log('something changed in the theme editor')
-    // })
+    // })    
 
     //react to theme mode switch, component will not be rerendered unless its state changes, so we need to manually switch colors to the theme colors if its switched 
     useEffect(() => {
         reset()
     }, [theme.palette.mode])
 
+    //if our parent changes the value of the isOpen prop, change state accordingly so it will know to re render
     useEffect(() => {
         setOpenModal(props.openModal)
     }, [props.openModal]);
 
+    //reset form values and tell the parent that is has been closed
     const handleModalClose = () => {
         reset()
         props.parentHandleClose();
@@ -91,8 +106,11 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
     const secondaryContrastTextPopupState = usePopupState({ variant: 'popover', popupId: 'secondaryContrastTextPopper' })
 
     const backgroundColorPopupState = usePopupState({ variant: 'popover', popupId: 'backgroundColorPopper' })
+    const paperColorPopupState = usePopupState({ variant: 'popover', popupId: 'paperColorPopper' })
+
     const primaryTextColorPopupState = usePopupState({ variant: 'popover', popupId: 'primaryTextColorPopper' })
     const secondaryTextColorPopupState = usePopupState({ variant: 'popover', popupId: 'secondaryTextColorPopper' })
+
 
     const handleThemeSave = () => {
         const newTheme: ThemeOptions = createTheme({
@@ -100,7 +118,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                 fontFamily: fontName,
             },
             palette: {
-                mode: 'light',
+                mode: isDarkTheme ? 'dark' : 'light',
                 primary: {
                     main: primaryColor,
                     contrastText: primaryContrastTextColor
@@ -111,6 +129,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                 },
                 background: {
                     default: backgroundColor,
+                    paper: paperColor
                 },
                 text: {
                     primary: primaryTextColor,
@@ -123,11 +142,11 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
     }
 
     return (
-        <Dialog onClose={handleModalClose} open={openModal} maxWidth={"md"} sx={{ top: '-100px' }}>
+        <Dialog onClose={handleModalClose} open={openModal} maxWidth={"md"}>
             <DialogContent sx={{ padding: '0px' }} dividers={true}>
 
                 {/* set min height for this modal window */}
-                <Box sx={{ minHeight: '400px', paddingLeft: '30px', paddingRight: '30px', paddingTop: '20px', paddingBottom: '0px' }}>
+                <Box sx={{ paddingLeft: '30px', paddingRight: '30px', paddingTop: '20px', paddingBottom: '0px' }}>
 
                     <DialogTitle sx={{ padding: '0px' }}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={"5px"}>
@@ -159,10 +178,20 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                         <Divider sx={{ mb: '15px' }} />
 
                         <Box display="flex">
-                            <Box sx={{ width: '50%' }} >
-                                <Stack direction="column" spacing={1} justifyContent="space-between" sx={{ height: '100%' }}>
+
+                            {/* this is the container holding the two 50% halves */}
+                            <Stack direction="row" display="flex" spacing={4}>
+                            <Box sx={{ width: '50%' }}>
+                                <Stack direction="column" spacing={1} justifyContent="space-between" display="flex">
 
                                     <Stack direction="column" spacing={1}>
+                                        <Stack direction="row" alignItems="center" spacing={3}>
+                                            <Typography variant="body1">Mode: </Typography>
+                                            <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
+                                                <Typography>Light</Typography><MaterialUISwitch checked={isDarkTheme} onChange={(event, value) => setIsDarkTheme(value)} /><Typography>Dark</Typography>
+                                            </Stack>
+                                        </Stack>
+
                                         <Stack id="theme-name-stack" direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
                                             <Typography variant="body1" id="theme-name-label">Name:</Typography>
                                             <OutlinedInput
@@ -177,20 +206,13 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                 onChange={(e) => setThemeName(e.target.value)}
                                             />
                                         </Stack>
-
-                                        <Stack direction="row" alignItems="center" spacing={3}>
-                                            <Typography variant="body1">Mode: </Typography>
-                                            <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
-                                                <Typography>Light</Typography><MaterialUISwitch /><Typography>Dark</Typography>
-                                            </Stack>
-                                        </Stack>
                                     </Stack>
 
                                     <Stack direction="column" spacing={1}>
                                         <Divider><Typography variant="h6">Colors</Typography></Divider>
 
-                                        <Stack id="colors-stack" spacing={2}>
-                                            <Stack id="primary-color-stack" direction="column">
+                                        <Stack spacing={2}>
+                                            <Stack id="primary-color-stack" direction="column" >
                                                 <Stack direction="row" justifyContent="space-between" >
                                                     <Typography variant="body1">Primary:</Typography>
                                                     <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
@@ -207,7 +229,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                 </Stack>
                                             </Stack>
 
-                                            <Stack id="secondary-color-stack" direction="column">
+                                            <Stack id="secondary-color-stack" direction="column" >
                                                 <Stack direction="row" justifyContent="space-between" >
                                                     <Typography variant="body1">Secondary:</Typography>
                                                     <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
@@ -224,15 +246,23 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                 </Stack>
                                             </Stack>
 
-
-
-                                            <Stack direction="row" justifyContent="space-between" >
-                                                <Typography variant="body1">Background:</Typography>
-                                                <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
-                                                <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
-                                                </Menu>
+                                            <Stack id="background-colors-stack" direction="column">
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography variant="body1">Background:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
+                                                    <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography variant="body2">Paper:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(paperColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: paperColor }} />
+                                                    <Menu {...bindMenu(paperColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={paperColor} onChange={(color: { hex: SetStateAction<string>; }) => setPaperColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
                                             </Stack>
+
                                         </Stack>
                                     </Stack>
 
@@ -278,14 +308,13 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                 </Stack>
                             </Box>
 
-                            <Divider orientation="vertical" flexItem sx={{ margin: '15px', marginLeft: '25px', marginTop: '5px', marginBottom: '0px' }} />
 
-                            <Box sx={{ width: '50%', padding: '10px' }}>
+                            <Box sx={{ width: '50%', padding: '10px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: backgroundColor, borderRadius: '5px' }}>
                                 <Stack direction="column" spacing={1}>
                                     <Box display="flex" justifyContent="center">
-                                        <Typography variant="body1">Preview</Typography>
+                                        <Typography variant="h6">Preview</Typography>
                                     </Box>
-                                    <Card sx={{ backgroundColor: backgroundColor, fontFamily: fontName }}>
+                                    <Card sx={{ backgroundColor: paperColor, fontFamily: fontName }}>
                                         <CardHeader
                                             avatar={
                                                 <Avatar sx={{ bgcolor: primaryColor, color: primaryContrastTextColor }} aria-label="recipe">
@@ -337,6 +366,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                     </Card>
                                 </Stack>
                             </Box>
+                            </Stack>
                         </Box>
 
                         <Divider sx={{ mt: '15px' }} />

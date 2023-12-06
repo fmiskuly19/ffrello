@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import * as Themes from '../themes/themeIndex'
-import { ThemeOptions } from '@mui/material'
 import { FFrelloTheme } from '../types/FFrelloTheme'
 
 interface ThemeState {
