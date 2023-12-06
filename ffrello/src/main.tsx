@@ -24,8 +24,10 @@ import WorkspaceHighlightsPage from './routes/homeView/workspaceHighlightsPage.t
 import WorkspaceHomePage from './routes/homeView/workspaceBoardsPage.tsx';
 import { SnackbarProvider } from 'notistack';
 import { useAppSelector } from './hooks.tsx';
+import DefaultTheme from './themes/defaultTheme.tsx'
 
 import * as Themes from './themes/themeIndex.tsx'
+import { useEffect, useState } from 'react';
 
 const router = createBrowserRouter([
   {
@@ -94,21 +96,18 @@ const router = createBrowserRouter([
 
 const Main = () => {
 
-  const theme = useAppSelector((state) => state.themeSlice.theme);
+  const currentThemeName = useAppSelector((state) => state.themeSlice.currentThemeName);
+  const themes = useAppSelector((state) => state.themeSlice.themes);
 
-  const getTheme = () => {
-    switch (theme) {
-      case 'Frutiger Aero':
-        return Themes.FrutigerAero.theme;
-      case 'Default':
-        return Themes.Default.theme;
-      default:
-        return Themes.Default.theme;
-    }
-  }
+  const [theme, setTheme] = useState(DefaultTheme.theme);
+
+  useEffect(() => {
+    let theme = themes.find(x => x.name == currentThemeName).theme;
+    setTheme(theme);
+  }, [currentThemeName])
 
   return (
-    <ThemeProvider theme={getTheme()}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <SnackbarProvider maxSnack={4}>
         <RouterProvider router={router} />

@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react";
 
-import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, Switch, Tooltip, Typography, styled, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, Switch, ThemeOptions, Tooltip, Typography, createTheme, styled, useTheme } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 
 import { usePopupState, bindToggle, bindMenu } from 'material-ui-popup-state/hooks'
@@ -12,6 +12,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SaveIcon from '@mui/icons-material/Save';
 
 import { CompactPicker } from 'react-color';
+import { useAppDispatch } from "../../hooks";
+import { addTheme } from "../../redux/themeSlice";
 
 interface ThemeEditorModalProps {
     openModal: boolean,
@@ -25,6 +27,8 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         'Montserrat',
         'Istok'
     ]
+
+    const dispatch = useAppDispatch()
 
     const theme = useTheme();
 
@@ -41,6 +45,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
 
 
     const [fontName, setFontName] = useState('Roboto')
+    const [themeName, setThemeName] = useState('')
 
     const reset = () => {
         setOpenModal(false);
@@ -53,6 +58,9 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         setBackgroundColor(theme.palette.background.default)
         setPrimaryTextColor(theme.palette.text.primary)
         setSecondaryTextColor(theme.palette.text.secondary)
+
+        setFontName('Roboto');
+        setThemeName('');
     }
 
     //generic useEffect that will execute each time ANYTHING changes
@@ -75,6 +83,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         props.parentHandleClose();
     };
 
+
     const primaryPopupState = usePopupState({ variant: 'popover', popupId: 'primaryPopper' })
     const primaryContrastTextPopupState = usePopupState({ variant: 'popover', popupId: 'primaryContrastTextPopper' })
 
@@ -85,8 +94,36 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
     const primaryTextColorPopupState = usePopupState({ variant: 'popover', popupId: 'primaryTextColorPopper' })
     const secondaryTextColorPopupState = usePopupState({ variant: 'popover', popupId: 'secondaryTextColorPopper' })
 
+    const handleThemeSave = () => {
+        const newTheme: ThemeOptions = createTheme({
+            typography: {
+                fontFamily: fontName,
+            },
+            palette: {
+                mode: 'light',
+                primary: {
+                    main: primaryColor,
+                    contrastText: primaryContrastTextColor
+                },
+                secondary: {
+                    main: secondaryColor,
+                    contrastText: secondaryContrastTextColor
+                },
+                background: {
+                    default: backgroundColor,
+                },
+                text: {
+                    primary: primaryTextColor,
+                    secondary: secondaryTextColor,
+                },
+            },
+        });
+
+        dispatch(addTheme({ name: themeName, theme: newTheme }));
+    }
+
     return (
-        <Dialog onClose={handleModalClose} open={openModal} maxWidth={"md"} fullWidth={true} sx={{ top: '-100px' }}>
+        <Dialog onClose={handleModalClose} open={openModal} maxWidth={"md"} sx={{ top: '-100px' }}>
             <DialogContent sx={{ padding: '0px' }} dividers={true}>
 
                 {/* set min height for this modal window */}
@@ -94,7 +131,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
 
                     <DialogTitle sx={{ padding: '0px' }}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={"5px"}>
-                            <Typography variant="h5" fontWeight="800">Theme Editor</Typography>
+                            <Typography variant="h4" fontWeight="800">Theme Editor</Typography>
 
                             <Stack direction="row" spacing={1}>
                                 <Stack direction="row" alignItems="center">
@@ -136,6 +173,8 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                 }}
                                                 sx={{ height: '36px' }}
                                                 fullWidth={true}
+                                                value={themeName}
+                                                onChange={(e) => setThemeName(e.target.value)}
                                             />
                                         </Stack>
 
@@ -160,7 +199,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                     </Menu>
                                                 </Stack>
                                                 <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography>Contrast Text:</Typography>
+                                                    <Typography variant="body2">Contrast Text:</Typography>
                                                     <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
                                                     <Menu {...bindMenu(primaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                         <CompactPicker color={primaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryContrastTextColor(color.hex)} />
@@ -177,7 +216,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                     </Menu>
                                                 </Stack>
                                                 <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography>Contrast Text:</Typography>
+                                                    <Typography variant="body2">Contrast Text:</Typography>
                                                     <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
                                                     <Menu {...bindMenu(secondaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                         <CompactPicker color={secondaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryContrastTextColor(color.hex)} />
@@ -246,7 +285,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                     <Box display="flex" justifyContent="center">
                                         <Typography variant="body1">Preview</Typography>
                                     </Box>
-                                    <Card sx={{ backgroundColor: backgroundColor }}>
+                                    <Card sx={{ backgroundColor: backgroundColor, fontFamily: fontName }}>
                                         <CardHeader
                                             avatar={
                                                 <Avatar sx={{ bgcolor: primaryColor, color: primaryContrastTextColor }} aria-label="recipe">
@@ -304,7 +343,10 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                     </Box>
                 </Box>
                 <DialogActions sx={{ paddingRight: '30px', paddingBottom: '15px', paddingTop: '10px' }}>
-                    <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} endIcon={<SaveIcon />}>Save</Button>
+                    <Button
+                        variant={theme.palette.mode == 'light' ? "contained" : "text"}
+                        endIcon={<SaveIcon />}
+                        onClick={handleThemeSave}>Save</Button>
                 </DialogActions>
             </DialogContent>
         </Dialog >

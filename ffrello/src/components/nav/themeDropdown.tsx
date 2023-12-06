@@ -1,8 +1,7 @@
 import { Box, MenuItem, Radio, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setTheme } from "../../redux/themeSlice";
-import * as Themes from '../../themes/themeIndex';
 import ThemeEditorModal from "../modals/themeEditorModal";
 
 
@@ -10,7 +9,8 @@ const ThemeDropdown = () => {
 
     const dispatch = useAppDispatch()
 
-    const theme = useAppSelector((state) => state.themeSlice.theme);
+    const theme = useAppSelector((state) => state.themeSlice.currentThemeName);
+    const themes = useAppSelector((state) => state.themeSlice.themes);
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -23,26 +23,29 @@ const ThemeDropdown = () => {
     };
 
     const handleClick = (theme: string) => {
-        dispatch(setTheme(theme))
+        console.log(`clicked theme ${theme}`)
+        let themeName = themes.find(x => x.name == theme).name;
+        dispatch(setTheme(themeName))
     }
 
     return (
         <>
             <Box m="12px" sx={{ minWidth: '200px' }}>
                 <Stack direction="column" spacing={.25}>
-                    {Object.keys(Themes).map((x) => {
+
+                    {themes.map((ffrelloTheme) => {
                         return (
                             <>
-                                <MenuItem sx={{ padding: '4px', borderRadius: '5px', display: 'block' }} onClick={() => handleClick(Themes[x as keyof Object].name)}>
+                                <MenuItem sx={{ padding: '4px', borderRadius: '5px', display: 'block' }} onClick={() => handleClick(ffrelloTheme.name)}>
                                     <Box sx={{ display: 'flex' }} flexDirection="row" alignItems="center" justifyContent="space-between">
-                                        <Typography>{Themes[x as keyof Object].name}</Typography>
+                                        <Typography>{ffrelloTheme.name}</Typography>
                                         <Radio
-                                            checked={theme === Themes[x as keyof Object].name}
+                                            checked={theme === ffrelloTheme.name}
                                             onChange={handleChange}
                                             size="small"
-                                            value={Themes[x as keyof Object].name}
+                                            value={ffrelloTheme.name}
                                             name="radio-buttons"
-                                            inputProps={{ 'aria-label': Themes[x as keyof Object].name }}
+                                            inputProps={{ 'aria-label': ffrelloTheme.name }}
                                         />
                                     </Box>
                                 </MenuItem >
