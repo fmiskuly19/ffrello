@@ -3,11 +3,13 @@ import { SetStateAction, useEffect, useState } from "react";
 import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, Switch, Tooltip, Typography, styled, useTheme } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 
+import { usePopupState, bindToggle, bindMenu } from 'material-ui-popup-state/hooks'
+
 import CloseIcon from '@mui/icons-material/Close';
 import CircleIcon from '@mui/icons-material/Circle';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
-import { usePopupState, bindToggle, bindMenu } from 'material-ui-popup-state/hooks'
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { CompactPicker } from 'react-color';
 
@@ -88,7 +90,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
             <DialogContent sx={{ padding: '0px' }} dividers={true}>
 
                 {/* set min height for this modal window */}
-                <Box sx={{ minHeight: '400px', padding: '15px' }}>
+                <Box sx={{ minHeight: '400px', paddingLeft: '30px', paddingRight: '30px', paddingTop: '20px', paddingBottom: '0px' }}>
 
                     <DialogTitle sx={{ padding: '0px' }}>
                         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={"5px"}>
@@ -100,7 +102,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                     <Tooltip placement="top" title="Click to enable a live preview" TransitionProps={{ timeout: 600 }} >
                                         <Checkbox
                                             sx={{ height: '24px', width: '24px' }}
-                                            checkedIcon={<CircleIcon sx={{ height: '16px', width: '16px', color: 'red' }} />}
+                                            checkedIcon={<CircleIcon className="record-pulse" sx={{ height: '16px', width: '16px', color: 'red' }} />}
                                             icon={<CircleTwoToneIcon sx={{ height: '16px', width: '16px', color: '#FF7276' }} />}
                                             checked={isLivePreview}
                                             onChange={(event, value) => setIsLivePreview(value)}
@@ -115,115 +117,122 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                         </Stack>
                     </DialogTitle>
 
-                    <div>
-                        {/* <Divider><Typography variant="body1">Colors</Typography></Divider> */}
-                        <Divider sx={{ mb: '10px' }} />
+                    <Box sx={{ height: '100%' }}>
+                        {/* <Divider><Typography variant="body2">Colors</Typography></Divider> */}
+                        <Divider sx={{ mb: '15px' }} />
 
                         <Box display="flex">
                             <Box sx={{ width: '50%' }} >
                                 <Stack direction="column" spacing={1} justifyContent="space-between" sx={{ height: '100%' }}>
 
-                                    <Stack id="theme-name-stack" direction="row" justifyContent="space-between" spacing={1}>
-                                        <Typography variant="h6" id="theme-name-label">Name:</Typography>
-                                        <OutlinedInput
-                                            id="theme-name-input"
-                                            aria-describedby="theme-name-label"
-                                            inputProps={{
-                                                'aria-label': 'Theme Name',
-                                            }}
-                                            sx={{ height: '36px' }}
-                                            fullWidth={true}
-                                        />
+                                    <Stack direction="column" spacing={1}>
+                                        <Stack id="theme-name-stack" direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+                                            <Typography variant="body1" id="theme-name-label">Name:</Typography>
+                                            <OutlinedInput
+                                                id="theme-name-input"
+                                                aria-describedby="theme-name-label"
+                                                inputProps={{
+                                                    'aria-label': 'Theme Name',
+                                                }}
+                                                sx={{ height: '36px' }}
+                                                fullWidth={true}
+                                            />
+                                        </Stack>
+
+                                        <Stack direction="row" alignItems="center" spacing={3}>
+                                            <Typography variant="body1">Mode: </Typography>
+                                            <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
+                                                <Typography>Light</Typography><MaterialUISwitch /><Typography>Dark</Typography>
+                                            </Stack>
+                                        </Stack>
                                     </Stack>
 
-                                    <Stack direction="row" alignItems="center" spacing={3}>
-                                        <Typography variant="h6">Mode: </Typography>
-                                        <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
-                                            <Typography>Light</Typography><MaterialUISwitch /><Typography>Dark</Typography>
+                                    <Stack direction="column" spacing={1}>
+                                        <Divider><Typography variant="h6">Colors</Typography></Divider>
+
+                                        <Stack id="colors-stack" spacing={2}>
+                                            <Stack id="primary-color-stack" direction="column">
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography variant="body1">Primary:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
+                                                    <Menu {...bindMenu(primaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={primaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography>Contrast Text:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
+                                                    <Menu {...bindMenu(primaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={primaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryContrastTextColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+                                            </Stack>
+
+                                            <Stack id="secondary-color-stack" direction="column">
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography variant="body1">Secondary:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
+                                                    <Menu {...bindMenu(secondaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={secondaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography>Contrast Text:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
+                                                    <Menu {...bindMenu(secondaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={secondaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryContrastTextColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+                                            </Stack>
+
+
+
+                                            <Stack direction="row" justifyContent="space-between" >
+                                                <Typography variant="body1">Background:</Typography>
+                                                <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
+                                                <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                    <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
+                                                </Menu>
+                                            </Stack>
                                         </Stack>
                                     </Stack>
 
-                                    <Divider><Typography>Colors</Typography></Divider>
 
-                                    <Stack id="colors-stack" spacing={2}>
-                                        <Stack id="primary-color-stack" direction="column">
+                                    <Stack direction="column" spacing={1}>
+                                        <Divider><Typography variant="h6">Text</Typography></Divider>
+                                        <Stack direction="column" spacing={2}>
+                                            <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                                                <Typography variant="body1">Font: </Typography>
+                                                <Select
+                                                    variant="outlined"
+                                                    fullWidth={true}
+                                                    value={fontName}
+                                                    defaultValue={fonts[0]}
+                                                    onChange={(event) => setFontName(event.target.value as string)}
+                                                    sx={{ height: '36px' }}>
+                                                    {fonts.map((fontName) => {
+                                                        return (<MenuItem value={fontName}>{fontName}</MenuItem>)
+                                                    })}
+                                                </Select>
+                                            </Stack>
+
                                             <Stack direction="row" justifyContent="space-between" >
-                                                <Typography variant="h6">Primary:</Typography>
-                                                <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
-                                                <Menu {...bindMenu(primaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={primaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryColor(color.hex)} />
+                                                <Typography variant="body1">Primary Color:</Typography>
+                                                <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryTextColor }} />
+                                                <Menu {...bindMenu(primaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                    <CompactPicker color={primaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} />
                                                 </Menu>
                                             </Stack>
+
                                             <Stack direction="row" justifyContent="space-between" >
-                                                <Typography>Contrast Text:</Typography>
-                                                <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
-                                                <Menu {...bindMenu(primaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={primaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryContrastTextColor(color.hex)} />
+                                                <Typography variant="body1">Secondary Color:</Typography>
+                                                <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryTextColor }} />
+                                                <Menu {...bindMenu(secondaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                    <CompactPicker color={secondaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} />
                                                 </Menu>
                                             </Stack>
                                         </Stack>
-
-                                        <Stack id="secondary-color-stack" direction="column">
-                                            <Stack direction="row" justifyContent="space-between" >
-                                                <Typography variant="h6">Secondary:</Typography>
-                                                <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
-                                                <Menu {...bindMenu(secondaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={secondaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryColor(color.hex)} />
-                                                </Menu>
-                                            </Stack>
-                                            <Stack direction="row" justifyContent="space-between" >
-                                                <Typography>Contrast Text:</Typography>
-                                                <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
-                                                <Menu {...bindMenu(secondaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={secondaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryContrastTextColor(color.hex)} />
-                                                </Menu>
-                                            </Stack>
-                                        </Stack>
-
-
-
-                                        <Stack direction="row" justifyContent="space-between" >
-                                            <Typography variant="h6">Background:</Typography>
-                                            <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
-                                            <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
-                                            </Menu>
-                                        </Stack>
                                     </Stack>
-
-                                    <Divider><Typography>Text</Typography></Divider>
-
-                                    <Stack direction="row" justifyContent="space-between" spacing={2}>
-                                        <Typography variant="h6">Font: </Typography>
-                                        <Select
-                                            variant="outlined"
-                                            fullWidth={true}
-                                            value={fontName}
-                                            defaultValue={fonts[0]}
-                                            onChange={(event) => setFontName(event.target.value as string)}
-                                            sx={{ height: '36px' }}>
-                                            {fonts.map((fontName) => {
-                                                return (<MenuItem value={fontName}>{fontName}</MenuItem>)
-                                            })}
-                                        </Select>
-                                    </Stack>
-
-                                    <Stack direction="row" justifyContent="space-between" >
-                                        <Typography variant="h6">Primary Color:</Typography>
-                                        <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryTextColor }} />
-                                        <Menu {...bindMenu(primaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                            <CompactPicker color={primaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} />
-                                        </Menu>
-                                    </Stack>
-
-                                    <Stack direction="row" justifyContent="space-between" >
-                                        <Typography variant="h6">Secondary Color:</Typography>
-                                        <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryTextColor }} />
-                                        <Menu {...bindMenu(secondaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                            <CompactPicker color={secondaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} />
-                                        </Menu>
-                                    </Stack>
-
 
 
 
@@ -235,7 +244,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                             <Box sx={{ width: '50%', padding: '10px' }}>
                                 <Stack direction="column" spacing={1}>
                                     <Box display="flex" justifyContent="center">
-                                        <Typography variant="h6">Preview</Typography>
+                                        <Typography variant="body1">Preview</Typography>
                                     </Box>
                                     <Card sx={{ backgroundColor: backgroundColor }}>
                                         <CardHeader
@@ -275,8 +284,13 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                             <Stack direction="row" display="flex" justifyContent="flex-end" spacing={1} mt="15px">
 
                                                 <Stack direction="row" display="flex" justifyContent="flex-end" spacing={1} mt="15px">
-                                                    <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: primaryColor, color: primaryContrastTextColor }} >Primary</Button>
-                                                    <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: secondaryColor, color: secondaryContrastTextColor }}>Secondary</Button>
+                                                    <Tooltip title="Primary color with contrast text" placement="bottom">
+                                                        <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: primaryColor, color: primaryContrastTextColor }} >Primary</Button>
+                                                    </Tooltip>
+
+                                                    <Tooltip title="Secondary color with contrast text" placement="bottom">
+                                                        <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: secondaryColor, color: secondaryContrastTextColor }}>Secondary</Button>
+                                                    </Tooltip>
                                                 </Stack>
 
                                             </Stack>
@@ -286,12 +300,11 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                             </Box>
                         </Box>
 
-                        <Divider sx={{ mt: '10px' }} />
-                    </div>
+                        <Divider sx={{ mt: '15px' }} />
+                    </Box>
                 </Box>
-                <DialogActions>
-                    <Button variant={theme.palette.mode == 'light' ? "contained" : "text"}>Save</Button>
-                    <Button variant={theme.palette.mode == 'light' ? "contained" : "text"}>Save and Apply</Button>
+                <DialogActions sx={{ paddingRight: '30px', paddingBottom: '15px', paddingTop: '10px' }}>
+                    <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} endIcon={<SaveIcon />}>Save</Button>
                 </DialogActions>
             </DialogContent>
         </Dialog >
