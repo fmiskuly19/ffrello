@@ -1,8 +1,9 @@
 import { Box, MenuItem, Radio, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setTheme } from "../../redux/themeSlice";
+import { setCurrentThemeName } from "../../redux/themeSlice";
 import ThemeEditorModal from "../modals/themeEditorModal";
+import { FFrelloTheme } from "../../types/FFrelloTheme";
 
 
 const ThemeDropdown = () => {
@@ -19,13 +20,13 @@ const ThemeDropdown = () => {
     }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(setTheme(event.target.value))
+        dispatch(setCurrentThemeName(event.target.value))
     };
 
-    const handleClick = (theme: string) => {
-        console.log(`clicked theme ${theme}`)
-        let themeName = themes.find(x => x.name == theme).name;
-        dispatch(setTheme(themeName))
+    const handleClick = (themeName: string) => {
+        console.log(`clicked theme ${themeName}`)
+        let name = themes.find(x => x.name == themeName).name;
+        dispatch(setCurrentThemeName(name))
     }
 
     return (
@@ -33,7 +34,7 @@ const ThemeDropdown = () => {
             <Box m="12px" sx={{ minWidth: '200px' }}>
                 <Stack direction="column" spacing={.25}>
 
-                    {themes.map((ffrelloTheme) => {
+                    {themes.map((ffrelloTheme: FFrelloTheme) => {
                         return (
                             <>
                                 <MenuItem sx={{ padding: '4px', borderRadius: '5px', display: 'block' }} onClick={() => handleClick(ffrelloTheme.name)}>

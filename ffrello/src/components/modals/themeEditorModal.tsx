@@ -1,9 +1,9 @@
 import { SetStateAction, useEffect, useState } from "react";
 
-import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Select, SelectChangeEvent, Stack, Switch, ThemeOptions, Tooltip, Typography, createTheme, styled, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Radio, Select, SelectChangeEvent, Stack, Switch, ThemeOptions, Tooltip, Typography, createTheme, styled, useTheme } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 
-import { usePopupState, bindToggle, bindMenu } from 'material-ui-popup-state/hooks'
+import { usePopupState, bindToggle, bindMenu, anchorRef } from 'material-ui-popup-state/hooks'
 
 import CloseIcon from '@mui/icons-material/Close';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -12,10 +12,15 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import SaveIcon from '@mui/icons-material/Save';
 
 import { CompactPicker } from 'react-color';
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addTheme } from "../../redux/themeSlice";
 
-import { useAppSelector } from './hooks.tsx';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+
+import { FFrelloTheme } from "../../types/FFrelloTheme";
+
+import { invertHex } from '../../helpers/invertHex'
 
 interface ThemeEditorModalProps {
     openModal: boolean,
@@ -25,39 +30,81 @@ interface ThemeEditorModalProps {
 const ThemeEditorModal = (props: ThemeEditorModalProps) => {
 
     const fonts = [
-        'Roboto',
         'Montserrat',
-        'Istok'
+        'Rubik Bubbles',
+        'Silkscreen',
+        'Shadows Into Light',
+        'Nova Square'
     ]
 
-    const dispatch = useAppDispatch()
-    
+    const globalTheme = useTheme();
+    const dispatch = useAppDispatch();
 
-    const theme = useTheme();
+    const [isLiveBackgroundPreview, setIsLiveBackgroundPreview] = useState(false);
+    const currentThemeName = useAppSelector((state) => state.themeSlice.currentThemeName);
 
-    const [openModal, setOpenModal] = useState(false);
-    const [isLivePreview, setIsLivePreview] = useState(false);
+    //#region Form Values
 
     //TODO
     //put all of these into a single state object called formValues
-    const [primaryColor, setPrimaryColor] = useState(theme.palette.primary.main)
-    const [primaryContrastTextColor, setPrimaryContrastTextColor] = useState(theme.palette.primary.contrastText)
-    const [secondaryColor, setSecondaryColor] = useState(theme.palette.secondary.main)
-    const [secondaryContrastTextColor, setSecondaryContrastTextColor] = useState(theme.palette.secondary.contrastText)
+    const [primaryColor, setPrimaryColor] = useState(globalTheme.palette.primary.main)
+    const [primaryContrastTextColor, setPrimaryContrastTextColor] = useState(globalTheme.palette.primary.contrastText)
+    const [secondaryColor, setSecondaryColor] = useState(globalTheme.palette.secondary.main)
+    const [secondaryContrastTextColor, setSecondaryContrastTextColor] = useState(globalTheme.palette.secondary.contrastText)
 
-    const [backgroundColor, setBackgroundColor] = useState(theme.palette.background.default)
-    const [paperColor, setPaperColor] = useState(theme.palette.background.paper)
+    const [backgroundColor, setBackgroundColor] = useState(globalTheme.palette.background.default)
+    const [paperColor, setPaperColor] = useState(globalTheme.palette.background.paper)
 
-    const [primaryTextColor, setPrimaryTextColor] = useState(theme.palette.text.primary)
-    const [secondaryTextColor, setSecondaryTextColor] = useState(theme.palette.text.secondary)
+    const [primaryTextColor, setPrimaryTextColor] = useState(globalTheme.palette.text.primary)
+    const [secondaryTextColor, setSecondaryTextColor] = useState(globalTheme.palette.text.secondary)
 
     const [fontName, setFontName] = useState('Roboto')
     const [themeName, setThemeName] = useState('')
 
-    const [isDarkTheme, setIsDarkTheme] = useState(theme.palette.mode == 'dark')
+    const [isDarkTheme, setIsDarkTheme] = useState(globalTheme.palette.mode == 'dark')
+
+
+    //react to theme switch, component will not be rerendered unless its state changes, so we need to manually switch colors to the theme colors if its switched 
+    useEffect(() => {
+        reset()
+    }, [globalTheme]) // I am surprised this works? dont udnerstand how its doing its comparison ie shallow or deep. theme is a deep unserializable object
+
+    const handleThemeModeSwitchFlip = (value: boolean) => {
+
+        //set state to flip the switch
+        setIsDarkTheme(value)
+
+        //also invert the background colors to match the selected theme
+        setBackgroundColor(invertHex(backgroundColor))
+        setPaperColor(invertHex(paperColor))
+
+        setPrimaryTextColor(invertHex(primaryTextColor))
+        setSecondaryTextColor(invertHex(secondaryTextColor))
+    }
 
     const reset = () => {
-        setOpenModal(false);
+        setOpenModal(false)
+        setPrimaryColor(globalTheme.palette.primary.main)
+        setPrimaryContrastTextColor(globalTheme.palette.primary.contrastText)
+
+        setSecondaryColor(globalTheme.palette.secondary.main)
+        setSecondaryContrastTextColor(globalTheme.palette.secondary.contrastText)
+
+        setBackgroundColor(globalTheme.palette.background.default)
+        setPaperColor(globalTheme.palette.background.paper)
+
+        setPrimaryTextColor(globalTheme.palette.text.primary)
+        setSecondaryTextColor(globalTheme.palette.text.secondary)
+
+        setFontName(globalTheme.typography.fontFamily?.toString() ?? '')
+        setThemeName(currentThemeName)
+
+        setIsDarkTheme(globalTheme.palette.mode == 'dark')
+
+        console.log(globalTheme);
+    }
+
+    const updateFormWithTheme = (theme: any) => {
         setPrimaryColor(theme.palette.primary.main)
         setPrimaryContrastTextColor(theme.palette.primary.contrastText)
 
@@ -70,22 +117,14 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         setPrimaryTextColor(theme.palette.text.primary)
         setSecondaryTextColor(theme.palette.text.secondary)
 
-        setFontName('Roboto');
-        setThemeName('');
-
         setIsDarkTheme(theme.palette.mode == 'dark')
     }
 
-    //generic useEffect that will execute each time ANYTHING changes
-    //do this for live preview of theme, if we want live preview, anytime anything changes save it as current theme
-    // useEffect(() => {
-    //     console.log('something changed in the theme editor')
-    // })    
+    //#endregion
 
-    //react to theme mode switch, component will not be rerendered unless its state changes, so we need to manually switch colors to the theme colors if its switched 
-    useEffect(() => {
-        reset()
-    }, [theme.palette.mode])
+    //#region Modal
+
+    const [openModal, setOpenModal] = useState(false);
 
     //if our parent changes the value of the isOpen prop, change state accordingly so it will know to re render
     useEffect(() => {
@@ -98,6 +137,9 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         props.parentHandleClose();
     };
 
+    //#endregion
+
+    //#region color popups
 
     const primaryPopupState = usePopupState({ variant: 'popover', popupId: 'primaryPopper' })
     const primaryContrastTextPopupState = usePopupState({ variant: 'popover', popupId: 'primaryContrastTextPopper' })
@@ -111,6 +153,23 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
     const primaryTextColorPopupState = usePopupState({ variant: 'popover', popupId: 'primaryTextColorPopper' })
     const secondaryTextColorPopupState = usePopupState({ variant: 'popover', popupId: 'secondaryTextColorPopper' })
 
+    //#endregion
+
+    //#region theme switching/theme name dropdown
+
+    const themeNamePopupState = usePopupState({ variant: 'popover', popupId: 'themeNamePopper' })
+    const themes = useAppSelector((state) => state.themeSlice.themes);
+
+    const handleUpdateFormWithSelectedTheme = (themeName: string) => {
+
+        setThemeName(themeName);
+        let theme = themes.find(x => x.name == themeName).theme;
+        if (theme) {
+            updateFormWithTheme(theme);
+        }
+    }
+
+    //#endregion
 
     const handleThemeSave = () => {
         const newTheme: ThemeOptions = createTheme({
@@ -136,9 +195,9 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                     secondary: secondaryTextColor,
                 },
             },
-        });
+        })
 
-        dispatch(addTheme({ name: themeName, theme: newTheme }));
+        dispatch(addTheme({ name: themeName, theme: newTheme }))
     }
 
     return (
@@ -160,12 +219,12 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                             sx={{ height: '24px', width: '24px' }}
                                             checkedIcon={<CircleIcon className="record-pulse" sx={{ height: '16px', width: '16px', color: 'red' }} />}
                                             icon={<CircleTwoToneIcon sx={{ height: '16px', width: '16px', color: '#FF7276' }} />}
-                                            checked={isLivePreview}
-                                            onChange={(event, value) => setIsLivePreview(value)}
+                                            checked={isLiveBackgroundPreview}
+                                            onChange={(_event, value) => setIsLiveBackgroundPreview(value)}
                                         />
                                     </Tooltip>
                                 </Stack>
-                                <IconButton onClick={() => handleModalClose()} sx={{ color: theme.palette.text.primary }}>
+                                <IconButton onClick={() => handleModalClose()} sx={{ color: globalTheme.palette.text.primary }}>
                                     <CloseIcon />
                                 </IconButton>
                             </Stack>
@@ -174,198 +233,223 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                     </DialogTitle>
 
                     <Box sx={{ height: '100%' }}>
-                        {/* <Divider><Typography variant="body2">Colors</Typography></Divider> */}
                         <Divider sx={{ mb: '15px' }} />
 
                         <Box display="flex">
 
                             {/* this is the container holding the two 50% halves */}
                             <Stack direction="row" display="flex" spacing={4}>
-                            <Box sx={{ width: '50%' }}>
-                                <Stack direction="column" spacing={1} justifyContent="space-between" display="flex">
+                                <Box sx={{ width: '50%' }}>
+                                    <Stack direction="column" spacing={1} justifyContent="space-between" display="flex">
 
-                                    <Stack direction="column" spacing={1}>
-                                        <Stack direction="row" alignItems="center" spacing={3}>
-                                            <Typography variant="body1">Mode: </Typography>
-                                            <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
-                                                <Typography>Light</Typography><MaterialUISwitch checked={isDarkTheme} onChange={(event, value) => setIsDarkTheme(value)} /><Typography>Dark</Typography>
-                                            </Stack>
-                                        </Stack>
-
-                                        <Stack id="theme-name-stack" direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-                                            <Typography variant="body1" id="theme-name-label">Name:</Typography>
-                                            <OutlinedInput
-                                                id="theme-name-input"
-                                                aria-describedby="theme-name-label"
-                                                inputProps={{
-                                                    'aria-label': 'Theme Name',
-                                                }}
-                                                sx={{ height: '36px' }}
-                                                fullWidth={true}
-                                                value={themeName}
-                                                onChange={(e) => setThemeName(e.target.value)}
-                                            />
-                                        </Stack>
-                                    </Stack>
-
-                                    <Stack direction="column" spacing={1}>
-                                        <Divider><Typography variant="h6">Colors</Typography></Divider>
-
-                                        <Stack spacing={2}>
-                                            <Stack id="primary-color-stack" direction="column" >
-                                                <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography variant="body1">Primary:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
-                                                    <Menu {...bindMenu(primaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                        <CompactPicker color={primaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryColor(color.hex)} />
-                                                    </Menu>
-                                                </Stack>
-                                                <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography variant="body2">Contrast Text:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
-                                                    <Menu {...bindMenu(primaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                        <CompactPicker color={primaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryContrastTextColor(color.hex)} />
-                                                    </Menu>
+                                        <Stack direction="column" spacing={1}>
+                                            <Stack direction="row" alignItems="center" spacing={3}>
+                                                <Typography variant="body1">Mode: </Typography>
+                                                <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
+                                                    <Typography>Light</Typography><MaterialUISwitch checked={isDarkTheme} onChange={(event, value) => handleThemeModeSwitchFlip(value)} /><Typography>Dark</Typography>
                                                 </Stack>
                                             </Stack>
 
-                                            <Stack id="secondary-color-stack" direction="column" >
-                                                <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography variant="body1">Secondary:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
-                                                    <Menu {...bindMenu(secondaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                        <CompactPicker color={secondaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryColor(color.hex)} />
-                                                    </Menu>
-                                                </Stack>
-                                                <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography variant="body2">Contrast Text:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
-                                                    <Menu {...bindMenu(secondaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                        <CompactPicker color={secondaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryContrastTextColor(color.hex)} />
-                                                    </Menu>
-                                                </Stack>
-                                            </Stack>
-
-                                            <Stack id="background-colors-stack" direction="column">
-                                                <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography variant="body1">Background:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
-                                                    <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                        <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
-                                                    </Menu>
-                                                </Stack>
-                                                <Stack direction="row" justifyContent="space-between" >
-                                                    <Typography variant="body2">Paper:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(paperColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: paperColor }} />
-                                                    <Menu {...bindMenu(paperColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                        <CompactPicker color={paperColor} onChange={(color: { hex: SetStateAction<string>; }) => setPaperColor(color.hex)} />
-                                                    </Menu>
-                                                </Stack>
-                                            </Stack>
-
-                                        </Stack>
-                                    </Stack>
-
-
-                                    <Stack direction="column" spacing={1}>
-                                        <Divider><Typography variant="h6">Text</Typography></Divider>
-                                        <Stack direction="column" spacing={2}>
-                                            <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                                                <Typography variant="body1">Font: </Typography>
-                                                <Select
-                                                    variant="outlined"
+                                            <Stack id="theme-name-stack" direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
+                                                <Typography variant="body1" id="theme-name-label">Name:</Typography>
+                                                <OutlinedInput
+                                                    id="theme-name-input"
+                                                    aria-describedby="theme-name-label"
+                                                    inputProps={{
+                                                        'aria-label': 'Theme Name',
+                                                    }}
+                                                    ref={anchorRef(themeNamePopupState)}
+                                                    sx={{ height: '36px', paddingRight: '0px' }}
                                                     fullWidth={true}
-                                                    value={fontName}
-                                                    defaultValue={fonts[0]}
-                                                    onChange={(event) => setFontName(event.target.value as string)}
-                                                    sx={{ height: '36px' }}>
-                                                    {fonts.map((fontName) => {
-                                                        return (<MenuItem value={fontName}>{fontName}</MenuItem>)
+                                                    value={themeName}
+                                                    onChange={(e) => setThemeName(e.target.value)}
+                                                    endAdornment={
+                                                        <IconButton size="small" sx={{ borderRadius: '5px' }}  {...bindToggle(themeNamePopupState)}>
+                                                            {themeNamePopupState.isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+                                                        </IconButton>
+                                                    }
+                                                />
+                                                <Menu {...bindMenu(themeNamePopupState)} MenuListProps={{ 'disablePadding': true }} anchorOrigin={{ vertical: "bottom", horizontal: "left" }} >
+                                                    {themes.map((ffrelloTheme: FFrelloTheme) => {
+                                                        return (
+                                                            <MenuItem sx={{ padding: '10px', borderRadius: '5px', display: 'block', minWidth: '345px' }} onClick={() => handleUpdateFormWithSelectedTheme(ffrelloTheme.name)}>
+                                                                <Box sx={{ display: 'flex' }} flexDirection="row" alignItems="center" justifyContent="space-between">
+                                                                    <Typography>{ffrelloTheme.name}</Typography>
+                                                                    <Radio
+                                                                        onChange={() => handleUpdateFormWithSelectedTheme(ffrelloTheme.name)}
+                                                                        checked={themeName == ffrelloTheme.name}
+                                                                        size="small"
+                                                                        value={ffrelloTheme.name}
+                                                                        name="radio-buttons"
+                                                                        inputProps={{ 'aria-label': ffrelloTheme.name }}
+                                                                    />
+                                                                </Box>
+                                                            </MenuItem >
+                                                        )
                                                     })}
-                                                </Select>
-                                            </Stack>
-
-                                            <Stack direction="row" justifyContent="space-between" >
-                                                <Typography variant="body1">Primary Color:</Typography>
-                                                <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryTextColor }} />
-                                                <Menu {...bindMenu(primaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={primaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} />
-                                                </Menu>
-                                            </Stack>
-
-                                            <Stack direction="row" justifyContent="space-between" >
-                                                <Typography variant="body1">Secondary Color:</Typography>
-                                                <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryTextColor }} />
-                                                <Menu {...bindMenu(secondaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
-                                                    <CompactPicker color={secondaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} onColorChangeComplete={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} />
                                                 </Menu>
                                             </Stack>
                                         </Stack>
+
+                                        <Stack direction="column" spacing={1}>
+                                            <Divider><Typography variant="h6">Colors</Typography></Divider>
+
+                                            <Stack spacing={2}>
+                                                <Stack id="primary-color-stack" direction="column" >
+                                                    <Stack direction="row" justifyContent="space-between" >
+                                                        <Typography variant="body1">Primary:</Typography>
+                                                        <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
+                                                        <Menu {...bindMenu(primaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                            <CompactPicker color={primaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryColor(color.hex)} />
+                                                        </Menu>
+                                                    </Stack>
+                                                    <Stack direction="row" justifyContent="space-between">
+                                                        <Typography variant="body2">Contrast Text:</Typography>
+                                                        <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
+                                                        <Menu {...bindMenu(primaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                            <CompactPicker color={primaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryContrastTextColor(color.hex)} />
+                                                        </Menu>
+                                                    </Stack>
+                                                </Stack>
+
+                                                <Stack id="secondary-color-stack" direction="column" >
+                                                    <Stack direction="row" justifyContent="space-between" >
+                                                        <Typography variant="body1">Secondary:</Typography>
+                                                        <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
+                                                        <Menu {...bindMenu(secondaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                            <CompactPicker color={secondaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryColor(color.hex)} />
+                                                        </Menu>
+                                                    </Stack>
+                                                    <Stack direction="row" justifyContent="space-between" >
+                                                        <Typography variant="body2">Contrast Text:</Typography>
+                                                        <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
+                                                        <Menu {...bindMenu(secondaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                            <CompactPicker color={secondaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryContrastTextColor(color.hex)} />
+                                                        </Menu>
+                                                    </Stack>
+                                                </Stack>
+
+                                                <Stack id="background-colors-stack" direction="column">
+                                                    <Stack direction="row" justifyContent="space-between" >
+                                                        <Typography variant="body1">Background:</Typography>
+                                                        <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
+                                                        <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                            <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
+                                                        </Menu>
+                                                    </Stack>
+                                                    <Stack direction="row" justifyContent="space-between" >
+                                                        <Typography variant="body2">Paper:</Typography>
+                                                        <Button variant="outlined" {...bindToggle(paperColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: paperColor }} />
+                                                        <Menu {...bindMenu(paperColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                            <CompactPicker color={paperColor} onChange={(color: { hex: SetStateAction<string>; }) => setPaperColor(color.hex)} />
+                                                        </Menu>
+                                                    </Stack>
+                                                </Stack>
+
+                                            </Stack>
+                                        </Stack>
+
+
+                                        <Stack direction="column" spacing={1}>
+                                            <Divider><Typography variant="h6">Text</Typography></Divider>
+                                            <Stack direction="column" spacing={2}>
+                                                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                                                    <Typography variant="body1">Font: </Typography>
+                                                    <Select
+                                                        variant="outlined"
+                                                        fullWidth={true}
+                                                        value={fontName}
+                                                        defaultValue={fonts[0]}
+                                                        onChange={(event) => setFontName(event.target.value as string)}
+                                                        sx={{ height: '36px' }}>
+                                                        {fonts.map((fontName) => {
+                                                            return (<MenuItem value={fontName}>{fontName}</MenuItem>)
+                                                        })}
+                                                    </Select>
+                                                </Stack>
+
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography variant="body1">Primary Color:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryTextColor }} />
+                                                    <Menu {...bindMenu(primaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={primaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} onChangeComplete={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+
+                                                <Stack direction="row" justifyContent="space-between" >
+                                                    <Typography variant="body1">Secondary Color:</Typography>
+                                                    <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryTextColor }} />
+                                                    <Menu {...bindMenu(secondaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
+                                                        <CompactPicker color={secondaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} onChangeComplete={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} />
+                                                    </Menu>
+                                                </Stack>
+                                            </Stack>
+                                        </Stack>
+
+
+
                                     </Stack>
+                                </Box>
 
 
+                                <Box sx={{ width: '50%', padding: '10px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: backgroundColor, borderRadius: '5px' }}>
 
-                                </Stack>
-                            </Box>
+                                    <Stack direction="column" spacing={1}>
+                                        <Box display="flex" justifyContent="center">
+                                            <Typography variant="h6" sx={{ fontFamily: fontName }}>Preview</Typography>
+                                        </Box>
+                                        <Card sx={{ backgroundColor: paperColor }}>
+                                            <CardHeader
+                                                avatar={
+                                                    <Avatar sx={{ bgcolor: primaryColor, color: primaryContrastTextColor, fontFamily: fontName }} aria-label="recipe">
+                                                        F
+                                                    </Avatar>
+                                                }
+                                                action={
+                                                    <IconButton aria-label="settings">
+                                                        <MoreVertIcon />
+                                                    </IconButton>
+                                                }
+                                                sx={{ color: primaryTextColor }}
+                                                title={<Typography sx={{ fontFamily: fontName }}>River Otter in funny hat</Typography>}
+                                                subheader={<Typography sx={{ fontFamily: fontName }}>May 20th, 2019</Typography>}
+                                            />
+                                            <CardMedia
+                                                sx={{ height: 140 }}
+                                                image="/src/assets/fishfearme.jpg"
+                                                title="women want me, fish fear me"
+                                            />
+                                            <CardContent sx={{ color: primaryTextColor }}>
+                                                <Tooltip title="Primary text Color" placement="left" >
+                                                    <Typography gutterBottom variant="h5" component="div" sx={{ fontFamily: fontName }}>
+                                                        River Otter
+                                                    </Typography>
+                                                </Tooltip>
 
-
-                            <Box sx={{ width: '50%', padding: '10px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: backgroundColor, borderRadius: '5px' }}>
-                                <Stack direction="column" spacing={1}>
-                                    <Box display="flex" justifyContent="center">
-                                        <Typography variant="h6">Preview</Typography>
-                                    </Box>
-                                    <Card sx={{ backgroundColor: paperColor, fontFamily: fontName }}>
-                                        <CardHeader
-                                            avatar={
-                                                <Avatar sx={{ bgcolor: primaryColor, color: primaryContrastTextColor }} aria-label="recipe">
-                                                    F
-                                                </Avatar>
-                                            }
-                                            action={
-                                                <IconButton aria-label="settings">
-                                                    <MoreVertIcon />
-                                                </IconButton>
-                                            }
-                                            sx={{ color: primaryTextColor }}
-                                            title="River Otter in funny hat"
-                                            subheader="May 20th, 2019"
-                                        />
-                                        <CardMedia
-                                            sx={{ height: 140 }}
-                                            image="/src/assets/fishfearme.jpg"
-                                            title="women want me, fish fear me"
-                                        />
-                                        <CardContent sx={{ color: primaryTextColor }}>
-                                            <Tooltip title="Primary text Color" placement="left" >
-                                                <Typography gutterBottom variant="h5" component="div">
-                                                    River Otter
-                                                </Typography>
-                                            </Tooltip>
-
-                                            <Tooltip title="Secondary text Color" placement="left">
-                                                <Typography variant="body2" color={secondaryTextColor}>
-                                                    The playful North American river otter is well adapted for semi-aquatic living.
-                                                    They are very flexible and can make sharp, sudden turns that help them catch fish.
-                                                </Typography>
-                                            </Tooltip>
-
-                                            <Stack direction="row" display="flex" justifyContent="flex-end" spacing={1} mt="15px">
+                                                <Tooltip title="Secondary text Color" placement="left">
+                                                    <Typography variant="body2" color={secondaryTextColor} sx={{ fontFamily: fontName }}>
+                                                        The playful North American river otter is well adapted for semi-aquatic living.
+                                                        They are very flexible and can make sharp, sudden turns that help them catch fish.
+                                                    </Typography>
+                                                </Tooltip>
 
                                                 <Stack direction="row" display="flex" justifyContent="flex-end" spacing={1} mt="15px">
-                                                    <Tooltip title="Primary color with contrast text" placement="bottom">
-                                                        <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: primaryColor, color: primaryContrastTextColor }} >Primary</Button>
-                                                    </Tooltip>
 
-                                                    <Tooltip title="Secondary color with contrast text" placement="bottom">
-                                                        <Button variant={theme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: secondaryColor, color: secondaryContrastTextColor }}>Secondary</Button>
-                                                    </Tooltip>
+                                                    <Stack direction="row" display="flex" justifyContent="flex-end" spacing={1} mt="15px">
+                                                        <Tooltip title="Primary color with contrast text" placement="bottom">
+                                                            <Button variant={globalTheme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: primaryColor, color: primaryContrastTextColor, fontFamily: fontName }} >Primary</Button>
+                                                        </Tooltip>
+
+                                                        <Tooltip title="Secondary color with contrast text" placement="bottom">
+                                                            <Button variant={globalTheme.palette.mode == 'light' ? "contained" : "text"} sx={{ backgroundColor: secondaryColor, color: secondaryContrastTextColor, fontFamily: fontName }}>Secondary</Button>
+                                                        </Tooltip>
+                                                    </Stack>
+
                                                 </Stack>
-
-                                            </Stack>
-                                        </CardContent>
-                                    </Card>
-                                </Stack>
-                            </Box>
+                                            </CardContent>
+                                        </Card>
+                                    </Stack>
+                                </Box>
                             </Stack>
                         </Box>
 
@@ -374,11 +458,11 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                 </Box>
                 <DialogActions sx={{ paddingRight: '30px', paddingBottom: '15px', paddingTop: '10px' }}>
                     <Button
-                        variant={theme.palette.mode == 'light' ? "contained" : "text"}
+                        variant={globalTheme.palette.mode == 'light' ? "contained" : "text"}
                         endIcon={<SaveIcon />}
                         onClick={handleThemeSave}>Save</Button>
                 </DialogActions>
-            </DialogContent>
+            </DialogContent >
         </Dialog >
     );
 }
@@ -396,16 +480,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
 
 
 
-
-
-
-
-
-
-
-
 //custom light/dark theme switch from material ui website docs https://mui.com/material-ui/react-switch/
-
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
     height: 34,

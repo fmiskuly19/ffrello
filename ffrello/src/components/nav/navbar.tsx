@@ -17,7 +17,7 @@ import CreateButtonDropdown from './createButtonDropdown';
 import NotificationsDropdown from './notificationsDropdown';
 
 const Navbar = () => {
-  //   const classes = useStyles();
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -39,7 +39,7 @@ const Navbar = () => {
                 <Stack direction='row'>
                   {/* logo goes here */}
                   <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.contrastText }}>
-                    <Typography variant="h5" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none', color: iconColor }} >FFrello</Typography>
+                    <Typography variant="h5" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none', color: iconColor, fontFamily: 'Nova Square' }} >FFrello</Typography>
                   </Link>
                 </Stack>
                 <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdown />} closeOnClick={true} />

@@ -39,7 +39,7 @@ const BoardCard = (props: BoardCardProps) => {
                 borderRadius: '5px',
                 textDecoration: 'none',
             }}>
-            <Typography variant="h5" fontWeight="600" sx={{ color: theme.palette.primary.contrastText }}>{props.name}</Typography>
+            <Typography variant="h5" fontWeight="600" sx={{ color: theme.palette.primary.contrastText, overflowX: 'hidden', overflowY: 'hidden' }} >{props.name}</Typography>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Typography variant="body1" sx={{ color: theme.palette.primary.contrastText }} noWrap>{props.Workspace?.name}</Typography>
                 <InteractiveStarIcon isStarred={props.isStarred} />

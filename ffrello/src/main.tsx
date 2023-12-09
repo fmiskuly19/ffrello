@@ -26,7 +26,6 @@ import { SnackbarProvider } from 'notistack';
 import { useAppSelector } from './hooks.tsx';
 import DefaultTheme from './themes/defaultTheme.tsx'
 
-import * as Themes from './themes/themeIndex.tsx'
 import { useEffect, useState } from 'react';
 
 const router = createBrowserRouter([

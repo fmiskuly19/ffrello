@@ -22,7 +22,7 @@ const FrutigerAeroTheme: ThemeOptions = createTheme({
         },
     },
     typography: {
-        fontFamily: 'Segoe UI',
+        fontFamily: 'Silkscreen',
     },
 });
 

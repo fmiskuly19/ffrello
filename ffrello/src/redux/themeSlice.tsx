@@ -10,7 +10,7 @@ interface ThemeState {
 // Define the initial state using that type
 const initialState: ThemeState = {
   currentThemeName: Themes.Default.name,
-  themes: [Themes.Default, Themes.FrutigerAero]
+  themes: [Themes.Default, Themes.FrutigerAero, Themes.CatsTheme]
 }
 
 export const themeSlice = createSlice({
@@ -23,13 +23,13 @@ export const themeSlice = createSlice({
         action.payload,
       ];
     },
-    setTheme: (state, action: PayloadAction<string>) => {
+    setCurrentThemeName: (state, action: PayloadAction<string>) => {
       state.currentThemeName = action.payload
     },
 
   },
 })
 
-export const { setTheme, addTheme } = themeSlice.actions
+export const { setCurrentThemeName, addTheme } = themeSlice.actions
 
 export default themeSlice.reducer
