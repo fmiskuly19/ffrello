@@ -118,6 +118,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         setSecondaryTextColor(theme.palette.text.secondary)
 
         setIsDarkTheme(theme.palette.mode == 'dark')
+        setFontName(theme.typography.fontFamily?.toString() ?? '')
     }
 
     //#endregion
