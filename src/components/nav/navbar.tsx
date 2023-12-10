@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import InformationDropdown from './informationDropdown'
 import CreateButtonDropdown from './createButtonDropdown';
 import NotificationsDropdown from './notificationsDropdown';
+import ProfileDropdown from './profileDropdown';
 
 const Navbar = () => {
 
@@ -55,7 +56,7 @@ const Navbar = () => {
                 <NavDropdown label="Notifications" menuContent={<NotificationsDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)', color: iconColor }} />} closeOnClick={false} />
                 <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon sx={{ color: iconColor }} />} closeOnClick={true} />
                 <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon sx={{ color: iconColor }} />} closeOnClick={false} />
-                <NavDropdown label="Avatar" menuContent={<ThemeDropdown />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} closeOnClick={true} />
+                <NavDropdown label="Avatar" menuContent={<ProfileDropdown />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} closeOnClick={true} />
               </Stack>
             </Toolbar>
           </Box>
