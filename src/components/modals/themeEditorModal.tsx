@@ -22,6 +22,8 @@ import { FFrelloTheme } from "../../types/FFrelloTheme";
 
 import { invertHex } from '../../helpers/invertHex'
 
+import fishFearMeJpg from '../../assets/fishfearme.jpg'
+
 interface ThemeEditorModalProps {
     openModal: boolean,
     parentHandleClose: any
@@ -419,7 +421,7 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                             />
                                             <CardMedia
                                                 sx={{ height: 140 }}
-                                                image="/src/assets/fishfearme.jpg"
+                                                image={fishFearMeJpg}
                                                 title="women want me, fish fear me"
                                             />
                                             <CardContent sx={{ color: primaryTextColor }}>
