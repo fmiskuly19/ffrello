@@ -22,7 +22,8 @@ jobs:
           node-version: '18.x'
 
       - name: npm install, build, and test
-        run: npm install | 
+        run: | 
+          npm install  
           npm run dev
 
       - name: Upload artifact for deployment job
