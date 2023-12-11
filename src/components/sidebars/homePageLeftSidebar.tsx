@@ -123,10 +123,10 @@ const HomePageLeftSidebar = () => {
                     workspaces.map((workspace) => {
                         return (
                             <Accordion disableGutters sx={{
-                                "&.MuiPaper-root::before": { content: 'none' }
+                                "&.MuiPaper-root::before": { content: 'none' }, "&.MuiPaper-root": { background: theme.palette.background.default }
                             }} elevation={0} expanded={expanded.includes(`accordion${workspace.id}`)} onChange={handleChange(`accordion${workspace.id}`)}>
                                 <AccordionSummary expandIcon={<KeyboardArrowDownIcon sx={{ fontSize: iconFontSize }} color='primary' />} sx={{
-                                    backgroundColor: theme.palette.background.default, paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: 'rgba(255, 255, 255, .1)' }, borderRadius: '8px'
+                                    backgroundColor: theme.palette.background.default, paddingLeft: '6px', paddingRight: '3px', '&:hover': { background: theme.palette.background.paper }, borderRadius: '8px'
                                 }}>
                                     <Stack direction="row" alignItems="center" spacing={1} sx={{ marginTop: '0px' }}>
                                         <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
