@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
 import { Stack } from "@mui/material";
-import { SkeletonHighlightCard } from "../../components/cards/highlightCard";
+import { SkeletonHighlightCard } from "../../components/material-ui-cards/highlightCard";
 
 const WorkspaceHighlightsPage = () => {
 

@@ -8,18 +8,16 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import HistoryIcon from '@mui/icons-material/History';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
-import BoardCard, { BoardCardHeight } from "../../components/cards/boardInfoCard";
-import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/cards/homepageWorkspaceCard";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { useSnackbar } from "notistack";
 import { getUserWorkspaces } from "../../redux/userSlice";
 
 import { useTheme } from '@mui/material/styles';
+import BoardCard, { BoardCardHeight } from "../../components/material-ui-cards/boardInfoCard";
+import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/material-ui-cards/homepageWorkspaceCard";
 
 
 const HomeBoardsPage = () => {
-
-    const theme = useTheme();
 
     const { enqueueSnackbar } = useSnackbar();
     const dispatch = useAppDispatch()
@@ -62,7 +60,7 @@ const HomeBoardsPage = () => {
                     </Stack>
                     <Grid container rowSpacing={2} columnGap={2}>
                         <Grid item xl={3}>
-                            <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} />
+                            <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} WorkspaceId={0} boardLists={[]} />
                         </Grid>
                     </Grid>
                 </Stack>

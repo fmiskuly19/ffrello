@@ -5,7 +5,6 @@ import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice
 
 import { Box, Grid, Skeleton, Stack, Typography } from "@mui/material"
 
-import HighlightCard, { SkeletonHighlightCard } from "../../components/cards/highlightCard";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HomePageRightSidebar from "../../components/sidebars/homePageRightSidebar";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
@@ -13,6 +12,7 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { getUserWorkspaces } from "../../redux/userSlice";
 
 import * as data from '../../data/hardcodes'
+import HighlightCard, { SkeletonHighlightCard } from "../../components/material-ui-cards/highlightCard";
 
 
 const HighlightsPage = () => {

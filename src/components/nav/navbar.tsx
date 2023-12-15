@@ -17,6 +17,8 @@ import CreateButtonDropdown from './createButtonDropdown';
 import NotificationsDropdown from './notificationsDropdown';
 import ProfileDropdown from './profileDropdown';
 
+import ffrelloLogo from '../../assets/ffrello.png'
+
 const Navbar = () => {
 
   const theme = useTheme();
@@ -37,8 +39,8 @@ const Navbar = () => {
             <Toolbar variant="dense" disableGutters>
               <Stack direction="row" alignItems="center" spacing={1} pl='5px'>
                 <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdown />} icon={<AppsIcon style={{ fontSize: '20px', color: iconColor }} />} closeOnClick={true} />
-                <Stack direction='row'>
-                  {/* logo goes here */}
+                <Stack direction='row' spacing={1}>
+                  <img src={ffrelloLogo} height="30px" />
                   <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.contrastText }}>
                     <Typography variant="h5" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none', color: iconColor, fontFamily: 'Nova Square' }} >FFrello</Typography>
                   </Link>

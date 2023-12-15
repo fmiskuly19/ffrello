@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "../../hooks"
 import { setSelectedMenu, setSelectedWorkspaceMenu } from "../../redux/homeSlice"
 import { useParams } from "react-router-dom";
 import { Grid, Skeleton, Stack, Typography } from "@mui/material";
-import BoardCard, { BoardCardHeight } from "../../components/cards/boardInfoCard";
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import HistoryIcon from '@mui/icons-material/History';
 import PeopleIcon from '@mui/icons-material/People';
+import BoardCard, { BoardCardHeight } from "../../components/material-ui-cards/boardInfoCard";
 
 const WorkspaceHomePage = () => {
 
@@ -59,7 +59,7 @@ const WorkspaceHomePage = () => {
                     <Grid container rowSpacing={2} columnGap={2}>
                         {workspace ?
                             <Grid item xl={3}>
-                                <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} />
+                                <BoardCard id={0} name={"Dummy Board"} isStarred={false} Workspace={{ id: 0, name: 'Dummy Board Name', boards: [] }} WorkspaceId={0} boardLists={[]} />
                             </Grid>
                             :
                             <Grid item xl={3}><Skeleton variant="rounded" height={BoardCardHeight} /></Grid>

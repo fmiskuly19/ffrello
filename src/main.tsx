@@ -27,6 +27,8 @@ import { useAppSelector } from './hooks.tsx';
 import DefaultTheme from './themes/defaultTheme.tsx'
 
 import { useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const router = createBrowserRouter([
   {
@@ -106,12 +108,15 @@ const Main = () => {
   }, [currentThemeName])
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SnackbarProvider maxSnack={4}>
-        <RouterProvider router={router} />
-      </SnackbarProvider>
-    </ThemeProvider>
+    <DndProvider backend={HTML5Backend}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <SnackbarProvider maxSnack={4}>
+          <RouterProvider router={router} />
+        </SnackbarProvider>
+      </ThemeProvider>
+    </DndProvider>
+
   )
 }
 

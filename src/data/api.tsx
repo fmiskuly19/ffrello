@@ -1,8 +1,8 @@
 import { getBoard, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { addNewCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
+import { addNewCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
 
-// export const API_HOST_URL = "https://localhost:7135/api"
-export const API_HOST_URL = "https://ffrelloapiappservice.azurewebsites.net/api"
+export const API_HOST_URL = "https://localhost:7135/api"
+//export const API_HOST_URL = "https://ffrelloapiappservice.azurewebsites.net/api"
 
 export const DummyApiCall = async () => {
     const target = "/api/dummy/";
@@ -128,6 +128,26 @@ export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
         }
         else {
             throw new Error('Did not create new card');
+        }
+    });
+};
+
+export const MoveCardApiCall = async (data: moveCardArgs, thunkAPI: any) => {
+    const target = `/${data.userid}/card/move`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        }
+        else {
+            throw new Error('Did not move card');
         }
     });
 };

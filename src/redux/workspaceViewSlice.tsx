@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, current, PayloadAction } from '@reduxjs/toolkit'
-import { GetBoardPage, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
+import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit'
+import { GetBoardPage, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 import Board from '../types/Board';
 import { getBoard as getBoardPageArgs } from './userSlice';
@@ -7,10 +7,18 @@ import Workspace from '../types/Workspace';
 import { BoardList } from '../types/BoardList';
 import FCard from '../types/FCard';
 
+// #region Thunk Args
+
 export interface addNewCardArgs {
     userid: string,
     boardListId: number,
     title: string,
+}
+
+export interface moveCardArgs {
+    userid: string,
+    boardListId: number,
+    cardId: number,
 }
 
 export interface newBoardListArgs {
@@ -31,9 +39,13 @@ export interface starBoardArgs {
     isStarred: boolean,
 }
 
+// #endregion
+
 interface WorkspaceViewSliceProps {
     currentBoard?: Board,
     workspace?: Workspace,
+
+    //api call statuses
     getBoardPageStatus: ApiCallStatus,
     removeBoardListStatus: ApiCallStatus,
     addBoardListStatus: ApiCallStatus,
@@ -41,12 +53,17 @@ interface WorkspaceViewSliceProps {
     newCardStatus: ApiCallStatus,
 }
 
-const initialState: WorkspaceViewSliceProps = {
-    getBoardPageStatus: ApiCallStatus.Idle,
-    removeBoardListStatus: ApiCallStatus.Idle,
-    addBoardListStatus: ApiCallStatus.Idle,
-    starBoardStatus: ApiCallStatus.Idle,
-    newCardStatus: ApiCallStatus.Idle,
+export interface MoveCardReducerPayload {
+    cardId: number,
+    boardListSourceId: number,
+    boardListDestId: number,
+}
+
+export interface InsertCardReducerPayload {
+    cardToMoveId: number,
+    cardToMoveBoardListId: number,
+    cardDroppedOnId: number,
+    cardDropppedOnBoardListId: number
 }
 
 export const getBoardPageThunk = createAsyncThunk(
@@ -87,12 +104,110 @@ export const newCardThunk = createAsyncThunk(
     }
 )
 
+export const moveCardThunk = createAsyncThunk(
+    '/moveCard',
+    async (data: moveCardArgs, thunkAPI) => {
+        return await MoveCardApiCall(data, thunkAPI);
+    }
+)
+
+const initialState: WorkspaceViewSliceProps = {
+    getBoardPageStatus: ApiCallStatus.Idle,
+    removeBoardListStatus: ApiCallStatus.Idle,
+    addBoardListStatus: ApiCallStatus.Idle,
+    starBoardStatus: ApiCallStatus.Idle,
+    newCardStatus: ApiCallStatus.Idle,
+}
+
 export const workspaceViewSlice = createSlice({
     name: 'workspaceView',
     initialState,
     reducers: {
         setGetBoardStatus: (state, action: PayloadAction<ApiCallStatus>) => {
             state.getBoardPageStatus = action.payload;
+        },
+        moveCard: (state, action: PayloadAction<MoveCardReducerPayload>) => {
+
+            let updatedBoardLists1 = state.currentBoard?.boardLists.map((list) => {
+
+                if (list.id === action.payload.boardListDestId) {
+
+                    const cardToMove = state.currentBoard?.boardLists.find((list) => list.id === action.payload.boardListSourceId)?.cards.find((card) => card.id === action.payload.cardId);
+
+                    if (cardToMove) {
+                        cardToMove.boardListId = action.payload.boardListDestId;
+                        const updatedCards = [...list.cards, cardToMove];
+                        return { ...list, cards: updatedCards };
+                    }
+                }
+
+                return list;
+            });
+
+            let updatedBoardLists2 = updatedBoardLists1?.map((list) => {
+
+                if (list.id === action.payload.boardListSourceId) {
+                    // Remove the card from the source list
+                    const updatedCards = list.cards.filter((card) => card.id !== action.payload.cardId);
+                    return { ...list, cards: updatedCards };
+                }
+
+                return list;
+            });
+
+            let updatedBoard = {
+                ...state.currentBoard,
+                boardLists: updatedBoardLists2,
+            };
+
+            state.currentBoard = updatedBoard as Board;
+        },
+        insertCard: (state, action: PayloadAction<InsertCardReducerPayload>) => {
+
+            //insert card into destination list 
+            let updatedListsAfterCardInsert = state.currentBoard?.boardLists.map((list) => {
+
+                if (list.id === action.payload.cardDropppedOnBoardListId) {
+
+                    //find the card that we dropped on
+                    const cardDroppedOnIndex = state.currentBoard?.boardLists.find((x) => x.id === action.payload.cardDropppedOnBoardListId)?.cards.findIndex((card) => card.id === action.payload.cardDroppedOnId);
+                    const cardToMove = state.currentBoard?.boardLists.find((x) => x.id === action.payload.cardToMoveBoardListId)?.cards.find((card) => card.id === action.payload.cardToMoveId);
+
+                    if (cardToMove && cardDroppedOnIndex !== undefined) {
+
+                        cardToMove.boardListId = action.payload.cardDropppedOnBoardListId;
+
+                        const updatedCards = [
+                            ...list.cards.slice(0, cardDroppedOnIndex),   // Items before the insert index
+                            cardToMove,                           // New card to be inserted
+                            ...list.cards.slice(cardDroppedOnIndex)      // Items after the insert index
+                        ];
+
+                        return { ...list, cards: updatedCards };
+                    }
+                }
+
+                return list;
+            });
+
+            //remove card from source list
+            let updatedListsAfterCardRemoval = updatedListsAfterCardInsert?.map((list) => {
+
+                if (list.id === action.payload.cardToMoveBoardListId) {
+                    // Remove the card from the source list
+                    const updatedCards = list.cards.filter((card) => card.id !== action.payload.cardToMoveId);
+                    return { ...list, cards: updatedCards };
+                }
+
+                return list;
+            });
+
+            let updatedBoard = {
+                ...state.currentBoard,
+                boardLists: updatedListsAfterCardRemoval,
+            };
+
+            state.currentBoard = updatedBoard as Board;
         },
     },
     extraReducers: (builder) => {
@@ -252,6 +367,6 @@ export const workspaceViewSlice = createSlice({
     },
 })
 
-export const { setGetBoardStatus } = workspaceViewSlice.actions
+export const { setGetBoardStatus, moveCard, insertCard } = workspaceViewSlice.actions
 
 export default workspaceViewSlice.reducer

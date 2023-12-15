@@ -9,7 +9,7 @@ const HomePages = () => {
             <Container sx={{ paddingTop: '30px', paddingBottom: '30px' }}>
                 <Grid container spacing={6}>
                     <Grid item lg={4} justifyContent='center'>
-                        <HomePageLeftSidebar expandedAccordions={[]} />
+                        <HomePageLeftSidebar />
                     </Grid>
                     <Grid item lg={8}>
                         <Outlet />

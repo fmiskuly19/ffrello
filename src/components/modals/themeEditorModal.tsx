@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from "react";
 
-import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Radio, Select, SelectChangeEvent, Stack, Switch, ThemeOptions, Tooltip, Typography, createTheme, styled, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Menu, MenuItem, OutlinedInput, Radio, Select, SelectChangeEvent, Stack, Switch, ThemeOptions, Tooltip, Typography, createTheme, styled, useMediaQuery, useTheme } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 
 import { usePopupState, bindToggle, bindMenu, anchorRef } from 'material-ui-popup-state/hooks'
@@ -203,6 +203,8 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
         dispatch(addTheme({ name: themeName, theme: newTheme }))
     }
 
+    const [showNewEditButtons, setShowNewEditButtons] = useState(false)
+
     return (
         <Dialog onClose={handleModalClose} open={openModal} maxWidth={"md"}>
             <DialogContent sx={{ padding: '0px' }} dividers={true}>
@@ -242,10 +244,21 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
 
                             {/* this is the container holding the two 50% halves */}
                             <Stack direction="row" display="flex" spacing={4}>
+
+
                                 <Box sx={{ width: '50%' }}>
                                     <Stack direction="column" spacing={1} justifyContent="space-between" display="flex">
 
                                         <Stack direction="column" spacing={1}>
+
+                                            <Stack direction="row" alignItems="center">
+                                                <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
+                                                    <Typography>Old Edit Buttons</Typography><Switch value={showNewEditButtons} onChange={(event, value) => setShowNewEditButtons(value)} /><Typography>New Edit Buttons</Typography>
+                                                </Stack>
+
+                                            </Stack>
+
+
                                             <Stack direction="row" alignItems="center" spacing={3}>
                                                 <Typography variant="body1">Mode: </Typography>
                                                 <Stack direction="row" alignItems="center" justifyContent="center" alignContent="flex-start">
@@ -294,21 +307,42 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                             </Stack>
                                         </Stack>
 
-                                        <Stack direction="column" spacing={1}>
+                                        <Stack direction="column" spacing={1} >
                                             <Divider><Typography variant="h6">Colors</Typography></Divider>
 
                                             <Stack spacing={2}>
                                                 <Stack id="primary-color-stack" direction="column" >
                                                     <Stack direction="row" justifyContent="space-between" >
                                                         <Typography variant="body1">Primary:</Typography>
-                                                        <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
+
+                                                        {showNewEditButtons ?
+                                                            <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ textTransform: 'none' }}>
+                                                                <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                    <Box display="flex" sx={{ backgroundColor: primaryColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                                </Stack>
+                                                            </Button> :
+                                                            <Button variant="outlined" {...bindToggle(primaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryColor }} />
+                                                        }
+
                                                         <Menu {...bindMenu(primaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                             <CompactPicker color={primaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryColor(color.hex)} />
                                                         </Menu>
                                                     </Stack>
                                                     <Stack direction="row" justifyContent="space-between">
                                                         <Typography variant="body2">Contrast Text:</Typography>
-                                                        <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
+
+                                                        {showNewEditButtons ?
+                                                            <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ textTransform: 'none' }}>
+                                                                <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                    <Box display="flex" sx={{ backgroundColor: primaryContrastTextColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                                </Stack>
+                                                            </Button> :
+                                                            <Button variant="outlined" {...bindToggle(primaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryContrastTextColor }} />
+                                                        }
+
+
                                                         <Menu {...bindMenu(primaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                             <CompactPicker color={primaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryContrastTextColor(color.hex)} />
                                                         </Menu>
@@ -318,14 +352,39 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                 <Stack id="secondary-color-stack" direction="column" >
                                                     <Stack direction="row" justifyContent="space-between" >
                                                         <Typography variant="body1">Secondary:</Typography>
-                                                        <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
+
+                                                        {showNewEditButtons ?
+                                                            <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ textTransform: 'none' }}>
+                                                                <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                    <Box display="flex" sx={{ backgroundColor: secondaryColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                                </Stack>
+                                                            </Button> :
+                                                            <Button variant="outlined" {...bindToggle(secondaryPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryColor }} />
+                                                        }
+
+
+
+
                                                         <Menu {...bindMenu(secondaryPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                             <CompactPicker color={secondaryColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryColor(color.hex)} />
                                                         </Menu>
                                                     </Stack>
                                                     <Stack direction="row" justifyContent="space-between" >
                                                         <Typography variant="body2">Contrast Text:</Typography>
-                                                        <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
+
+                                                        {showNewEditButtons ?
+                                                            <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ textTransform: 'none' }}>
+                                                                <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                    <Box display="flex" sx={{ backgroundColor: secondaryContrastTextColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                                </Stack>
+                                                            </Button> :
+                                                            <Button variant="outlined" {...bindToggle(secondaryContrastTextPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryContrastTextColor }} />
+                                                        }
+
+
+
                                                         <Menu {...bindMenu(secondaryContrastTextPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                             <CompactPicker color={secondaryContrastTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryContrastTextColor(color.hex)} />
                                                         </Menu>
@@ -335,14 +394,36 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                 <Stack id="background-colors-stack" direction="column">
                                                     <Stack direction="row" justifyContent="space-between" >
                                                         <Typography variant="body1">Background:</Typography>
-                                                        <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
+
+                                                        {showNewEditButtons ?
+                                                            <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ textTransform: 'none' }}>
+                                                                <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                    <Box display="flex" sx={{ backgroundColor: backgroundColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                                </Stack>
+                                                            </Button> :
+                                                            <Button variant="outlined" {...bindToggle(backgroundColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: backgroundColor }} />
+                                                        }
+
+
+
                                                         <Menu {...bindMenu(backgroundColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                             <CompactPicker color={backgroundColor} onChange={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} onChangeComplete={(color: { hex: SetStateAction<string>; }) => setBackgroundColor(color.hex)} />
                                                         </Menu>
                                                     </Stack>
                                                     <Stack direction="row" justifyContent="space-between" >
                                                         <Typography variant="body2">Paper:</Typography>
-                                                        <Button variant="outlined" {...bindToggle(paperColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: paperColor }} />
+
+                                                        {showNewEditButtons ?
+                                                            <Button variant="outlined" {...bindToggle(paperColorPopupState)} sx={{ textTransform: 'none' }}>
+                                                                <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                    <Box display="flex" sx={{ backgroundColor: paperColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                                </Stack>
+                                                            </Button> :
+                                                            <Button variant="outlined" {...bindToggle(paperColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: paperColor }} />
+                                                        }
+
                                                         <Menu {...bindMenu(paperColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                             <CompactPicker color={paperColor} onChange={(color: { hex: SetStateAction<string>; }) => setPaperColor(color.hex)} />
                                                         </Menu>
@@ -371,17 +452,38 @@ const ThemeEditorModal = (props: ThemeEditorModalProps) => {
                                                     </Select>
                                                 </Stack>
 
-                                                <Stack direction="row" justifyContent="space-between" >
+                                                <Stack direction="row" justifyContent="space-between">
                                                     <Typography variant="body1">Primary Color:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryTextColor }} />
+
+                                                    {showNewEditButtons ?
+                                                        <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ textTransform: 'none' }}>
+                                                            <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+                                                                <Box display="flex" sx={{ backgroundColor: primaryTextColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                            </Stack>
+                                                        </Button> :
+                                                        <Button variant="outlined" {...bindToggle(primaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: primaryTextColor }} />
+                                                    }
+
+
+
                                                     <Menu {...bindMenu(primaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                         <CompactPicker color={primaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} onChangeComplete={(color: { hex: SetStateAction<string>; }) => setPrimaryTextColor(color.hex)} />
                                                     </Menu>
                                                 </Stack>
 
-                                                <Stack direction="row" justifyContent="space-between" >
+                                                <Stack direction="row" justifyContent="space-between">
                                                     <Typography variant="body1">Secondary Color:</Typography>
-                                                    <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryTextColor }} />
+
+                                                    {showNewEditButtons ?
+                                                        <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ textTransform: 'none' }}>
+                                                            <Stack direction="row" display="flex" justifyContent="center" spacing={1} alignItems="center">
+
+                                                                <Box display="flex" sx={{ backgroundColor: secondaryTextColor, borderRadius: '5px', width: '28px', height: '22px' }}></Box>
+                                                            </Stack>
+                                                        </Button> :
+                                                        <Button variant="outlined" {...bindToggle(secondaryTextColorPopupState)} sx={{ borderRadius: '10px', width: '28px', height: '28px', backgroundColor: secondaryTextColor }} />
+                                                    }
+
                                                     <Menu {...bindMenu(secondaryTextColorPopupState)} MenuListProps={{ 'disablePadding': true }}>
                                                         <CompactPicker color={secondaryTextColor} onChange={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} onChangeComplete={(color: { hex: SetStateAction<string>; }) => setSecondaryTextColor(color.hex)} />
                                                     </Menu>

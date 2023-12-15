@@ -1,29 +1,30 @@
-import { Box, Button, CircularProgress, Divider, Grid, IconButton, Menu, MenuItem, OutlinedInput, Paper, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import WorkspaceViewLeftSidebar from "../../components/sidebars/workspaceViewLeftSidebar";
+import { useDrop } from "react-dnd";
+import { enqueueSnackbar } from "notistack";
+
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { ApiCallStatus } from "../../types/ApiCallStatus";
-import { getBoardPageThunk, newBoardListThunk, newCardThunk, starBoardThunk } from "../../redux/workspaceViewSlice";
+import { getBoardPageThunk, newBoardListThunk, starBoardThunk } from "../../redux/workspaceViewSlice";
+
+import { Box, Button, CircularProgress, Divider, Grid, IconButton, MenuItem, OutlinedInput, Paper, Stack, Typography, useTheme } from "@mui/material";
+
 import StarIcon from '@mui/icons-material/Star';
 import CloseIcon from '@mui/icons-material/Close';
-
-
 import PeopleIcon from '@mui/icons-material/People';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { useEffect, useState } from "react";
-import { BoardList } from "../../types/BoardList";
-import BoardListActionMenu from "../../components/popups/boardListActionPopup";
-import { enqueueSnackbar } from "notistack";
 import AddIcon from '@mui/icons-material/Add';
-import BoardListCard from "../../components/cards/boardListCard";
+
+import WorkspaceViewLeftSidebar from "../../components/sidebars/workspaceViewLeftSidebar";
+import BoardListPaper from "../../components/material-ui-cards/boardList";
+
+import { ApiCallStatus } from "../../types/ApiCallStatus";
+import { BoardList } from "../../types/BoardList";
 
 export interface newBoardListCard {
     boardListId: number,
     open: boolean,
     value: string
 }
-
-const newCardActionsDefault = { boardListId: 0, open: false, value: '' }
 
 const MINCOLUMNWIDTH = '250px';
 
@@ -32,7 +33,6 @@ const BoardPage = () => {
     const dispatch = useAppDispatch()
 
     const [openNewBoardList, setOpenNewBoardList] = useState(false);
-    const [newCardActions, setNewCardActions] = useState<newBoardListCard>(newCardActionsDefault);
 
     let { boardid } = useParams();
     const userid = useAppSelector((state) => state.userSlice.User.userid)
@@ -111,67 +111,11 @@ const BoardPage = () => {
 
                     {
                         boardLists ?
-                            boardLists.map((list: BoardList) => {
-
-                                return (
-                                    <>
-                                        <Paper sx={{ minWidth: MINCOLUMNWIDTH, maxWidth: MINCOLUMNWIDTH, padding: '10px', height: 'max-content', borderRadius: '15px' }}>
-                                            <Stack direction="column" spacing={1}>
-                                                <Stack direction="row" justifyContent="space-between" alignItems="center" ml="5px">
-                                                    <Typography variant="h6">{list.name}</Typography>
-                                                    <BoardListActionMenu boardList={list} openAddCard={setNewCardActions} />
-                                                </Stack>
-
-
-                                                {list.cards ?
-                                                    <>
-                                                        {list.cards.map((card) => {
-                                                            return (
-                                                                <Stack direction="column">
-                                                                    <BoardListCard {...card} />
-                                                                </Stack>
-                                                            )
-                                                        })}
-                                                    </>
-                                                    :
-                                                    <>
-                                                    </>
-                                                }
-
-                                                {newCardActions.boardListId == list.id && newCardActions.open ?
-                                                    <>
-                                                        <OutlinedInput multiline rows={2} value={newCardActions.value} onChange={(e) => setNewCardActions({ ...newCardActions, value: e.target.value })} />
-                                                        <Stack direction="row" display="flex" alignItems="center">
-                                                            <Button sx={{ textTransform: 'none' }} onClick={() => { dispatch(newCardThunk({ userid: userid, boardListId: list.id, title: newCardActions.value })); setNewCardActions(newCardActionsDefault) }} >
-                                                                Add Card
-                                                            </Button>
-                                                            <IconButton onClick={() => setNewCardActions({ boardListId: 0, open: false, value: '' })}>
-                                                                <CloseIcon sx={{ height: '18px', width: '18px' }} color='primary' />
-                                                            </IconButton>
-                                                        </Stack>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <MenuItem sx={{ paddingLeft: '0px', borderRadius: '8px' }} onClick={() => { setNewCardActions({ boardListId: list.id, open: true, value: '' }) }}>
-                                                            <Box display="flex" flexDirection="row" alignItems="center">
-                                                                <AddIcon sx={{ height: '18px', width: '18px', marginRight: '5px' }} />
-                                                                Add a Card
-                                                            </Box>
-                                                        </MenuItem>
-                                                    </>
-                                                }
-                                            </Stack>
-                                        </Paper >
-
-
-                                    </>
-                                )
-                            })
+                            boardLists.map((list: BoardList) => { return <BoardListPaper {...list}></BoardListPaper> })
                             :
                             <></>
 
                     }
-
 
                     {/* new board list button */}
                     {openNewBoardList ?
