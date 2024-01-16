@@ -1,6 +1,6 @@
 # FFrello 
 
-FFrello, or 'Frank's Fake Trello', is a recreation of [Trello](https://trello.com/) written in ReactJs on the front end, and .NET core on the [back end](https://github.com/fmiskuly19/ffrello-api).
+FFrello, or 'Frank's Fake Trello', is a recreation of [Trello](https://trello.com/) written in React on the front end, and .NET core on the [back end](https://github.com/fmiskuly19/ffrello-api).
 
 I started FFrello in late 2023 to brush up on my full stack web dev skills that I was not using in my career. I spent a lot of time trying to figure out a project to create that would let me practice these skills, but could not think of anything meaningful that I could commit to. Often times in software development, especially with personal projects, I have found myself stuck in the "ideas" phase. Too much time thinking of what to do, and not enough time thinking about how to do the thing. 
 
