@@ -23,7 +23,7 @@ Overall goals for the website:
 
 FFrello is hosted at https://ffrello.onrender.com/
 
-The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.azurewebsites.net/). 
+The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.azurewebsites.net/). (no front end yet, will show an error screen)
 
 ## Tech stack
 - [vite](https://vitejs.dev/) (I am not using this to its potential so I may remove this dependency)
