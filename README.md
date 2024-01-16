@@ -41,7 +41,12 @@ The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.
 ![Home Boards Page](https://github.com/fmiskuly19/ffrello/assets/33069374/c5312185-dd20-4d32-932f-00e43dace3b1)
 
 ### Theming
+
+#### Theme Dropdown
 ![Theme Dropdown](https://github.com/fmiskuly19/ffrello/assets/33069374/dfcd88dd-fbe7-4462-8df5-9c3569e0f54e)
+#### Theme Editor
 ![Theme Editor](https://github.com/fmiskuly19/ffrello/assets/33069374/c65065bf-1303-4359-b85c-5fec9066ffb0)
+#### Theme Editor w/ selected theme
 ![Theme Editor (Cats Theme)](https://github.com/fmiskuly19/ffrello/assets/33069374/30430793-f94e-4106-a32c-98920467dc18)
+#### Frutiger Aero Light Theme
 ![Frutiger Aero Light Theme](https://github.com/fmiskuly19/ffrello/assets/33069374/01a1e870-c2c4-4cfb-a946-5176c78310d3)
