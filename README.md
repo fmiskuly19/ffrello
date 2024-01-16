@@ -17,6 +17,7 @@ Overall goals for the website:
 - Near 1:1 replication of Trello's main functionality (boards, user highlights, workspaces, templates, etc.) and UI.
 - Microsoft Azure data analytics
 - Blazor front end for the web api
+- mobile support
 
 ## Host
 
