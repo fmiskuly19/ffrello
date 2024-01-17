@@ -50,3 +50,4 @@ The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.
 ![Theme Editor (Cats Theme)](https://github.com/fmiskuly19/ffrello/assets/33069374/30430793-f94e-4106-a32c-98920467dc18)
 #### Frutiger Aero Light Theme
 ![Frutiger Aero Light Theme](https://github.com/fmiskuly19/ffrello/assets/33069374/01a1e870-c2c4-4cfb-a946-5176c78310d3)
+(this font doesnt match the 'Frutiger Aero' aesthetic, I just thought it was cool)
