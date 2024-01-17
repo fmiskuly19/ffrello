@@ -26,6 +26,7 @@ FFrello is hosted at https://ffrello.onrender.com/
 The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.azurewebsites.net/). (no front end yet, will show an error screen)
 
 ## Tech stack
+#### Frontend
 - [vite](https://vitejs.dev/) (I am not using this to its potential so I may remove this dependency)
 - [material-ui](https://mui.com/material-ui/) for UI kit and styling
 - [react-redux](https://react-redux.js.org/) for state management
@@ -33,6 +34,14 @@ The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.
 - [react-color](https://casesandberg.github.io/react-color/) for colorpicker elements
 - [material-ui-popup-state](https://www.npmjs.com/package/material-ui-popup-state) helper library for material ui popups
 - [notistack](https://www.npmjs.com/package/notistack) for user notifications
+
+#### Backend
+- .net 6.0
+- sqlite (local, this will be hosted in Azure)
+- [Entity Framework](https://learn.microsoft.com/en-us/aspnet/entity-framework)
+- [AutoMapper](https://automapper.org/)
+- [SwaggerUI](https://swagger.io/tools/swagger-ui/)
+
 
 ## Screenshots (WIP)
 
