@@ -1,8 +1,8 @@
 import { getBoard, getUserWorkspaceArgs, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
 import { addNewCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
 
-//export const API_HOST_URL = "https://localhost:7135/api"
-export const API_HOST_URL = "https://ffrelloapiappservice.azurewebsites.net/api"
+export const API_HOST_URL = "https://localhost:7135/api"
+//export const API_HOST_URL = "https://ffrelloapiappservice.azurewebsites.net/api"
 
 // #region Authentication
 

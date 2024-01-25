@@ -19,6 +19,7 @@ import ProfileDropdown from './profileDropdown';
 
 import ffrelloLogo from '../../assets/ffrello.png'
 import { useAppSelector } from '../../hooks';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
 
@@ -29,15 +30,58 @@ const Navbar = () => {
 
   const iconColor = theme.palette.mode == 'dark' ? theme.palette.primary.main : theme.palette.primary.contrastText;
 
+  const isLoggedIn = useAppSelector((state) => state.authSlice.isLoggedIn);
+  const [userLoginStatus, setUserLoginStatus] = useState(isLoggedIn)
+
+  useEffect(() => {
+    console.log(`login status changed to ${isLoggedIn}`)
+    setUserLoginStatus(isLoggedIn);
+  }, [isLoggedIn])
+
   return (
-    <MuiAppBar position="sticky">
-      {isMobile ? (
-        <Toolbar variant="dense" >
-          <SearchIcon />
-          <AccountCircleIcon />
-        </Toolbar>
-      ) : (
-        <>
+
+    userLoginStatus ?
+      <MuiAppBar position="sticky">
+        {isMobile ? (
+          <Toolbar variant="dense" >
+            <SearchIcon />
+            <AccountCircleIcon />
+          </Toolbar>
+        ) : (
+          <>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Toolbar variant="dense" disableGutters>
+                <Stack direction="row" alignItems="center" spacing={1} pl='5px'>
+                  <NavDropdown label="Appswitcher" menuContent={<AppswitcherDropdown />} icon={<AppsIcon style={{ fontSize: '20px', color: iconColor }} />} closeOnClick={true} />
+                  <Stack direction='row' spacing={1}>
+                    <img src={ffrelloLogo} height="30px" />
+                    <Link to="/" style={{ textDecoration: 'none', color: theme.palette.primary.contrastText }}>
+                      <Typography variant="h5" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none', color: iconColor, fontFamily: 'Nova Square' }} >FFrello</Typography>
+                    </Link>
+                  </Stack>
+                  <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdown />} closeOnClick={true} />
+                  <NavDropdown label="Recent" menuContent={<RecentBoardsDropdown />} closeOnClick={true} />
+                  <NavDropdown label="Starred" menuContent={<StarredDropdown />} closeOnClick={true} />
+                  <NavDropdown label="Templates" menuContent={<TemplatesDropdownContent />} closeOnClick={false} />
+                  <CreateButtonDropdown />
+                </Stack>
+              </Toolbar>
+              <Toolbar variant="dense">
+                <Stack direction="row" alignItems="center" spacing={1}>
+                  <TextField id="outlined-basic" label="Search" size="small" sx={{ color: iconColor }} InputLabelProps={{ color: 'primary' }} />
+                  <NavDropdown label="Notifications" menuContent={<NotificationsDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)', color: iconColor }} />} closeOnClick={false} />
+                  <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon sx={{ color: iconColor }} />} closeOnClick={true} />
+                  <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon sx={{ color: iconColor }} />} closeOnClick={false} />
+                  <NavDropdown label="Avatar" menuContent={<ProfileDropdown />} icon={<Avatar alt={googleUser?.name} sx={{ width: 24, height: 24 }} src={googleUser?.pictureUrl} />} closeOnClick={true} />
+                </Stack>
+              </Toolbar>
+            </Box>
+          </>
+        )}
+      </MuiAppBar>
+      :
+      <>
+        <MuiAppBar position="sticky">
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Toolbar variant="dense" disableGutters>
               <Stack direction="row" alignItems="center" spacing={1} pl='5px'>
@@ -48,26 +92,17 @@ const Navbar = () => {
                     <Typography variant="h5" fontWeight="bold" fontFamily="Helvetica" sx={{ textDecoration: 'none', color: iconColor, fontFamily: 'Nova Square' }} >FFrello</Typography>
                   </Link>
                 </Stack>
-                <NavDropdown label="Workspaces" menuContent={<WorkspaceDropdown />} closeOnClick={true} />
-                <NavDropdown label="Recent" menuContent={<RecentBoardsDropdown />} closeOnClick={true} />
-                <NavDropdown label="Starred" menuContent={<StarredDropdown />} closeOnClick={true} />
-                <NavDropdown label="Templates" menuContent={<TemplatesDropdownContent />} closeOnClick={false} />
-                <CreateButtonDropdown />
               </Stack>
             </Toolbar>
             <Toolbar variant="dense">
               <Stack direction="row" alignItems="center" spacing={1}>
-                <TextField id="outlined-basic" label="Search" size="small" sx={{ color: iconColor }} InputLabelProps={{ color: 'primary' }} />
-                <NavDropdown label="Notifications" menuContent={<NotificationsDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)', color: iconColor }} />} closeOnClick={false} />
-                <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon sx={{ color: iconColor }} />} closeOnClick={true} />
                 <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon sx={{ color: iconColor }} />} closeOnClick={false} />
                 <NavDropdown label="Avatar" menuContent={<ProfileDropdown />} icon={<Avatar alt={googleUser?.name} sx={{ width: 24, height: 24 }} src={googleUser?.pictureUrl} />} closeOnClick={true} />
               </Stack>
             </Toolbar>
           </Box>
-        </>
-      )}
-    </MuiAppBar>
+        </MuiAppBar>
+      </>
   );
 };
 

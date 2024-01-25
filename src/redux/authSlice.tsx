@@ -36,11 +36,21 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        logoutUser: (state) => {
+            state.accessToken = initialState.accessToken
+            state.authenticationApiCallStatus = initialState.authenticationApiCallStatus
+            state.isLoggedIn = initialState.isLoggedIn
+            state.googleUser = initialState.googleUser
+            state.isAuthenticated = initialState.isAuthenticated
+        },
         setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
             state.isAuthenticated = action.payload
         },
         setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
             state.isLoggedIn = action.payload
+        },
+        setAccessToken: (state, action: PayloadAction<string>) => {
+            state.accessToken = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -58,16 +68,10 @@ export const authSlice = createSlice({
 
             console.log("ffrello api authentication successful")
             console.log(action.payload);
-
-            //set user for profile dropdown menu
-
-            //set jwt (access token) in httponly cookie
-
-            //set refresh token in httponly cookie
         })
     },
 })
 
-export const { setIsAuthenticated, setIsLoggedIn } = authSlice.actions
+export const { setIsAuthenticated, setIsLoggedIn, setAccessToken, logoutUser } = authSlice.actions
 
 export default authSlice.reducer

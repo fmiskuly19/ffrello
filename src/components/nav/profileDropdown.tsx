@@ -1,6 +1,6 @@
 import { Avatar, Box, Divider, MenuItem, Stack, Switch, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setIsLoggedIn } from "../../redux/authSlice";
+import { logoutUser, setAccessToken } from "../../redux/authSlice";
 
 const ProfileDropdown = () => {
 
@@ -8,7 +8,7 @@ const ProfileDropdown = () => {
     const dispatch = useAppDispatch();
 
     const logOut = () => {
-        dispatch(setIsLoggedIn(false));
+        dispatch(logoutUser());
     }
 
     return (
