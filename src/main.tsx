@@ -8,6 +8,8 @@ import {
 import { ThemeProvider } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline';
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 import HighlightsPage from './routes/homeView/homeHighlightsPage.tsx'
 import WorkspaceMembersPage from './routes/workspaceView/workspaceMembersPage.tsx';
 import BoardPage from './routes/boardView/boardPage.tsx';
@@ -37,8 +39,18 @@ const router = createBrowserRouter([
     children: [
       {
         element: <HomePages />,
+
         children: [
           {
+            // the highlights page's path is set to '/' which looks odd with this pattern of routes given that its 2 children deep.
+            // <MainPage/> is the Navbar with an <Outlet/> below for routed components
+            // <HomePages/> contains the leftSidebar, and an <Outlet/> component for the routed content.
+
+            /* so when navigating to '/' it is rending the MainPages Outlet,
+              which goes to the HomePages compoent of Sidebar content and Outlet, 
+              which goes to the next element with the path '/', 
+              rendering the default path as the navbar, with homepage left side bar content, and the highlights page shown  by default. */
+
             path: "/",
             element: <HighlightsPage />
           },
@@ -97,6 +109,9 @@ const router = createBrowserRouter([
 
 const Main = () => {
 
+  const GOOGLE_CLIENTID = "972637678983-nnt2kq47b4i39k814ejqsc6v94p34qec.apps.googleusercontent.com"
+  const GOOGLE_SECRET = "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"
+
   const currentThemeName = useAppSelector((state) => state.themeSlice.currentThemeName);
   const themes = useAppSelector((state) => state.themeSlice.themes);
 
@@ -108,15 +123,16 @@ const Main = () => {
   }, [currentThemeName])
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENTID}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={4}>
-          <RouterProvider router={router} />
-        </SnackbarProvider>
+        <DndProvider backend={HTML5Backend}>
+          <SnackbarProvider maxSnack={4}>
+            <RouterProvider router={router} />
+          </SnackbarProvider>
+        </DndProvider>
       </ThemeProvider>
-    </DndProvider>
-
+    </GoogleOAuthProvider>
   )
 }
 

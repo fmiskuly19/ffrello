@@ -18,11 +18,14 @@ import NotificationsDropdown from './notificationsDropdown';
 import ProfileDropdown from './profileDropdown';
 
 import ffrelloLogo from '../../assets/ffrello.png'
+import { useAppSelector } from '../../hooks';
 
 const Navbar = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const googleUser = useAppSelector((state) => state.authSlice.googleUser);
 
   const iconColor = theme.palette.mode == 'dark' ? theme.palette.primary.main : theme.palette.primary.contrastText;
 
@@ -58,7 +61,7 @@ const Navbar = () => {
                 <NavDropdown label="Notifications" menuContent={<NotificationsDropdown />} icon={<NotificationsNoneIcon sx={{ transform: 'rotate(45deg)', color: iconColor }} />} closeOnClick={false} />
                 <NavDropdown label="Information" menuContent={<InformationDropdown />} icon={<HelpOutlineIcon sx={{ color: iconColor }} />} closeOnClick={true} />
                 <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon sx={{ color: iconColor }} />} closeOnClick={false} />
-                <NavDropdown label="Avatar" menuContent={<ProfileDropdown />} icon={<Avatar alt="Fwank Misk" sx={{ width: 24, height: 24 }} />} closeOnClick={true} />
+                <NavDropdown label="Avatar" menuContent={<ProfileDropdown />} icon={<Avatar alt={googleUser?.name} sx={{ width: 24, height: 24 }} src={googleUser?.pictureUrl} />} closeOnClick={true} />
               </Stack>
             </Toolbar>
           </Box>

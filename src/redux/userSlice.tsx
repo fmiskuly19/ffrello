@@ -53,12 +53,17 @@ export interface removeWorkspaceArgs {
     workspace: Workspace,
 }
 
+export interface getUserWorkspaceArgs {
+    userId: string,
+    accessToken: string,
+}
+
 //workspaces
 
 export const getUserWorkspaces = createAsyncThunk(
     '/getUserWorkspaces',
-    async (userId: string, thunkAPI) => {
-        return await GetWorkspacesApiCall(userId, thunkAPI);
+    async (data: getUserWorkspaceArgs, thunkAPI) => {
+        return await GetWorkspacesApiCall(data, thunkAPI);
     }
 )
 

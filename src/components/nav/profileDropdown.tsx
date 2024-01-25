@@ -1,14 +1,51 @@
-import { Box, Stack, Switch, Typography } from "@mui/material";
+import { Avatar, Box, Divider, MenuItem, Stack, Switch, Typography } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setIsLoggedIn } from "../../redux/authSlice";
 
 const ProfileDropdown = () => {
 
+    const googleUser = useAppSelector((state) => state.authSlice.googleUser);
+    const dispatch = useAppDispatch();
+
+    const logOut = () => {
+        dispatch(setIsLoggedIn(false));
+    }
+
     return (
-        <Box m="12px">
-            <Stack direction="row" alignItems="center">
-                <Typography>
-                    Profile Dropdown!
-                </Typography>
-                <Switch size="small" defaultChecked />
+        <Box pt="15px" pb="10px">
+            <Stack direction="column" spacing={1}>
+                <Stack direction="column" spacing={2}>
+                    <Stack direction="row" spacing={1} alignItems="center" pl="15px" pr="15px">
+                        <Avatar alt={googleUser?.name} src={googleUser?.pictureUrl} />
+                        <Stack direction="column">
+                            <Typography variant="subtitle1">
+                                {googleUser?.name}
+                            </Typography>
+                            <Typography variant="subtitle2">
+                                {googleUser?.email}
+                            </Typography>
+                        </Stack>
+                    </Stack>
+                    <Divider />
+                    <MenuItem>
+                        Switch Accounts
+                    </MenuItem>
+                </Stack>
+                <Divider />
+                <div>
+                    <MenuItem>
+                        Theme
+                    </MenuItem>
+                    <MenuItem>
+                        Help
+                    </MenuItem>
+                </div>
+                <Divider />
+                <div>
+                    <MenuItem onClick={logOut}>
+                        Log out
+                    </MenuItem>
+                </div>
             </Stack>
         </Box>
     )

@@ -3,6 +3,7 @@ import homeReducer from './homeSlice.tsx'
 import themeReducer from './themeSlice.tsx'
 import userReducer from './userSlice.tsx'
 import workspaceViewReducer from './workspaceViewSlice.tsx'
+import authReducer from './authSlice.tsx'
 
 const store = configureStore({
    reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
       themeSlice: themeReducer,
       userSlice: userReducer,
       workspaceViewSlice: workspaceViewReducer,
+      authSlice: authReducer,
    },
 })
 export default store;

@@ -1,8 +1,35 @@
-import { getBoard, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
+import { getBoard, getUserWorkspaceArgs, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
 import { addNewCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
 
 export const API_HOST_URL = "https://localhost:7135/api"
 //export const API_HOST_URL = "https://ffrelloapiappservice.azurewebsites.net/api"
+
+// #region Authentication
+
+export const AuthenticateWithApiAfterGoogleSignIn = async (googleUserAccessToken: string) => {
+    const target = "/auth/google-signin/";
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ accessToken: googleUserAccessToken }),
+    })
+        .then((response) => {
+            if (response.ok) return response.json();
+            else return Promise.reject(`Could not authenticate with api after google log in`);
+        })
+        .catch((err) =>
+            Promise.reject(
+                `Could not get dummy method. Error: ${err}`
+            )
+        );
+}
+
+// #endregion
+
+// #region user data
 
 export const DummyApiCall = async () => {
     const target = "/api/dummy/";
@@ -18,9 +45,14 @@ export const DummyApiCall = async () => {
         );
 }
 
-export const GetWorkspacesApiCall = async (userid: string, thunkAPI: any) => {
-    const target = `/${userid}/workspaces/`;
+export const GetWorkspacesApiCall = async (data: getUserWorkspaceArgs, thunkAPI: any) => {
+    const target = `/${data.userId}/workspaces/`;
+    console.log("GetWorkspacesApiCall data")
+    console.log(data)
     return await fetch(`${API_HOST_URL}${target}`, {
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`
+        },
         signal: thunkAPI.signal,
     }).then((res) => {
         if (res.ok) {
@@ -235,4 +267,8 @@ export const GetWorkspaceSettings = async () => {
     return DummyApiCall();
 };
 
+
+
+
+// #endregion
 
