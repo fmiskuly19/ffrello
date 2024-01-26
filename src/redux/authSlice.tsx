@@ -9,24 +9,24 @@ interface GoogleUserInfo {
 }
 
 interface AuthSliceProps {
-    isAuthenticated: boolean,
+    isAuthenticatedWithExternalProvider: boolean,
     isLoggedIn: boolean,
     googleUser?: GoogleUserInfo,
     accessToken: string,
-    authenticationApiCallStatus: ApiCallStatus,
+    ffrelloAuthenticationApiCallStatus: ApiCallStatus,
 }
 
 // Define the initial state using that type
 const initialState: AuthSliceProps = {
-    isAuthenticated: false,
+    isAuthenticatedWithExternalProvider: false,
     isLoggedIn: false,
     accessToken: '',
     googleUser: undefined,
-    authenticationApiCallStatus: ApiCallStatus.Idle,
+    ffrelloAuthenticationApiCallStatus: ApiCallStatus.Idle,
 }
 
-export const authenticateWithApi = createAsyncThunk(
-    '/authenticateWithApi',
+export const authenticateWithFFrelloApi = createAsyncThunk(
+    '/authenticateWithFFrelloApi',
     async (googleUserAccessToken: string) => {
         return await AuthenticateWithApiAfterGoogleSignIn(googleUserAccessToken);
     }
@@ -38,13 +38,16 @@ export const authSlice = createSlice({
     reducers: {
         logoutUser: (state) => {
             state.accessToken = initialState.accessToken
-            state.authenticationApiCallStatus = initialState.authenticationApiCallStatus
+            state.ffrelloAuthenticationApiCallStatus = initialState.ffrelloAuthenticationApiCallStatus
             state.isLoggedIn = initialState.isLoggedIn
             state.googleUser = initialState.googleUser
-            state.isAuthenticated = initialState.isAuthenticated
+            state.isAuthenticatedWithExternalProvider = initialState.isAuthenticatedWithExternalProvider
         },
-        setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
-            state.isAuthenticated = action.payload
+        setIsAuthenticatedWithExternalProvider: (state, action: PayloadAction<boolean>) => {
+            state.isAuthenticatedWithExternalProvider = action.payload
+        },
+        setFfrelloAuthenticationApiCallStatus: (state, action: PayloadAction<ApiCallStatus>) => {
+            state.ffrelloAuthenticationApiCallStatus = action.payload
         },
         setIsLoggedIn: (state, action: PayloadAction<boolean>) => {
             state.isLoggedIn = action.payload
@@ -54,14 +57,14 @@ export const authSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(authenticateWithApi.pending, (state) => {
-            state.authenticationApiCallStatus = ApiCallStatus.Loading;
+        builder.addCase(authenticateWithFFrelloApi.pending, (state) => {
+            state.ffrelloAuthenticationApiCallStatus = ApiCallStatus.Loading;
         }),
-            builder.addCase(authenticateWithApi.rejected, (state) => {
-                state.authenticationApiCallStatus = ApiCallStatus.Failure;
+            builder.addCase(authenticateWithFFrelloApi.rejected, (state) => {
+                state.ffrelloAuthenticationApiCallStatus = ApiCallStatus.Failure;
             })
-        builder.addCase(authenticateWithApi.fulfilled, (state, action) => {
-            state.authenticationApiCallStatus = ApiCallStatus.Success;
+        builder.addCase(authenticateWithFFrelloApi.fulfilled, (state, action) => {
+            state.ffrelloAuthenticationApiCallStatus = ApiCallStatus.Success;
             state.accessToken = action.payload.accessToken;
             state.googleUser = action.payload.googleUser;
             state.isLoggedIn = true;
@@ -72,6 +75,6 @@ export const authSlice = createSlice({
     },
 })
 
-export const { setIsAuthenticated, setIsLoggedIn, setAccessToken, logoutUser } = authSlice.actions
+export const { setIsAuthenticatedWithExternalProvider, setFfrelloAuthenticationApiCallStatus, setIsLoggedIn, setAccessToken, logoutUser } = authSlice.actions
 
 export default authSlice.reducer

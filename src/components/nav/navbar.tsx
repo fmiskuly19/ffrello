@@ -97,7 +97,6 @@ const Navbar = () => {
             <Toolbar variant="dense">
               <Stack direction="row" alignItems="center" spacing={1}>
                 <NavDropdown label="Theme" menuContent={<ThemeDropdown />} icon={<TonalityIcon sx={{ color: iconColor }} />} closeOnClick={false} />
-                <NavDropdown label="Avatar" menuContent={<ProfileDropdown />} icon={<Avatar alt={googleUser?.name} sx={{ width: 24, height: 24 }} src={googleUser?.pictureUrl} />} closeOnClick={true} />
               </Stack>
             </Toolbar>
           </Box>

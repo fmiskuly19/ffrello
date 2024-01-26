@@ -1,5 +1,5 @@
 import { Box, MenuItem, Radio, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCurrentThemeName } from "../../redux/themeSlice";
 import ThemeEditorModal from "../modals/themeEditorModal";
@@ -9,6 +9,14 @@ import { FFrelloTheme } from "../../types/FFrelloTheme";
 const ThemeDropdown = () => {
 
     const dispatch = useAppDispatch()
+
+    //pre auth stuff
+    const isLoggedIn = useAppSelector((state) => state.authSlice.isLoggedIn);
+    const [userLoginStatus, setUserLoginStatus] = useState(isLoggedIn)
+    useEffect(() => {
+        console.log(`login status changed to ${isLoggedIn}`)
+        setUserLoginStatus(isLoggedIn);
+    }, [isLoggedIn])
 
     const theme = useAppSelector((state) => state.themeSlice.currentThemeName);
     const themes = useAppSelector((state) => state.themeSlice.themes);
@@ -54,10 +62,14 @@ const ThemeDropdown = () => {
                         )
                     })}
 
-                    {/* Create Theme Menu Item */}
-                    <MenuItem onClick={() => setOpenModal(true)}>
-                        <Typography>Edit/Create Theme</Typography>
-                    </MenuItem >
+                    {
+                        userLoginStatus ?
+                            <MenuItem onClick={() => setOpenModal(true)}>
+                                <Typography>Edit/Create Theme</Typography>
+                            </MenuItem>
+                            : <></>
+                    }
+
                 </Stack>
             </Box >
 

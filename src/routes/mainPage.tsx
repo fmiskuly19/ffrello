@@ -5,12 +5,7 @@ import { useAppDispatch, useAppSelector } from "../hooks";
 import CreateWorkspaceModal from "../components/modals/createWorkspaceModal";
 
 import { getUserWorkspaces } from "../redux/userSlice";
-import { ApiCallStatus } from "../types/ApiCallStatus";
-import { GoogleLogin } from "@react-oauth/google";
-import { authenticateWithApi, setIsAuthenticated } from "../redux/authSlice";
-import { Box, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { access } from "fs";
 import LoginPage from "./loginPage";
 
 const MainPage = () => {
