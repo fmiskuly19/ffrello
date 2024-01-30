@@ -109,9 +109,6 @@ const router = createBrowserRouter([
 
 const Main = () => {
 
-  const GOOGLE_CLIENTID = "972637678983-nnt2kq47b4i39k814ejqsc6v94p34qec.apps.googleusercontent.com"
-  const GOOGLE_SECRET = "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"
-
   const currentThemeName = useAppSelector((state) => state.themeSlice.currentThemeName);
   const themes = useAppSelector((state) => state.themeSlice.themes);
 
@@ -123,7 +120,7 @@ const Main = () => {
   }, [currentThemeName])
 
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENTID}>
+    <GoogleOAuthProvider clientId={import.meta.env.REACT_APP_GOOGLE_CLIENTID as string}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <DndProvider backend={HTML5Backend}>
