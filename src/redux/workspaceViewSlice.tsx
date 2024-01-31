@@ -10,6 +10,7 @@ import FCard from '../types/FCard';
 // #region Thunk Args
 
 export interface addNewCardArgs {
+    accessToken: string,
     userid: string,
     boardListId: number,
     title: string,
@@ -22,12 +23,14 @@ export interface moveCardArgs {
 }
 
 export interface newBoardListArgs {
+    accessToken: string,
     userid: string,
     boardId: number,
     name: string,
 }
 
 export interface removeBoardListArgs {
+    accessToken: string,
     userId: string,
     boardListId: number,
     boardList: BoardList,
@@ -224,7 +227,6 @@ export const workspaceViewSlice = createSlice({
             builder.addCase(getBoardPageThunk.rejected, (state) => {
                 state.getBoardPageStatus = ApiCallStatus.Failure;
             })
-
 
 
         //add new board list ***************************************************************************

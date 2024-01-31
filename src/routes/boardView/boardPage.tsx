@@ -41,8 +41,6 @@ const BoardPage = () => {
     const workspace = useAppSelector((state) => state.workspaceViewSlice.workspace)
     const boardLists = useAppSelector((state) => state.workspaceViewSlice.currentBoard?.boardLists)
     const getBoardStatus = useAppSelector((state) => state.workspaceViewSlice.getBoardPageStatus)
-    const addBoardListStatus = useAppSelector((state) => state.workspaceViewSlice.addBoardListStatus)
-    const removeBoardListStatus = useAppSelector((state) => state.workspaceViewSlice.removeBoardListStatus)
     const accessToken = useAppSelector((state) => state.authSlice.accessToken)
 
     const [newBoardListName, setNewBoardListName] = useState('');
@@ -55,18 +53,6 @@ const BoardPage = () => {
     useEffect(() => {
         dispatch(getBoardPageThunk({ accessToken: accessToken, userid: userid, boardid: Number(boardid) }))
     }, [])
-
-    //get board if the route id and our current cached board id dont match
-    if (boardid !== String(board?.id)) {
-        dispatch(getBoardPageThunk({ accessToken: accessToken, userid: userid, boardid: Number(boardid) }))
-    }
-
-    if (addBoardListStatus == ApiCallStatus.Failure) {
-        enqueueSnackbar('Could not add list', { variant: 'error' })
-    }
-    if (removeBoardListStatus == ApiCallStatus.Failure) {
-        enqueueSnackbar('Could not remove list', { variant: 'error' })
-    }
 
     let pageContent;
     if (getBoardStatus == ApiCallStatus.Loading) {
@@ -86,7 +72,7 @@ const BoardPage = () => {
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <Typography variant="h5" fontWeight="700">{board?.name}</Typography>
                         <IconButton color="primary" onClick={() => dispatch(starBoardThunk({ userId: userid, isStarred: !board.isStarred, boardId: board.id }))}>
-                            {board.isStarred ?
+                            {board?.isStarred ?
                                 <StarIcon htmlColor="#F8C021" sx={{ fontSize: '18px' }} />
                                 :
                                 <StarBorderIcon sx={{ width: '18px', height: '18px' }} />
@@ -126,7 +112,7 @@ const BoardPage = () => {
                                     {/* <OutlinedInput inputRef={input => input && input.focus()} size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} /> */}
                                     <OutlinedInput size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} />
                                     <Stack direction="row">
-                                        <Button onClick={() => { dispatch(newBoardListThunk({ userid: userid, name: newBoardListName, boardId: board.id })); reset() }} sx={{ textTransform: 'none' }}>Add List</Button>
+                                        <Button onClick={() => { dispatch(newBoardListThunk({ accessToken: accessToken, userid: userid, name: newBoardListName, boardId: board.id })); reset() }} sx={{ textTransform: 'none' }}>Add List</Button>
                                         <IconButton onClick={() => reset()}><CloseIcon sx={{ height: '18px', width: '18px' }} color='primary' /></IconButton>
                                     </Stack>
                                 </Stack>

@@ -234,6 +234,7 @@ export const NewBoardListApiCall = async (data: newBoardListArgs, thunkAPI: any)
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'PUT',
         headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
@@ -241,11 +242,22 @@ export const NewBoardListApiCall = async (data: newBoardListArgs, thunkAPI: any)
         signal: thunkAPI.signal
     }).then((res) => {
         if (res.ok) {
+            if (isDev) enqueueSnackbar("Success creating Board List", { variant: "success" });
             return res.json();
         }
         else {
-            throw new Error('Did not create new Board');
+            if (isDev) {
+                console.log(`Error creating Board List. Status Code: ${res.status}. Text: ${res.statusText}`);
+                enqueueSnackbar("Error creating Board List, see log", { variant: "error" });
+            }
+            return Promise.reject();
         }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error creating Board List: ${err}`);
+            enqueueSnackbar("Error creating Board List, see log", { variant: "error" });
+        }
+        return Promise.reject();
     });
 };
 
@@ -254,6 +266,7 @@ export const RemoveBoardListApiCall = async (data: removeBoardListArgs, thunkAPI
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'DELETE',
         headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
@@ -261,11 +274,23 @@ export const RemoveBoardListApiCall = async (data: removeBoardListArgs, thunkAPI
         signal: thunkAPI.signal
     }).then((res) => {
         if (res.ok) {
+            if (isDev) enqueueSnackbar("Success removing Board List", { variant: "success" });
+            //return a resolved promise, there is no json response to return
             return Promise.resolve();
         }
         else {
-            throw new Error('Did remove Board');
+            if (isDev) {
+                console.log(`Error removing Board List. Status Code: ${res.status}. Text: ${res.statusText}`);
+                enqueueSnackbar("Error removing Board List, see log", { variant: "error" });
+            }
+            return Promise.reject();
         }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error removing Board List: ${err}`);
+            enqueueSnackbar("Error removing Board List, see log", { variant: "error" });
+        }
+        return Promise.reject();
     });
 };
 
@@ -278,6 +303,7 @@ export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
         headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
@@ -285,11 +311,22 @@ export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
         signal: thunkAPI.signal
     }).then((res) => {
         if (res.ok) {
+            if (isDev) enqueueSnackbar("Success creating new card", { variant: "success" });
             return res.json();
         }
         else {
-            throw new Error('Did not create new card');
+            if (isDev) {
+                console.log(`Error creating new card. Status Code: ${res.status}. Text: ${res.statusText}`);
+                enqueueSnackbar("Error creating new card, see log", { variant: "error" });
+            }
+            return Promise.reject();
         }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error creating new card: ${err}`);
+            enqueueSnackbar("Error creating new card, see log", { variant: "error" });
+        }
+        return Promise.reject();
     });
 };
 
