@@ -43,6 +43,7 @@ const BoardPage = () => {
     const getBoardStatus = useAppSelector((state) => state.workspaceViewSlice.getBoardPageStatus)
     const addBoardListStatus = useAppSelector((state) => state.workspaceViewSlice.addBoardListStatus)
     const removeBoardListStatus = useAppSelector((state) => state.workspaceViewSlice.removeBoardListStatus)
+    const accessToken = useAppSelector((state) => state.authSlice.accessToken)
 
     const [newBoardListName, setNewBoardListName] = useState('');
 
@@ -52,12 +53,12 @@ const BoardPage = () => {
     }
 
     useEffect(() => {
-        dispatch(getBoardPageThunk({ userid: userid, boardid: Number(boardid) }))
+        dispatch(getBoardPageThunk({ accessToken: accessToken, userid: userid, boardid: Number(boardid) }))
     }, [])
 
     //get board if the route id and our current cached board id dont match
     if (boardid !== String(board?.id)) {
-        dispatch(getBoardPageThunk({ userid: userid, boardid: Number(boardid) }))
+        dispatch(getBoardPageThunk({ accessToken: accessToken, userid: userid, boardid: Number(boardid) }))
     }
 
     if (addBoardListStatus == ApiCallStatus.Failure) {

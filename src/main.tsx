@@ -119,8 +119,12 @@ const Main = () => {
     setTheme(theme);
   }, [currentThemeName])
 
+  console.log(`app mode: ${import.meta.env.MODE}`)
+  console.log(`ffrello api endpoint: ${import.meta.env.VITE_FFRELLO_API_ENDPOINT}`)
+
+
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.REACT_APP_GOOGLE_CLIENTID as string}>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENTID as string}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <DndProvider backend={HTML5Backend}>

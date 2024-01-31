@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { newBoard, setNewBoardStatus } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
-import { enqueueSnackbar } from "notistack";
 
 
 interface CreateBoardMenuProps {
@@ -20,13 +19,14 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
     const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
     const newBoardStatus = useAppSelector((state) => state.userSlice.newBoardStatus)
     const userId = useAppSelector((state) => state.userSlice.User.userid);
+    const accessToken = useAppSelector((state) => state.authSlice.accessToken);
 
     const [workspaceId, setWorkspaceId] = useState("");
     const [boardTitle, setBoardTitle] = useState("");
     const [visibility, setVisibility] = useState("");
 
     const createNewBoard = async () => {
-        dispatch(newBoard({ boardTitle: boardTitle, visibility: visibility, workspaceid: Number(workspaceId), userid: userId }))
+        dispatch(newBoard({ accessToken: accessToken, boardTitle: boardTitle, visibility: visibility, workspaceid: Number(workspaceId), userid: userId }))
     }
 
     let newBoardContent;
@@ -87,18 +87,13 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
     //this is probably bad for performance but if I take this out of the useEffect it executes twice
     useEffect(() => {
         if (newBoardStatus == ApiCallStatus.Success) {
-            enqueueSnackbar('Success creating new board', { variant: 'success' })
-
             props.onClose();
-
             dispatch(setNewBoardStatus(ApiCallStatus.Idle))
             setWorkspaceId('')
             setVisibility('')
             setBoardTitle('')
         }
         else if (newBoardStatus == ApiCallStatus.Failure) {
-            enqueueSnackbar('Failure creating new board', { variant: 'error' })
-
             dispatch(setNewBoardStatus(ApiCallStatus.Idle))
             setWorkspaceId('')
             setVisibility('')

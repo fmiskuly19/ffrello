@@ -19,9 +19,8 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import LetterBox from "../letterBox";
-import { removeWorkspace, removeWorkspaceArgs, setCurrentWorkspace, setRemoveWorkspaceStatus } from "../../redux/userSlice";
+import { removeWorkspace, setCurrentWorkspace } from "../../redux/userSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
-import { useSnackbar } from "notistack";
 
 import { useTheme } from '@mui/material/styles';
 
@@ -37,13 +36,12 @@ const HomePageLeftSidebar = () => {
 
     const theme = useTheme();
 
-    const { enqueueSnackbar } = useSnackbar();
-
     const selectedMenu = useAppSelector((state) => state.homeSlice.selectedMenu)
     const selectedWorkspaceMenu = useAppSelector((state) => state.homeSlice.selectedWorkspaceMenu)
     const expanded = useAppSelector((state) => state.homeSlice.expandedAccordions)
     const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
     const userid = useAppSelector((state) => state.userSlice.User.userid)
+    const accessToken = useAppSelector((state) => state.authSlice.accessToken)
     const dispatch = useAppDispatch()
 
     const links = [
@@ -92,19 +90,8 @@ const HomePageLeftSidebar = () => {
 
     let accordionAreaContent;
     const workspaceStatus = useAppSelector((state) => state.userSlice.workspaceStatus);
-    const removeWorkspaceStatus = useAppSelector((state) => state.userSlice.removeWorkspaceStatus);
 
-    if (removeWorkspaceStatus == ApiCallStatus.Failure) {
-        enqueueSnackbar('error removing workspace', { variant: 'error' });
-        dispatch(setRemoveWorkspaceStatus(ApiCallStatus.Idle))
-    }
-
-    if (removeWorkspaceStatus == ApiCallStatus.Success) {
-        enqueueSnackbar('success removing workspace', { variant: 'success' });
-        dispatch(setRemoveWorkspaceStatus(ApiCallStatus.Idle))
-    }
-
-    if (workspaceStatus == ApiCallStatus.Loading || removeWorkspaceStatus == ApiCallStatus.Loading) {
+    if (workspaceStatus == ApiCallStatus.Loading) {
         accordionAreaContent =
             <Box justifyContent="center" display="flex">
                 <CircularProgress />
@@ -132,7 +119,7 @@ const HomePageLeftSidebar = () => {
                                         <LetterBox backgroundColor={`linear-gradient(180deg, rgba(${color1},${color2},${color3},1) 0%, rgba(${color3},${color2},${color1},1) 100%)`} size={24} letter={workspace.name.substring(0, 1)} />
                                         <Typography variant="body1" fontWeight="600">{workspace.name} Workspace</Typography>
                                     </Stack>
-                                    <IconButton onClick={() => dispatch(removeWorkspace({ userid: userid, workspaceid: workspace.id, workspace: workspace }))}>
+                                    <IconButton onClick={() => dispatch(removeWorkspace({ accessToken: accessToken, userid: userid, workspaceid: workspace.id, workspace: workspace }))}>
                                         <DeleteOutlineIcon sx={{ height: "15px", width: "15px" }} />
                                     </IconButton>
                                 </AccordionSummary>

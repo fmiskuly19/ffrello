@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit'
-import { GetBoardPage, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
+import { GetBoardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 import Board from '../types/Board';
 import { getBoard as getBoardPageArgs } from './userSlice';
@@ -69,7 +69,7 @@ export interface InsertCardReducerPayload {
 export const getBoardPageThunk = createAsyncThunk(
     '/getBoard',
     async (data: getBoardPageArgs, thunkAPI) => {
-        return await GetBoardPage(data, thunkAPI);
+        return await GetBoardApiCall(data, thunkAPI);
     }
 )
 

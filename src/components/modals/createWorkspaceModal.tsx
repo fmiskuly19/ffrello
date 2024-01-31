@@ -9,9 +9,11 @@ import handofgod from '../../assets/create.gif'
 
 const CreateWorkspaceModal = () => {
 
+    const accessToken = useAppSelector((state) => state.authSlice.accessToken);
     //get these from the nav state slice so we dont have to duplicate the modal many times, as its opened from 3 different locations
     const openModal = useAppSelector((state) => state.homeSlice.openCreateWorkspaceModal);
     const userId = useAppSelector((state) => state.userSlice.User.userid);
+
     const dispatch = useAppDispatch()
 
     const handleClose = () => {
@@ -30,7 +32,7 @@ const CreateWorkspaceModal = () => {
     const [workspaceDescription, setWorkspaceDescription] = useState('');
 
     const createNewWorkspace = async () => {
-        dispatch(newWorkspace({ userid: userId, workspaceName: workspaceName, theme: workspaceTheme, description: workspaceDescription }))
+        dispatch(newWorkspace({ accessToken: accessToken, userid: userId, workspaceName: workspaceName, theme: workspaceTheme, description: workspaceDescription }))
     }
 
     let modalContent;
@@ -123,7 +125,7 @@ const CreateWorkspaceModal = () => {
         </Box>
     }
 
-    //when we get a sucessful response, wait 5 seconds and then close the modal
+    //when we get a sucessful response, wait 3 seconds and then close the modal
     useEffect(() => {
         if (newWorkspaceStatus == ApiCallStatus.Success) {
             const timer = setTimeout(() => {

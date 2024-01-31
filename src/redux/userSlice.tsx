@@ -10,20 +10,19 @@ interface UserSliceProps {
     User: User,
     workspaceStatus: ApiCallStatus,
     newWorkspaceStatus: ApiCallStatus,
-    removeWorkspaceStatus: ApiCallStatus,
     newBoardStatus: ApiCallStatus,
 }
 
 const initialState: UserSliceProps = {
     workspaceStatus: ApiCallStatus.Idle,
     newWorkspaceStatus: ApiCallStatus.Idle,
-    removeWorkspaceStatus: ApiCallStatus.Idle,
     newBoardStatus: ApiCallStatus.Idle,
     Workspaces: undefined,
     User: { id: 0, userid: 'frankstestworkspace', name: 'Fwank Misk' }
 }
 
 export interface newWorkspaceArgs {
+    accessToken: string,
     userid: string,
     workspaceName: string,
     theme: string,
@@ -31,6 +30,7 @@ export interface newWorkspaceArgs {
 }
 
 export interface newBoardArgs {
+    accessToken: string,
     userid: string,
     workspaceid: number,
     boardTitle: string,
@@ -38,6 +38,7 @@ export interface newBoardArgs {
 }
 
 export interface getBoard {
+    accessToken: string,
     userid: string,
     boardid: number,
 }
@@ -48,14 +49,15 @@ export interface getWorkspaceArgs {
 }
 
 export interface removeWorkspaceArgs {
+    accessToken: string,
     userid: string,
     workspaceid: number,
     workspace: Workspace,
 }
 
 export interface getUserWorkspaceArgs {
-    userId: string,
     accessToken: string,
+    userId: string,
 }
 
 //workspaces
@@ -100,9 +102,6 @@ export const userSlice = createSlice({
         setNewWorkspaceStatus: (state, action: PayloadAction<ApiCallStatus>) => {
             state.newWorkspaceStatus = action.payload;
         },
-        setRemoveWorkspaceStatus: (state, action: PayloadAction<ApiCallStatus>) => {
-            state.removeWorkspaceStatus = action.payload;
-        },
         setNewBoardStatus: (state, action: PayloadAction<ApiCallStatus>) => {
             state.newBoardStatus = action.payload;
         },
@@ -136,7 +135,6 @@ export const userSlice = createSlice({
 
         //remove workspace reducers
         builder.addCase(removeWorkspace.pending, (state, action) => {
-            state.removeWorkspaceStatus = ApiCallStatus.Loading;
 
             //temporarily remove workspace from list while api call is loading to make it look like its already deleted 
             state.Workspaces = state.Workspaces?.filter(item => item.id !== action.meta.arg.workspaceid);
@@ -144,10 +142,8 @@ export const userSlice = createSlice({
             builder.addCase(removeWorkspace.fulfilled, (state, action) => {
                 //set updated workspaces that is returned after successfully removing
                 state.Workspaces = action.payload
-                state.removeWorkspaceStatus = ApiCallStatus.Success;
             }),
             builder.addCase(removeWorkspace.rejected, (state, action) => {
-                state.removeWorkspaceStatus = ApiCallStatus.Failure;
 
                 //add temporarily removed workspace back to list if we failed to delete, make it look like nothing happened
                 state.Workspaces = [
@@ -172,6 +168,6 @@ export const userSlice = createSlice({
     },
 })
 
-export const { setNewWorkspaceStatus, setRemoveWorkspaceStatus, setCurrentWorkspace, setNewBoardStatus } = userSlice.actions
+export const { setNewWorkspaceStatus, setCurrentWorkspace, setNewBoardStatus } = userSlice.actions
 
 export default userSlice.reducer

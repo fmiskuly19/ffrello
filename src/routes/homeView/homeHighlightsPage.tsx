@@ -9,7 +9,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HomePageRightSidebar from "../../components/sidebars/homePageRightSidebar";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import { getUserWorkspaces } from "../../redux/userSlice";
 
 import * as data from '../../data/hardcodes'
 import HighlightCard, { SkeletonHighlightCard } from "../../components/material-ui-cards/highlightCard";
@@ -24,10 +23,6 @@ const HighlightsPage = () => {
     useEffect(() => {
         dispatch(setSelectedMenu('Home')) //set this so when we navigate here the left sidebar reflects that
         dispatch(setSelectedWorkspaceMenu(''))
-
-        if (workspaceStatus == ApiCallStatus.Failure) {
-            dispatch(getUserWorkspaces('fwank'))
-        }
     }, [])
 
     let highlightsContent;

@@ -10,9 +10,7 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { useSnackbar } from "notistack";
-import { getUserWorkspaces } from "../../redux/userSlice";
 
-import { useTheme } from '@mui/material/styles';
 import BoardCard, { BoardCardHeight } from "../../components/material-ui-cards/boardInfoCard";
 import WorkspaceCard, { SkeletonWorkspaceCard } from "../../components/material-ui-cards/homepageWorkspaceCard";
 
@@ -79,10 +77,6 @@ const HomeBoardsPage = () => {
     useEffect(() => {
         dispatch(setSelectedMenu('Boards')) //set this so when we navigate here the left sidebar reflects that
         dispatch(setSelectedWorkspaceMenu(''))
-
-        if (workspaceStatus == ApiCallStatus.Failure) {
-            dispatch(getUserWorkspaces('fwank'))
-        }
     }, [])
 
 

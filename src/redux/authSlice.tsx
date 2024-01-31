@@ -68,9 +68,6 @@ export const authSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.googleUser = action.payload.googleUser;
             state.isLoggedIn = true;
-
-            console.log("ffrello api authentication successful")
-            console.log(action.payload);
         })
     },
 })

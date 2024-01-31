@@ -14,16 +14,18 @@ const MainPage = () => {
     const isLoggedIn = useAppSelector((state) => state.authSlice.isLoggedIn);
     const accessToken = useAppSelector((state) => state.authSlice.accessToken);
 
-    const [userLoginStatus, setUserLoginStatus] = useState(isLoggedIn)
+    const [userLoginStatus, setUserLoginStatus] = useState(false)
 
     useEffect(() => {
-        console.log(`login status changed to ${isLoggedIn}`)
         setUserLoginStatus(isLoggedIn);
-        console.log(`acccess token changed ${accessToken}`)
+        console.log(`user Logged in status: ${isLoggedIn}`)
 
         //get workspaces with new creddentials
-        dispatch(getUserWorkspaces({ userId: 'fwank', accessToken: accessToken }));
-    }, [isLoggedIn, accessToken])
+        if (isLoggedIn) {
+            console.log('dispatching getUserWorkspaces')
+            dispatch(getUserWorkspaces({ userId: 'fwank', accessToken: accessToken }));
+        }
+    }, [isLoggedIn])
 
     //after auth stuff
     const dispatch = useAppDispatch();
