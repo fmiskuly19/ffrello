@@ -121,7 +121,7 @@ const Main = () => {
 
   console.log(`app mode: ${import.meta.env.MODE}`)
   console.log(`ffrello api endpoint: ${import.meta.env.VITE_FFRELLO_API_ENDPOINT}`)
-  console.log(`ffrello api endpoint: ${import.meta.env.VITE_GOOGLE_CLIENTID}`)
+
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENTID as string}>
