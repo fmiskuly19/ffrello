@@ -29,7 +29,7 @@ const BoardListPaper = (props: BoardList) => {
 
     const [, drop] = useDrop(() => ({
         accept: DraggableType.FAWD,
-        drop: (item: any, monitor) => {
+        drop: (item: any) => {
 
             console.log('dropping onto a boardlist!')
 

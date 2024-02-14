@@ -2,7 +2,7 @@
 
 import Board from "../types/Board"
 import HomePageHighlight from "../types/HomePageHighlight"
-import FCard from "../types/FCard"
+import FFrelloCard from "../types/FFrelloCard"
 import Workspace from "../types/Workspace";
 
 const getRand = (min: number, max: number) => {
@@ -73,7 +73,7 @@ export const hardCodedHighlights: HomePageHighlight[] = [
 
 export const templateNames = ['Elegant Minimalist', 'Vibrant Spectrum', 'Coastal Retreat', 'Urban Chic', 'Modern Fusion', 'Serene Zen', 'Retro Remix', 'Botanical Bliss', 'Timeless Elegance', 'Industrial Edge', 'Whimsical Wonderland', 'Cosmic Dreams', 'Rustic Charm', 'Eclectic Fusion', 'Art Deco Glam', 'Tropical Paradise', 'Nordic Haven', 'Boho Chic', 'Geometric Harmony', 'Vintage Vibe']
 
-export const Issues: FCard[] = [
+export const Issues: FFrelloCard[] = [
     { id: 1, title: 'Issue text', comments: ["", "", ""], attachments: ["links", "links", "links"], users: [""] },
     { id: 2, title: 'HUGE ISSUE HERE', comments: ["", "", ""], attachments: ["links", "links", "links"], users: [""] },
     { id: 3, title: 'OMFG there is a huge issue', comments: ["", "", ""], attachments: ["links", "links", "links"], users: [""] },

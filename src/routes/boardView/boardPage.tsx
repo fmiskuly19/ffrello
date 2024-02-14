@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDrop } from "react-dnd";
-import { enqueueSnackbar } from "notistack";
 
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getBoardPageThunk, newBoardListThunk, starBoardThunk } from "../../redux/workspaceViewSlice";
@@ -19,6 +17,7 @@ import BoardListPaper from "../../components/material-ui-cards/boardList";
 
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { BoardList } from "../../types/BoardList";
+import FFrelloCardModal from "../../components/modals/ffrelloCardModal";
 
 export interface newBoardListCard {
     boardListId: number,
@@ -67,6 +66,9 @@ const BoardPage = () => {
     else if (getBoardStatus == ApiCallStatus.Success && board) {
         pageContent =
             <>
+                {/* modal for when the user clicks on a card, react to global state change */}
+                <FFrelloCardModal />
+
                 {/* top bar */}
                 <Box display="flex" width="100%" justifyContent="space-between" p="15px" sx={{ borderBottom: '1px solid gray' }}>
                     <Stack direction="row" alignItems="center" spacing={1}>

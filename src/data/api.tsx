@@ -1,7 +1,6 @@
 import { enqueueSnackbar } from "notistack";
-import { getBoard, getUserWorkspaceArgs, getWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { addNewCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
-import { useAppSelector } from "../hooks";
+import { getBoard, getUserWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
+import { addNewCardArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
 
 const API_HOST_URL = import.meta.env.VITE_FFRELLO_API_ENDPOINT;
 const isDev = import.meta.env.MODE == "development"
@@ -330,6 +329,7 @@ export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
     });
 };
 
+//TODO this is not set up for auth
 export const MoveCardApiCall = async (data: moveCardArgs, thunkAPI: any) => {
     const target = `${data.userid}/card/move`;
     return await fetch(`${API_HOST_URL}${target}`, {
@@ -347,6 +347,37 @@ export const MoveCardApiCall = async (data: moveCardArgs, thunkAPI: any) => {
         else {
             throw new Error('Did not move card');
         }
+    });
+};
+
+export const GetCardApiCall = async (data: getCardArgs, thunkAPI: any) => {
+    const target = `${data.userid}/card/${data.cardId}`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'GET',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar("Success getting card", { variant: "success" });
+            return res.json();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error cgetting card. Status Code: ${res.status}. Text: ${res.statusText}`);
+                enqueueSnackbar("Error getting card, see log", { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error getting card: ${err}`);
+            enqueueSnackbar("Error getting card, see log", { variant: "error" });
+        }
+        return Promise.reject();
     });
 };
 

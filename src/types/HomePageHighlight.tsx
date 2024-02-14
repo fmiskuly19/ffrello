@@ -1,9 +1,9 @@
-import FCard from './FCard'
+import FFrelloCard from './FFrelloCard'
 import User from './User';
 
 interface HomePageHighlight {
     id?: number,
-    issue: FCard,
+    issue: FFrelloCard,
     author?: User,
     comment?: string,
     timestamp?: string

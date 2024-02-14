@@ -1,6 +1,7 @@
-interface FCard {
+interface FFrelloCard {
     id?: number,
     boardListId: number,
+    boardListName: string,
     title: string,
     description?: string,
     comments?: string[],
@@ -9,4 +10,4 @@ interface FCard {
     checklistItems?: string[],
 }
 
-export default FCard;
+export default FFrelloCard;

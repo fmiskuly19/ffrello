@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit'
-import { GetBoardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
+import { GetBoardApiCall, GetCardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 import Board from '../types/Board';
 import { getBoard as getBoardPageArgs } from './userSlice';
 import Workspace from '../types/Workspace';
 import { BoardList } from '../types/BoardList';
-import FCard from '../types/FCard';
+import FFrelloCard from '../types/FFrelloCard';
 
 // #region Thunk Args
 
@@ -19,6 +19,12 @@ export interface addNewCardArgs {
 export interface moveCardArgs {
     userid: string,
     boardListId: number,
+    cardId: number,
+}
+
+export interface getCardArgs {
+    accessToken: string,
+    userid: string,
     cardId: number,
 }
 
@@ -54,6 +60,12 @@ interface WorkspaceViewSliceProps {
     addBoardListStatus: ApiCallStatus,
     starBoardStatus: ApiCallStatus,
     newCardStatus: ApiCallStatus,
+    getCardStatus: ApiCallStatus,
+
+    //card modal
+    openFFrelloCardModal: boolean,
+    ffrelloCardModalId: number,
+    modalCard?: FFrelloCard
 }
 
 export interface MoveCardReducerPayload {
@@ -67,6 +79,11 @@ export interface InsertCardReducerPayload {
     cardToMoveBoardListId: number,
     cardDroppedOnId: number,
     cardDropppedOnBoardListId: number
+}
+
+export interface OpenFFrelloCardModalPayload {
+    openModal: boolean,
+    cardId: number
 }
 
 export const getBoardPageThunk = createAsyncThunk(
@@ -114,12 +131,24 @@ export const moveCardThunk = createAsyncThunk(
     }
 )
 
+export const getCardThunk = createAsyncThunk(
+    '/getCard',
+    async (data: getCardArgs, thunkAPI) => {
+        return await GetCardApiCall(data, thunkAPI);
+    }
+)
+
 const initialState: WorkspaceViewSliceProps = {
     getBoardPageStatus: ApiCallStatus.Idle,
     removeBoardListStatus: ApiCallStatus.Idle,
     addBoardListStatus: ApiCallStatus.Idle,
     starBoardStatus: ApiCallStatus.Idle,
     newCardStatus: ApiCallStatus.Idle,
+    getCardStatus: ApiCallStatus.Idle,
+
+    openFFrelloCardModal: false,
+    ffrelloCardModalId: 0,
+    modalCard: undefined
 }
 
 export const workspaceViewSlice = createSlice({
@@ -211,6 +240,13 @@ export const workspaceViewSlice = createSlice({
             };
 
             state.currentBoard = updatedBoard as Board;
+        },
+        setOpenFFrelloCardModal: (state, action: PayloadAction<OpenFFrelloCardModalPayload>) => {
+            state.openFFrelloCardModal = action.payload.openModal;
+            state.ffrelloCardModalId = action.payload.cardId;
+        },
+        setGetCardStatus: (state, action: PayloadAction<ApiCallStatus>) => {
+            state.getCardStatus = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -337,7 +373,7 @@ export const workspaceViewSlice = createSlice({
             if (state.currentBoard) {
                 var currentBoardList = state.currentBoard.boardLists.find(x => x.id == action.meta.arg.boardListId);
                 if (!currentBoardList?.cards) {
-                    currentBoardList!.cards = [] as FCard[];
+                    currentBoardList!.cards = [] as FFrelloCard[];
                 }
                 currentBoardList?.cards.push({ boardListId: action.meta.arg.boardListId, title: action.meta.arg.title });
             }
@@ -366,9 +402,23 @@ export const workspaceViewSlice = createSlice({
 
                 state.newCardStatus = ApiCallStatus.Success;
             })
+
+
+
+        //get card *****************************************************************************************
+        builder.addCase(getCardThunk.pending, (state) => {
+            state.getCardStatus = ApiCallStatus.Loading;
+        }),
+            builder.addCase(getCardThunk.rejected, (state) => {
+                state.getCardStatus = ApiCallStatus.Failure;
+            }),
+            builder.addCase(getCardThunk.fulfilled, (state, action) => {
+                state.getCardStatus = ApiCallStatus.Success;
+                state.modalCard = action.payload
+            })
     },
 })
 
-export const { setGetBoardStatus, moveCard, insertCard } = workspaceViewSlice.actions
+export const { setGetBoardStatus, moveCard, insertCard, setOpenFFrelloCardModal } = workspaceViewSlice.actions
 
 export default workspaceViewSlice.reducer
