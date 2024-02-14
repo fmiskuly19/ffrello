@@ -10,14 +10,12 @@ If you are viewing this page and have comments/suggestions/coding advice, please
 
 ## Goals
 
-I would like to get this site to a point where a user could log in with a Google account, which would be used on the backend to authenticate a user and authorize api calls. Currently the website only operates in a 1 user 'local' mode. 
-
 Overall goals for the website:
-- Google OAuth integration for users (multiuser support)
 - Near 1:1 replication of Trello's main functionality (boards, user highlights, workspaces, templates, etc.) and UI.
 - Microsoft Azure data analytics
 - Blazor front end for the web api
 - mobile support
+- Authentication with other External auth providers (Microsoft, Meta)
 
 ## Host
 
@@ -44,6 +42,9 @@ The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.
 
 
 ## Screenshots (WIP)
+
+### Auth Screen
+![AuthScreen](https://github.com/fmiskuly19/ffrello-public/assets/33069374/2325f184-0dd4-4743-9867-367606c6dbc6)
 
 ### Home Pages
 ![Home Page](https://github.com/fmiskuly19/ffrello/assets/33069374/f55e25f9-e096-4fc5-aadd-a9c08c103ebd)
