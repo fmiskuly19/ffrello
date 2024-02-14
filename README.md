@@ -25,7 +25,7 @@ The backend web api is hosted in [Microsoft Azure](https://ffrelloapiappservice.
 
 ## Tech stack
 #### Frontend
-- [vite](https://vitejs.dev/) (I am not using this to its potential so I may remove this dependency)
+- [vite](https://vitejs.dev/) 
 - [material-ui](https://mui.com/material-ui/) for UI kit and styling
 - [react-redux](https://react-redux.js.org/) for state management
 - [react-router-dom](https://reactrouter.com/en/main) for navigation
