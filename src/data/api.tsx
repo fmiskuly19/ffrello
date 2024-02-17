@@ -1,6 +1,6 @@
 import { enqueueSnackbar } from "notistack";
 import { getBoard, getUserWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { addCardCommentArgs, addNewCardArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs, watchCardArgs } from "../redux/workspaceViewSlice";
+import { addCardCommentArgs, addNewCardArgs, editCommentArgs, editDescriptionArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, removeCommentArgs, starBoardArgs, watchCardArgs } from "../redux/workspaceViewSlice";
 
 const API_HOST_URL = import.meta.env.VITE_FFRELLO_API_ENDPOINT;
 const isDev = import.meta.env.MODE == "development"
@@ -67,7 +67,7 @@ export const GetWorkspacesApiCall = async (data: getUserWorkspaceArgs, thunkAPI:
         if (res.ok) return res.json();
         else {
             if (isDev) {
-                console.log(`Error getting workspaces. Status Code: ${res.status}. Text: ${res.statusText}`)
+                console.log(`Error getting workspaces. Status Code: ${res.status}`)
                 enqueueSnackbar("Error getting workspaces, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -97,7 +97,7 @@ export const NewWorkspaceApiCall = async (data: newWorkspaceArgs, thunkAPI: any)
         if (res.ok) return res.json();
         else {
             if (isDev) {
-                console.log(`Error creating new workspace. Status Code: ${res.status}. Text: ${res.statusText}`)
+                console.log(`Error creating new workspace. Status Code: ${res.status}`)
                 enqueueSnackbar("Error creating new workspace, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -130,7 +130,7 @@ export const RemoveWorkspace = async (data: removeWorkspaceArgs, thunkAPI: any) 
         }
         else {
             if (isDev) {
-                console.log(`Error removing workspace. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error removing workspace. Status Code: ${res.status}`);
                 enqueueSnackbar("Error removing workspace, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -166,7 +166,7 @@ export const NewBoardApiCall = async (data: newBoardArgs, thunkAPI: any) => {
         }
         else {
             if (isDev) {
-                console.log(`Error creating new Board. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error creating new Board. Status Code: ${res.status}`);
                 enqueueSnackbar("Error creating new Board, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -214,7 +214,7 @@ export const GetBoardApiCall = async (data: getBoard, thunkAPI: any) => {
         }
         else {
             if (isDev) {
-                console.log(`Error getting Board. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error getting Board. Status Code: ${res.status}`);
                 enqueueSnackbar("Error getting Board, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -246,7 +246,7 @@ export const NewBoardListApiCall = async (data: newBoardListArgs, thunkAPI: any)
         }
         else {
             if (isDev) {
-                console.log(`Error creating Board List. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error creating Board List. Status Code: ${res.status}`);
                 enqueueSnackbar("Error creating Board List, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -279,7 +279,7 @@ export const RemoveBoardListApiCall = async (data: removeBoardListArgs, thunkAPI
         }
         else {
             if (isDev) {
-                console.log(`Error removing Board List. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error removing Board List. Status Code: ${res.status}`);
                 enqueueSnackbar("Error removing Board List, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -315,7 +315,7 @@ export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
         }
         else {
             if (isDev) {
-                console.log(`Error creating new card. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error creating new card. Status Code: ${res.status}`);
                 enqueueSnackbar("Error creating new card, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -367,7 +367,7 @@ export const GetCardApiCall = async (data: getCardArgs, thunkAPI: any) => {
         }
         else {
             if (isDev) {
-                console.log(`Error cgetting card. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error cgetting card. Status Code: ${res.status}`);
                 enqueueSnackbar("Error getting card, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -399,7 +399,7 @@ export const WatchCardApiCall = async (data: watchCardArgs, thunkAPI: any) => {
         }
         else {
             if (isDev) {
-                console.log(`Error watching card. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error watching card. Status Code: ${res.status}`);
                 enqueueSnackbar("Error watching card, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -431,7 +431,7 @@ export const AddCardCommentApiCall = async (data: addCardCommentArgs, thunkAPI: 
         }
         else {
             if (isDev) {
-                console.log(`Error adding comment. Status Code: ${res.status}. Text: ${res.statusText}`);
+                console.log(`Error adding comment. Status Code: ${res.status}`);
                 enqueueSnackbar("Error adding comment, see log", { variant: "error" });
             }
             return Promise.reject();
@@ -440,6 +440,104 @@ export const AddCardCommentApiCall = async (data: addCardCommentArgs, thunkAPI: 
         if (isDev) {
             console.log(`Error adding comment: ${err}`);
             enqueueSnackbar("Error adding comment, see log", { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const RemoveCommentApiCall = async (data: removeCommentArgs, thunkAPI: any) => {
+    const target = `card/comment/remove`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ commentId: data.comment.id as number }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success removing comment with id ${data.comment.id}`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error removing comment with id ${data.comment.id}. Status Code: ${res.status}`);
+                enqueueSnackbar(`Error removing comment with id ${data.comment.id}, see log`, { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error removing comment with id ${data.comment.id}: ${err}`);
+            enqueueSnackbar(`Error removing comment with id ${data.comment.id}, see log`, { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const EditCommentApiCall = async (data: editCommentArgs, thunkAPI: any) => {
+    const target = `card/comment/edit`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ commentId: data.originalComment.id as number, Value: data.newValue }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success editing comment with id ${data.originalComment.id}`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error editing comment with id ${data.originalComment.id}. Status Code: ${res.status}`);
+                enqueueSnackbar(`Error editing comment with id ${data.originalComment.id}, see log`, { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error editing comment with id ${data.originalComment.id}: ${err}`);
+            enqueueSnackbar(`Error editing comment with id ${data.originalComment.id}, see log`, { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const EditDescriptionApiCall = async (data: editDescriptionArgs, thunkAPI: any) => {
+    const target = `card/description/edit`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cardId: data.cardId, Value: data.newValue }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success editing description`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error editing description. Status Code: ${res.status}`);
+            }
+            //show error editing description always
+            enqueueSnackbar(`Error editing description`, { variant: "error" });
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error editing description: ${err}`);
+            //why is this 
+            enqueueSnackbar(`Error editing description, see log`, { variant: "error" });
         }
         return Promise.reject();
     });

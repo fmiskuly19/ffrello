@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, MenuItem, Stack, Switch, Typography } from "@mui/material";
+import { Avatar, Box, Divider, MenuItem, Stack, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { logoutUser } from "../../redux/authSlice";
 import { enqueueSnackbar } from "notistack";

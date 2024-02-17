@@ -1,9 +1,10 @@
-import { Avatar, Box, Button, Checkbox, Dialog, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, MenuItem, Paper, Stack, TextField, Typography, useTheme } from "@mui/material"
+import { Avatar, Box, Button, Checkbox, Dialog, Divider, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Paper, Stack, TextField, Typography, useTheme } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addCardCommentThunk, getCardThunk, setIsWatchingModalCard, setOpenFFrelloCardModal, watchCardThunk } from "../../redux/workspaceViewSlice";
+import { addCardCommentThunk, editCommentThunk, editDescriptionThunk, getCardThunk, removeCommentThunk, setIsWatchingModalCard, setOpenFFrelloCardModal, watchCardThunk } from "../../redux/workspaceViewSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
-import { MoonLoader, SyncLoader } from "react-spinners";
+import { MoonLoader } from "react-spinners";
+import Comment from "../../types/Comment"
 
 //icons
 import PersonIcon from '@mui/icons-material/Person';
@@ -17,6 +18,11 @@ import WidthFullIcon from '@mui/icons-material/WidthFull';
 import DescriptionIcon from '@mui/icons-material/Description';
 import CloseIcon from '@mui/icons-material/Close';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddReactionIcon from '@mui/icons-material/AddReaction';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import IosShareIcon from '@mui/icons-material/IosShare';
 
 
 const FFrelloCardModal = () => {
@@ -36,7 +42,14 @@ const FFrelloCardModal = () => {
     const cardId = useAppSelector((state) => state.workspaceViewSlice.ffrelloCardModalId);
 
     const [openModal, setOpenModal] = useState(false);
+
     const [newComment, setNewCommentValue] = useState("");
+
+    const [isEditingComment, setIsEditingComment] = useState(0);
+    const [editedCommentValue, setEditedCommentValue] = useState("");
+
+    const [isEditingDescription, setIsEditingDescription] = useState(false);
+    const [editedDescriptionValue, setEditedDescriptionValue] = useState("");
 
     useEffect(() => {
         setOpenModal(openFFrelloCardModal)
@@ -48,9 +61,12 @@ const FFrelloCardModal = () => {
     //re render anytime ffrelloCard changes
     useEffect(() => { }, [ffrelloCard])
 
-    const saveFFrelloCard = () => {
-
-    }
+    const handleNewCommentKeyPress = (event: any) => {
+        if (event.key === 'Enter') {
+            createComment();
+            event.preventDefault();
+        }
+    };
 
     const createComment = () => {
         setNewCommentValue("")
@@ -58,12 +74,46 @@ const FFrelloCardModal = () => {
     }
 
     const handleModalClose = () => {
-        dispatch(setOpenFFrelloCardModal({ openModal: false, cardId: 0 }))
+        //close modal
+        dispatch(setOpenFFrelloCardModal({ openModal: false, cardId: 0 }));
+        //then reset form
+        reset();
+    }
+
+    const handleSaveDescriptionEdit = () => {
+        setIsEditingDescription(false);
+        dispatch(editDescriptionThunk({ accessToken: accessToken, cardId: cardId, newValue: editedDescriptionValue, originalValue: ffrelloCard?.description as string }))
+    }
+
+    const handleEditCommentClick = (c: Comment) => {
+        setIsEditingComment(c.id as number);
+        setEditedCommentValue(c.value);
+    }
+
+    const handleEditDescriptionClick = () => {
+        setIsEditingDescription(true)
+        setEditedDescriptionValue(ffrelloCard?.description as string)
+    }
+
+    const handleDeleteClick = (comment: Comment) => {
+        dispatch(removeCommentThunk({ accessToken: accessToken, comment: comment }))
+    }
+
+    const handleSaveCommentEdit = (comment: Comment) => {
+        setIsEditingComment(0);
+        setEditedCommentValue("");
+        dispatch(editCommentThunk({ accessToken: accessToken, originalComment: comment, newValue: editedCommentValue }))
     }
 
     const handleWatchClick = () => {
         dispatch(setIsWatchingModalCard(!ffrelloCard?.isUserWatching));
         dispatch(watchCardThunk({ accessToken: accessToken, cardId: cardId, isWatching: !ffrelloCard?.isUserWatching, userId: userId }));
+    }
+
+    const reset = () => {
+        setNewCommentValue("");
+        setIsEditingComment(0);
+        setEditedCommentValue("");
     }
 
     const MenuItems = [
@@ -91,19 +141,19 @@ const FFrelloCardModal = () => {
 
     const CardActions = [
         <>
-            <ListItemIcon><PersonIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemIcon><ArrowForwardIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
             <ListItemText><Typography variant="body2">Move</Typography></ListItemText>
         </>,
         <>
-            <ListItemIcon><LabelIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemIcon><ContentCopyIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
             <ListItemText><Typography variant="body2">Copy</Typography></ListItemText>
         </>,
         <>
-            <ListItemIcon><CheckBoxIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemIcon><ArchiveIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
             <ListItemText><Typography variant="body2">Archive</Typography></ListItemText>
         </>,
         <>
-            <ListItemIcon><DateRangeIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemIcon><IosShareIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
             <ListItemText><Typography variant="body2">Share</Typography></ListItemText>
         </>,
     ]
@@ -121,6 +171,7 @@ const FFrelloCardModal = () => {
         modalContent = <>Error!!!</>
     }
     else if (getCardStatus == ApiCallStatus.Success && ffrelloCard) {
+
         modalContent = <>
             <Stack direction="column" sx={{ width: '100%' }} spacing={4}>
                 <Stack direction="row" spacing={1} justifyContent={"space-between"} display="flex">
@@ -142,8 +193,8 @@ const FFrelloCardModal = () => {
                     </IconButton>
                 </Stack>
                 <Stack direction="row" justifyContent={"space-between"}>
-                    <Box sx={{ width: '70%' }}>
-                        <Stack direction="column" spacing={2}>
+                    <Box sx={{ width: '70%', maxWidth: '70%' }}>
+                        <Stack direction="column" spacing={4}>
                             {/* row of actions like notifications and members */}
 
                             <Stack direction="row" spacing={1}>
@@ -176,22 +227,71 @@ const FFrelloCardModal = () => {
                             </Stack>
 
                             <Stack direction="column" spacing={1}>
-                                <Stack direction="row" spacing={1}>
-                                    <DescriptionIcon />
-                                    <Typography>Description</Typography>
+                                <Stack direction="row" justifyContent="space-between">
+                                    <Stack direction="row" spacing={1}>
+                                        <DescriptionIcon />
+                                        <Typography>Description</Typography>
+                                    </Stack>
+                                    <Button variant="outlined" size="small" onClick={handleEditDescriptionClick} sx={{ textTransform: 'none' }}>Edit</Button>
                                 </Stack>
-                                <TextField hiddenLabel size="small" variant="filled" fullWidth={true} placeholder="Add a more detailed description..." value={ffrelloCard.description} />
+                                {
+                                    isEditingDescription ?
+                                        <Stack direction="column" spacing={1}>
+                                            <TextField hiddenLabel
+                                                size="small"
+                                                variant="filled"
+                                                placeholder="Add a more detailed description..."
+                                                value={editedDescriptionValue}
+                                                onChange={(e) => { setEditedDescriptionValue(e.target.value) }}
+                                                fullWidth
+                                                autoFocus />
+
+                                            <Stack direction="row" spacing={1}>
+                                                <Button
+                                                    size="small"
+                                                    color="primary"
+                                                    variant="contained"
+                                                    onClick={() => handleSaveDescriptionEdit()}
+                                                    sx={{ textTransform: 'none' }}>
+                                                    Save
+                                                </Button>
+                                                <Button
+                                                    size="small"
+                                                    variant="outlined"
+                                                    onClick={() => setIsEditingDescription(false)}
+                                                    sx={{ textTransform: 'none' }}>
+                                                    Cancel
+                                                </Button>
+                                            </Stack>
+                                        </Stack>
+
+                                        :
+                                        <Paper sx={{ borderRadius: '8px', width: '100%', padding: '5px' }}>
+                                            <Typography variant="body2">
+                                                {ffrelloCard.description}
+                                            </Typography>
+                                        </Paper>
+                                }
+
                             </Stack>
                             <Stack direction="row" justifyContent={"space-between"}>
                                 <Stack direction="row" spacing={1}>
                                     <BlurLinearIcon />
                                     <Typography fontWeight="900">Activity</Typography>
                                 </Stack>
-                                <Button variant="outlined" sx={{ textTransform: 'none' }}>Show Details</Button>
+                                <Button variant="outlined" size="small" sx={{ textTransform: 'none' }}>Show Details</Button>
                             </Stack>
                             <Stack direction="row" alignItems={"center"} spacing={0.5}>
                                 <Avatar alt={googleUser?.name} src={googleUser?.pictureUrl} />
-                                <TextField hiddenLabel size="small" variant="filled" fullWidth={true} placeholder="Write a comment..." value={newComment} onChange={(e) => setNewCommentValue(e.target.value)} />
+                                <TextField
+                                    size="small"
+                                    variant="filled"
+                                    placeholder="Write a comment..."
+                                    value={newComment}
+                                    onKeyDown={handleNewCommentKeyPress}
+                                    onChange={(e) => setNewCommentValue(e.target.value)}
+                                    fullWidth
+                                    hiddenLabel />
                                 {newComment ?
                                     <IconButton
                                         onClick={createComment}
@@ -202,23 +302,57 @@ const FFrelloCardModal = () => {
                                     : <></>}
 
                             </Stack>
-                            <Stack direction="column">
+                            <Stack direction="column" spacing={1}>
                                 {ffrelloCard.comments?.map((c) => {
                                     return (
                                         <Stack direction="row" spacing={1}  >
-                                            <Avatar sx={{ height: '28px', width: '28px' }} />
+                                            <Avatar alt={c.username} src={c.profilePhotoUrl} sx={{ height: '28px', width: '28px' }} />
                                             <Stack direction="column" sx={{ width: '100%' }}>
-                                                <Stack direction="row" alignItems={"flex-end"} spacing={1}>
-                                                    <Typography variant="body1">Username</Typography>
-                                                    <Typography variant="subtitle2">timestamp</Typography>
+                                                <Stack direction="row" alignItems={"flex-end"} spacing={2}>
+                                                    <Typography variant="body1">{c.username}</Typography>
+                                                    <Typography variant="caption">{c.timestamp}</Typography>
                                                 </Stack>
-                                                <Paper sx={{ borderRadius: '8px', width: '100%', padding: '5px' }}>
-                                                    {c.value}
-                                                </Paper>
-                                                <Stack direction="row">
-                                                    <CloseIcon sx={{ height: '14px', width: '14px' }} />
-                                                    <CloseIcon sx={{ height: '14px', width: '14px' }} />
-                                                    <CloseIcon sx={{ height: '14px', width: '14px' }} />
+
+                                                {isEditingComment == c.id as number ?
+                                                    <Stack direction="column" spacing={1}>
+                                                        <OutlinedInput autoFocus size="small" value={editedCommentValue} onChange={(e) => setEditedCommentValue(e.target.value)} />
+                                                        <Stack direction="row" spacing={1}>
+                                                            <Button
+                                                                size="small"
+                                                                color="primary"
+                                                                variant="contained"
+                                                                onClick={() => handleSaveCommentEdit(c)}
+                                                                sx={{ textTransform: 'none' }}>
+                                                                Save
+                                                            </Button>
+                                                            <Button
+                                                                size="small"
+                                                                variant="outlined"
+                                                                onClick={() => setIsEditingComment(0)}
+                                                                sx={{ textTransform: 'none' }}>
+                                                                Discard Changes
+                                                            </Button>
+                                                        </Stack>
+                                                    </Stack>
+                                                    :
+                                                    <Paper sx={{ borderRadius: '8px', width: '100%', padding: '5px' }}>
+                                                        <Typography variant="body2">
+                                                            {c.value}
+                                                        </Typography>
+                                                    </Paper>
+                                                }
+
+                                                <Stack direction="row" alignItems="center" spacing={0.5} >
+                                                    <AddReactionIcon sx={{ height: '14px', width: '14px' }} />
+                                                    <Divider orientation="vertical" sx={{ height: '50%' }} />
+                                                    {/* Add comment id to editing set when clicking on edit */}
+                                                    <Link onClick={() => handleEditCommentClick(c)}>
+                                                        <Typography variant="caption">Edit</Typography>
+                                                    </Link>
+                                                    <Typography variant="h6">-</Typography>
+                                                    <Link onClick={() => handleDeleteClick(c)}>
+                                                        <Typography variant="caption">Delete</Typography>
+                                                    </Link>
                                                 </Stack>
                                             </Stack>
                                         </Stack>
@@ -256,17 +390,19 @@ const FFrelloCardModal = () => {
     }
 
     return (
-        <Dialog onClose={handleModalClose} open={openModal} maxWidth={false}>
-            <Box display="flex" sx={{
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                paddingTop: '30px',
-                paddingBottom: '30px',
-                minWidth: '700px',
-                minHeight: "800px",
-                maxHeight: "800px",
-                alignItems: 'stretch',
-            }}>
+        <Dialog onClose={handleModalClose} open={openModal} maxWidth={false} scroll="body"
+        >
+            <Box display="flex"
+                sx={{
+                    paddingLeft: '20px',
+                    paddingRight: '20px',
+                    paddingTop: '30px',
+                    paddingBottom: '30px',
+                    minWidth: '700px',
+                    maxWidth: '700px',
+                    minHeight: "800px",
+                    alignItems: 'stretch',
+                }}>
                 {modalContent}
             </Box >
         </Dialog >
