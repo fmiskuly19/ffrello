@@ -68,6 +68,20 @@ const FFrelloCardModal = () => {
         }
     };
 
+    const handleEditCommentKeyPress = (event: any, c: Comment) => {
+        if (event.key === 'Enter') {
+            handleSaveCommentEdit(c)
+            event.preventDefault();
+        }
+    };
+
+    const handleEditDescriptionKeyPress = (event: any) => {
+        if (event.key === 'Enter') {
+            handleSaveEditDescription()
+            event.preventDefault();
+        }
+    };
+
     const createComment = () => {
         setNewCommentValue("")
         dispatch(addCardCommentThunk({ accessToken: accessToken, cardId: cardId, userId: userId, comment: newComment }))
@@ -80,7 +94,7 @@ const FFrelloCardModal = () => {
         reset();
     }
 
-    const handleSaveDescriptionEdit = () => {
+    const handleSaveEditDescription = () => {
         setIsEditingDescription(false);
         dispatch(editDescriptionThunk({ accessToken: accessToken, cardId: cardId, newValue: editedDescriptionValue, originalValue: ffrelloCard?.description as string }))
     }
@@ -239,6 +253,7 @@ const FFrelloCardModal = () => {
                                         <Stack direction="column" spacing={1}>
                                             <TextField hiddenLabel
                                                 size="small"
+                                                onKeyDown={handleEditDescriptionKeyPress}
                                                 variant="filled"
                                                 placeholder="Add a more detailed description..."
                                                 value={editedDescriptionValue}
@@ -251,7 +266,7 @@ const FFrelloCardModal = () => {
                                                     size="small"
                                                     color="primary"
                                                     variant="contained"
-                                                    onClick={() => handleSaveDescriptionEdit()}
+                                                    onClick={() => handleSaveEditDescription()}
                                                     sx={{ textTransform: 'none' }}>
                                                     Save
                                                 </Button>
@@ -315,7 +330,12 @@ const FFrelloCardModal = () => {
 
                                                 {isEditingComment == c.id as number ?
                                                     <Stack direction="column" spacing={1}>
-                                                        <OutlinedInput autoFocus size="small" value={editedCommentValue} onChange={(e) => setEditedCommentValue(e.target.value)} />
+                                                        <OutlinedInput
+                                                            autoFocus
+                                                            size="small"
+                                                            value={editedCommentValue}
+                                                            onChange={(e) => setEditedCommentValue(e.target.value)}
+                                                            onKeyDown={(e) => handleEditCommentKeyPress(e, c)} />
                                                         <Stack direction="row" spacing={1}>
                                                             <Button
                                                                 size="small"
