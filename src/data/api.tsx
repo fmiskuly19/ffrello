@@ -1,6 +1,6 @@
 import { enqueueSnackbar } from "notistack";
 import { getBoard, getUserWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { addNewCardArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs, watchCardArgs } from "../redux/workspaceViewSlice";
+import { addCardCommentArgs, addNewCardArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs, watchCardArgs } from "../redux/workspaceViewSlice";
 
 const API_HOST_URL = import.meta.env.VITE_FFRELLO_API_ENDPOINT;
 const isDev = import.meta.env.MODE == "development"
@@ -408,6 +408,38 @@ export const WatchCardApiCall = async (data: watchCardArgs, thunkAPI: any) => {
         if (isDev) {
             console.log(`Error watching card: ${err}`);
             enqueueSnackbar("Error watching card, see log", { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const AddCardCommentApiCall = async (data: addCardCommentArgs, thunkAPI: any) => {
+    const target = `card/comment/new`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cardId: data.cardId, userId: data.userId, comment: data.comment }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar("Success adding comment", { variant: "success" });
+            return res.json();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error adding comment. Status Code: ${res.status}. Text: ${res.statusText}`);
+                enqueueSnackbar("Error adding comment, see log", { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error adding comment: ${err}`);
+            enqueueSnackbar("Error adding comment, see log", { variant: "error" });
         }
         return Promise.reject();
     });

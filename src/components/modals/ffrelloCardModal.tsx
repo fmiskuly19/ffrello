@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Checkbox, Dialog, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, MenuItem, Paper, Stack, TextField, Typography, useTheme } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getCardThunk, setIsWatchingModalCard, setOpenFFrelloCardModal, watchCardThunk } from "../../redux/workspaceViewSlice";
+import { addCardCommentThunk, getCardThunk, setIsWatchingModalCard, setOpenFFrelloCardModal, watchCardThunk } from "../../redux/workspaceViewSlice";
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { MoonLoader, SyncLoader } from "react-spinners";
 
@@ -36,6 +36,7 @@ const FFrelloCardModal = () => {
     const cardId = useAppSelector((state) => state.workspaceViewSlice.ffrelloCardModalId);
 
     const [openModal, setOpenModal] = useState(false);
+    const [newComment, setNewCommentValue] = useState("");
 
     useEffect(() => {
         setOpenModal(openFFrelloCardModal)
@@ -52,7 +53,8 @@ const FFrelloCardModal = () => {
     }
 
     const createComment = () => {
-
+        setNewCommentValue("")
+        dispatch(addCardCommentThunk({ accessToken: accessToken, cardId: cardId, userId: userId, comment: newComment }))
     }
 
     const handleModalClose = () => {
@@ -189,16 +191,39 @@ const FFrelloCardModal = () => {
                             </Stack>
                             <Stack direction="row" alignItems={"center"} spacing={0.5}>
                                 <Avatar alt={googleUser?.name} src={googleUser?.pictureUrl} />
-                                <TextField hiddenLabel size="small" variant="filled" fullWidth={true} placeholder="Write a comment..."  >
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={createComment}
-                                            edge="end"
-                                        >
-                                            <SendIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                </TextField>
+                                <TextField hiddenLabel size="small" variant="filled" fullWidth={true} placeholder="Write a comment..." value={newComment} onChange={(e) => setNewCommentValue(e.target.value)} />
+                                {newComment ?
+                                    <IconButton
+                                        onClick={createComment}
+                                        edge="end"
+                                    >
+                                        <SendIcon />
+                                    </IconButton>
+                                    : <></>}
+
+                            </Stack>
+                            <Stack direction="column">
+                                {ffrelloCard.comments?.map((c) => {
+                                    return (
+                                        <Stack direction="row" spacing={1}  >
+                                            <Avatar sx={{ height: '28px', width: '28px' }} />
+                                            <Stack direction="column" sx={{ width: '100%' }}>
+                                                <Stack direction="row" alignItems={"flex-end"} spacing={1}>
+                                                    <Typography variant="body1">Username</Typography>
+                                                    <Typography variant="subtitle2">timestamp</Typography>
+                                                </Stack>
+                                                <Paper sx={{ borderRadius: '8px', width: '100%', padding: '5px' }}>
+                                                    {c.value}
+                                                </Paper>
+                                                <Stack direction="row">
+                                                    <CloseIcon sx={{ height: '14px', width: '14px' }} />
+                                                    <CloseIcon sx={{ height: '14px', width: '14px' }} />
+                                                    <CloseIcon sx={{ height: '14px', width: '14px' }} />
+                                                </Stack>
+                                            </Stack>
+                                        </Stack>
+                                    )
+                                })}
                             </Stack>
                         </Stack>
                     </Box >
@@ -238,9 +263,9 @@ const FFrelloCardModal = () => {
                 paddingTop: '30px',
                 paddingBottom: '30px',
                 minWidth: '700px',
-                minHeight: "600px",
+                minHeight: "800px",
+                maxHeight: "800px",
                 alignItems: 'stretch',
-                overFlowY: 'scroll'
             }}>
                 {modalContent}
             </Box >

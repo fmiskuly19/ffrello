@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit'
-import { GetBoardApiCall, GetCardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall, WatchCardApiCall } from '../data/api';
+import { AddCardCommentApiCall, GetBoardApiCall, GetCardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall, WatchCardApiCall } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 import Board from '../types/Board';
 import { getBoard as getBoardPageArgs } from './userSlice';
@@ -50,6 +50,12 @@ export interface watchCardArgs extends FFrelloApiCallArgs {
     cardId: number,
     userId: number,
     isWatching: boolean,
+}
+
+export interface addCardCommentArgs extends FFrelloApiCallArgs {
+    cardId: number,
+    userId: number,
+    comment: string,
 }
 
 // #endregion
@@ -121,7 +127,8 @@ export const removeBoardListThunk = createAsyncThunk(
     }
 )
 
-//cards
+//#region Cards
+
 export const newCardThunk = createAsyncThunk(
     '/newCard',
     async (data: addNewCardArgs, thunkAPI) => {
@@ -149,6 +156,16 @@ export const watchCardThunk = createAsyncThunk(
         return await WatchCardApiCall(data, thunkAPI);
     }
 )
+
+export const addCardCommentThunk = createAsyncThunk(
+    '/addComment',
+    async (data: addCardCommentArgs, thunkAPI) => {
+        return await AddCardCommentApiCall(data, thunkAPI);
+    }
+)
+
+//#endregion
+
 
 const initialState: WorkspaceViewSliceProps = {
     getBoardPageStatus: ApiCallStatus.Idle,
@@ -395,7 +412,8 @@ export const workspaceViewSlice = createSlice({
                 currentBoardList?.cards.push({
                     boardListId: action.meta.arg.boardListId, title: action.meta.arg.title,
                     boardListName: '',
-                    isUserWatching: false
+                    isUserWatching: false,
+                    comments: []
                 });
             }
 
@@ -448,6 +466,14 @@ export const workspaceViewSlice = createSlice({
             builder.addCase(watchCardThunk.fulfilled, (state) => {
                 state.watchCardStatus = ApiCallStatus.Success;
             })
+
+        //watch card *****************************************************************************************
+        builder.addCase(addCardCommentThunk.fulfilled, (state, action) => {
+            state.modalCard = {
+                ...state.modalCard as FFrelloCard,
+                comments: action.payload 
+            }
+        })
     },
 })
 

@@ -1,3 +1,4 @@
+import Comment from "./Comment";
 import User from "./User";
 
 interface FFrelloCard {
@@ -6,7 +7,7 @@ interface FFrelloCard {
     boardListName: string,
     title: string,
     description?: string,
-    comments?: string[],
+    comments: Comment[],
     attachments?: string[],
     members?: User[],
     checklistItems?: string[],
