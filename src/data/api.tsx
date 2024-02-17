@@ -1,6 +1,6 @@
 import { enqueueSnackbar } from "notistack";
 import { getBoard, getUserWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { addNewCardArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs } from "../redux/workspaceViewSlice";
+import { addNewCardArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs, watchCardArgs } from "../redux/workspaceViewSlice";
 
 const API_HOST_URL = import.meta.env.VITE_FFRELLO_API_ENDPOINT;
 const isDev = import.meta.env.MODE == "development"
@@ -57,7 +57,7 @@ export const DummyApiCall = async () => {
 
 //
 export const GetWorkspacesApiCall = async (data: getUserWorkspaceArgs, thunkAPI: any) => {
-    const target = `${data.userId}/workspaces/`;
+    const target = `workspaces/`;
     return await fetch(`${API_HOST_URL}${target}`, {
         headers: {
             "Authorization": `Bearer ${data.accessToken}`
@@ -83,7 +83,7 @@ export const GetWorkspacesApiCall = async (data: getUserWorkspaceArgs, thunkAPI:
 
 //
 export const NewWorkspaceApiCall = async (data: newWorkspaceArgs, thunkAPI: any) => {
-    const target = `${data.userid}/workspace/new`;
+    const target = `workspace/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
         headers: {
@@ -114,7 +114,7 @@ export const NewWorkspaceApiCall = async (data: newWorkspaceArgs, thunkAPI: any)
 
 //
 export const RemoveWorkspace = async (data: removeWorkspaceArgs, thunkAPI: any) => {
-    const target = `${data.userid}/workspace/remove/${data.workspaceid}`;
+    const target = `workspace/remove/${data.workspaceid}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'DELETE',
         headers: {
@@ -149,7 +149,7 @@ export const RemoveWorkspace = async (data: removeWorkspaceArgs, thunkAPI: any) 
 // #region Boards
 
 export const NewBoardApiCall = async (data: newBoardArgs, thunkAPI: any) => {
-    const target = `${data.userid}/board/new`;
+    const target = `board/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
         headers: {
@@ -181,7 +181,7 @@ export const NewBoardApiCall = async (data: newBoardArgs, thunkAPI: any) => {
 };
 
 export const StarBoardApiCall = async (data: starBoardArgs, thunkAPI: any) => {
-    const target = `${data.userId}/board/star/${data.boardId}`;
+    const target = `board/star/${data.boardId}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'PUT',
         headers: {
@@ -201,7 +201,7 @@ export const StarBoardApiCall = async (data: starBoardArgs, thunkAPI: any) => {
 };
 
 export const GetBoardApiCall = async (data: getBoard, thunkAPI: any) => {
-    const target = `${data.userid}/getBoard/${data.boardid}`;
+    const target = `getBoard/${data.boardid}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         headers: {
             "Authorization": `Bearer ${data.accessToken}`
@@ -229,7 +229,7 @@ export const GetBoardApiCall = async (data: getBoard, thunkAPI: any) => {
 };
 
 export const NewBoardListApiCall = async (data: newBoardListArgs, thunkAPI: any) => {
-    const target = `${data.userid}/newBoardList/`;
+    const target = `newBoardList/`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'PUT',
         headers: {
@@ -261,7 +261,7 @@ export const NewBoardListApiCall = async (data: newBoardListArgs, thunkAPI: any)
 };
 
 export const RemoveBoardListApiCall = async (data: removeBoardListArgs, thunkAPI: any) => {
-    const target = `${data.userId}/boardList/remove/${data.boardListId}`;
+    const target = `boardList/remove/${data.boardListId}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'DELETE',
         headers: {
@@ -298,7 +298,7 @@ export const RemoveBoardListApiCall = async (data: removeBoardListArgs, thunkAPI
 // #region cards
 
 export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
-    const target = `${data.userid}/card/new`;
+    const target = `card/new`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
         headers: {
@@ -331,7 +331,7 @@ export const NewCardApiCall = async (data: addNewCardArgs, thunkAPI: any) => {
 
 //TODO this is not set up for auth
 export const MoveCardApiCall = async (data: moveCardArgs, thunkAPI: any) => {
-    const target = `${data.userid}/card/move`;
+    const target = `card/move`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'POST',
         headers: {
@@ -351,7 +351,7 @@ export const MoveCardApiCall = async (data: moveCardArgs, thunkAPI: any) => {
 };
 
 export const GetCardApiCall = async (data: getCardArgs, thunkAPI: any) => {
-    const target = `${data.userid}/card/${data.cardId}`;
+    const target = `card/${data.cardId}`;
     return await fetch(`${API_HOST_URL}${target}`, {
         method: 'GET',
         headers: {
@@ -376,6 +376,38 @@ export const GetCardApiCall = async (data: getCardArgs, thunkAPI: any) => {
         if (isDev) {
             console.log(`Error getting card: ${err}`);
             enqueueSnackbar("Error getting card, see log", { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const WatchCardApiCall = async (data: watchCardArgs, thunkAPI: any) => {
+    const target = `card/${data.cardId}/watch`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'PUT',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ watch: data.isWatching, cardId: data.cardId, userId: data.userId }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar("Success watching card from api", { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error watching card. Status Code: ${res.status}. Text: ${res.statusText}`);
+                enqueueSnackbar("Error watching card, see log", { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error watching card: ${err}`);
+            enqueueSnackbar("Error watching card, see log", { variant: "error" });
         }
         return Promise.reject();
     });

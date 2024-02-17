@@ -12,7 +12,6 @@ const CreateWorkspaceModal = () => {
     const accessToken = useAppSelector((state) => state.authSlice.accessToken);
     //get these from the nav state slice so we dont have to duplicate the modal many times, as its opened from 3 different locations
     const openModal = useAppSelector((state) => state.homeSlice.openCreateWorkspaceModal);
-    const userId = useAppSelector((state) => state.userSlice.User.userid);
 
     const dispatch = useAppDispatch()
 
@@ -32,7 +31,7 @@ const CreateWorkspaceModal = () => {
     const [workspaceDescription, setWorkspaceDescription] = useState('');
 
     const createNewWorkspace = async () => {
-        dispatch(newWorkspace({ accessToken: accessToken, userid: userId, workspaceName: workspaceName, theme: workspaceTheme, description: workspaceDescription }))
+        dispatch(newWorkspace({ accessToken: accessToken, workspaceName: workspaceName, theme: workspaceTheme, description: workspaceDescription }))
     }
 
     let modalContent;

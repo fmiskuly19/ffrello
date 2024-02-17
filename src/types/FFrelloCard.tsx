@@ -1,3 +1,5 @@
+import User from "./User";
+
 interface FFrelloCard {
     id?: number,
     boardListId: number,
@@ -6,8 +8,9 @@ interface FFrelloCard {
     description?: string,
     comments?: string[],
     attachments?: string[],
-    users?: string[],
+    members?: User[],
     checklistItems?: string[],
+    isUserWatching: boolean,
 }
 
 export default FFrelloCard;

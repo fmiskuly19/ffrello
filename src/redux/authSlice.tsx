@@ -13,6 +13,7 @@ interface AuthSliceProps {
     isLoggedIn: boolean,
     googleUser?: GoogleUserInfo,
     accessToken: string,
+    loggedInUserId: number,
     ffrelloAuthenticationApiCallStatus: ApiCallStatus,
 }
 
@@ -20,6 +21,7 @@ interface AuthSliceProps {
 const initialState: AuthSliceProps = {
     isAuthenticatedWithExternalProvider: false,
     isLoggedIn: false,
+    loggedInUserId: 0,
     accessToken: '',
     googleUser: undefined,
     ffrelloAuthenticationApiCallStatus: ApiCallStatus.Idle,
@@ -68,6 +70,7 @@ export const authSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.googleUser = action.payload.googleUser;
             state.isLoggedIn = true;
+            state.loggedInUserId = action.payload.userId;
         })
     },
 })

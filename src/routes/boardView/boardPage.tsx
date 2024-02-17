@@ -34,7 +34,6 @@ const BoardPage = () => {
     const [openNewBoardList, setOpenNewBoardList] = useState(false);
 
     let { boardid } = useParams();
-    const userid = useAppSelector((state) => state.userSlice.User.userid)
 
     const board = useAppSelector((state) => state.workspaceViewSlice.currentBoard)
     const workspace = useAppSelector((state) => state.workspaceViewSlice.workspace)
@@ -50,7 +49,7 @@ const BoardPage = () => {
     }
 
     useEffect(() => {
-        dispatch(getBoardPageThunk({ accessToken: accessToken, userid: userid, boardid: Number(boardid) }))
+        dispatch(getBoardPageThunk({ accessToken: accessToken, boardid: Number(boardid) }))
     }, [])
 
     let pageContent;
@@ -73,7 +72,7 @@ const BoardPage = () => {
                 <Box display="flex" width="100%" justifyContent="space-between" p="15px" sx={{ borderBottom: '1px solid gray' }}>
                     <Stack direction="row" alignItems="center" spacing={1}>
                         <Typography variant="h5" fontWeight="700">{board?.name}</Typography>
-                        <IconButton color="primary" onClick={() => dispatch(starBoardThunk({ userId: userid, isStarred: !board.isStarred, boardId: board.id }))}>
+                        <IconButton color="primary" onClick={() => dispatch(starBoardThunk({ accessToken: accessToken, isStarred: !board.isStarred, boardId: board.id }))}>
                             {board?.isStarred ?
                                 <StarIcon htmlColor="#F8C021" sx={{ fontSize: '18px' }} />
                                 :
@@ -114,7 +113,7 @@ const BoardPage = () => {
                                     {/* <OutlinedInput inputRef={input => input && input.focus()} size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} /> */}
                                     <OutlinedInput size="small" value={newBoardListName} onChange={(e) => setNewBoardListName(e.target.value as string)} />
                                     <Stack direction="row">
-                                        <Button onClick={() => { dispatch(newBoardListThunk({ accessToken: accessToken, userid: userid, name: newBoardListName, boardId: board.id })); reset() }} sx={{ textTransform: 'none' }}>Add List</Button>
+                                        <Button onClick={() => { dispatch(newBoardListThunk({ accessToken: accessToken, name: newBoardListName, boardId: board.id })); reset() }} sx={{ textTransform: 'none' }}>Add List</Button>
                                         <IconButton onClick={() => reset()}><CloseIcon sx={{ height: '18px', width: '18px' }} color='primary' /></IconButton>
                                     </Stack>
                                 </Stack>

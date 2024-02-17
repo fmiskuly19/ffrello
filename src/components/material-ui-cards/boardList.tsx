@@ -24,7 +24,6 @@ const BoardListPaper = (props: BoardList) => {
     const dispatch = useAppDispatch();
 
     const [newCardActions, setNewCardActions] = useState<newBoardListCard>(newCardActionsDefault);
-    const userid = useAppSelector((state) => state.userSlice.User.userid)
     const accessToken = useAppSelector((state) => state.authSlice.accessToken)
 
     const [, drop] = useDrop(() => ({
@@ -77,7 +76,7 @@ const BoardListPaper = (props: BoardList) => {
                     <>
                         <OutlinedInput multiline rows={2} value={newCardActions.value} onChange={(e) => setNewCardActions({ ...newCardActions, value: e.target.value })} />
                         <Stack direction="row" display="flex" alignItems="center">
-                            <Button sx={{ textTransform: 'none' }} onClick={() => { dispatch(newCardThunk({ accessToken: accessToken, userid: userid, boardListId: props.id, title: newCardActions.value })); setNewCardActions(newCardActionsDefault) }} >
+                            <Button sx={{ textTransform: 'none' }} onClick={() => { dispatch(newCardThunk({ accessToken: accessToken, boardListId: props.id, title: newCardActions.value })); setNewCardActions(newCardActionsDefault) }} >
                                 Add Card
                             </Button>
                             <IconButton onClick={() => setNewCardActions({ boardListId: 0, open: false, value: '' })}>

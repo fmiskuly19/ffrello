@@ -18,12 +18,11 @@ const initialState: UserSliceProps = {
     newWorkspaceStatus: ApiCallStatus.Idle,
     newBoardStatus: ApiCallStatus.Idle,
     Workspaces: undefined,
-    User: { id: 0, userid: 'frankstestworkspace', name: 'Fwank Misk' }
+    User: { id: 0, name: 'Fwank Misk' }
 }
 
 export interface newWorkspaceArgs {
     accessToken: string,
-    userid: string,
     workspaceName: string,
     theme: string,
     description: string,
@@ -31,7 +30,6 @@ export interface newWorkspaceArgs {
 
 export interface newBoardArgs {
     accessToken: string,
-    userid: string,
     workspaceid: number,
     boardTitle: string,
     visibility: string,
@@ -39,25 +37,21 @@ export interface newBoardArgs {
 
 export interface getBoard {
     accessToken: string,
-    userid: string,
     boardid: number,
 }
 
 export interface getWorkspaceArgs {
-    userid: string,
     workspaceid: number,
 }
 
 export interface removeWorkspaceArgs {
     accessToken: string,
-    userid: string,
     workspaceid: number,
     workspace: Workspace,
 }
 
 export interface getUserWorkspaceArgs {
     accessToken: string,
-    userId: string,
 }
 
 //workspaces

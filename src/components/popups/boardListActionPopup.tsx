@@ -19,7 +19,6 @@ interface BoardListActionMenuProps {
 const BoardListActionMenu = (props: BoardListActionMenuProps) => {
 
     const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.userSlice.User.userid);
     const accessToken = useAppSelector((state) => state.authSlice.accessToken);
 
     var popupstate = usePopupState({ variant: 'popover', popupId: String(props.boardList.id) });
@@ -36,7 +35,7 @@ const BoardListActionMenu = (props: BoardListActionMenuProps) => {
                         Add Card
                         <AddIcon />
                     </MenuItem>
-                    <MenuItem onClick={() => { popupstate.close(); dispatch(removeBoardListThunk({ accessToken: accessToken, userId: userId, boardListId: props.boardList.id, boardList: props.boardList })); }}>
+                    <MenuItem onClick={() => { popupstate.close(); dispatch(removeBoardListThunk({ accessToken: accessToken, boardListId: props.boardList.id, boardList: props.boardList })); }}>
                         Remove List
                     </MenuItem>
                 </MenuList>

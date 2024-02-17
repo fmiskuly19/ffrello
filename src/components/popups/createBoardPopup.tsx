@@ -18,7 +18,6 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
 
     const workspaces = useAppSelector((state) => state.userSlice.Workspaces)
     const newBoardStatus = useAppSelector((state) => state.userSlice.newBoardStatus)
-    const userId = useAppSelector((state) => state.userSlice.User.userid);
     const accessToken = useAppSelector((state) => state.authSlice.accessToken);
 
     const [workspaceId, setWorkspaceId] = useState("");
@@ -26,7 +25,7 @@ const CreateBoardMenu = (props: CreateBoardMenuProps) => {
     const [visibility, setVisibility] = useState("");
 
     const createNewBoard = async () => {
-        dispatch(newBoard({ accessToken: accessToken, boardTitle: boardTitle, visibility: visibility, workspaceid: Number(workspaceId), userid: userId }))
+        dispatch(newBoard({ accessToken: accessToken, boardTitle: boardTitle, visibility: visibility, workspaceid: Number(workspaceId) }))
     }
 
     let newBoardContent;

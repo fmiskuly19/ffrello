@@ -90,9 +90,9 @@ const BoardListCard = (props: BoardListCard) => {
                                 }
                             </Stack>
 
-                            {props.users ?
+                            {props.members ?
                                 <AvatarGroup max={8}>
-                                    {props.users.map((x) => {
+                                    {props.members.map((x) => {
                                         return (<Avatar alt="Fwank" src="" sx={{ height: '22px', width: '22px' }} />)
                                     })}
                                 </AvatarGroup>

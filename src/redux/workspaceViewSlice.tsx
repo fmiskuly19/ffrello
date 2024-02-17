@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction, current } from '@reduxjs/toolkit'
-import { GetBoardApiCall, GetCardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall } from '../data/api';
+import { GetBoardApiCall, GetCardApiCall, MoveCardApiCall, NewBoardListApiCall, NewCardApiCall, RemoveBoardListApiCall, StarBoardApiCall, WatchCardApiCall } from '../data/api';
 import { ApiCallStatus } from '../types/ApiCallStatus';
 import Board from '../types/Board';
 import { getBoard as getBoardPageArgs } from './userSlice';
@@ -9,43 +9,47 @@ import FFrelloCard from '../types/FFrelloCard';
 
 // #region Thunk Args
 
-export interface addNewCardArgs {
+export interface FFrelloApiCallArgs {
     accessToken: string,
-    userid: string,
+}
+
+export interface addNewCardArgs extends FFrelloApiCallArgs {
     boardListId: number,
     title: string,
 }
 
-export interface moveCardArgs {
-    userid: string,
+export interface moveCardArgs extends FFrelloApiCallArgs {
     boardListId: number,
     cardId: number,
 }
 
-export interface getCardArgs {
-    accessToken: string,
-    userid: string,
+export interface getCardArgs extends FFrelloApiCallArgs {
     cardId: number,
 }
 
-export interface newBoardListArgs {
-    accessToken: string,
-    userid: string,
+export interface getCardArgs extends FFrelloApiCallArgs {
+    cardId: number,
+}
+
+export interface newBoardListArgs extends FFrelloApiCallArgs {
     boardId: number,
     name: string,
 }
 
-export interface removeBoardListArgs {
-    accessToken: string,
-    userId: string,
+export interface removeBoardListArgs extends FFrelloApiCallArgs {
     boardListId: number,
     boardList: BoardList,
 }
 
-export interface starBoardArgs {
-    userId: string,
+export interface starBoardArgs extends FFrelloApiCallArgs {
     boardId: number,
     isStarred: boolean,
+}
+
+export interface watchCardArgs extends FFrelloApiCallArgs {
+    cardId: number,
+    userId: number,
+    isWatching: boolean,
 }
 
 // #endregion
@@ -61,6 +65,7 @@ interface WorkspaceViewSliceProps {
     starBoardStatus: ApiCallStatus,
     newCardStatus: ApiCallStatus,
     getCardStatus: ApiCallStatus,
+    watchCardStatus: ApiCallStatus,
 
     //card modal
     openFFrelloCardModal: boolean,
@@ -138,6 +143,13 @@ export const getCardThunk = createAsyncThunk(
     }
 )
 
+export const watchCardThunk = createAsyncThunk(
+    '/watchCard',
+    async (data: watchCardArgs, thunkAPI) => {
+        return await WatchCardApiCall(data, thunkAPI);
+    }
+)
+
 const initialState: WorkspaceViewSliceProps = {
     getBoardPageStatus: ApiCallStatus.Idle,
     removeBoardListStatus: ApiCallStatus.Idle,
@@ -145,6 +157,7 @@ const initialState: WorkspaceViewSliceProps = {
     starBoardStatus: ApiCallStatus.Idle,
     newCardStatus: ApiCallStatus.Idle,
     getCardStatus: ApiCallStatus.Idle,
+    watchCardStatus: ApiCallStatus.Idle,
 
     openFFrelloCardModal: false,
     ffrelloCardModalId: 0,
@@ -244,6 +257,12 @@ export const workspaceViewSlice = createSlice({
         setOpenFFrelloCardModal: (state, action: PayloadAction<OpenFFrelloCardModalPayload>) => {
             state.openFFrelloCardModal = action.payload.openModal;
             state.ffrelloCardModalId = action.payload.cardId;
+        },
+        setIsWatchingModalCard: (state, action: PayloadAction<boolean>) => {
+            state.modalCard = {
+                ...state.modalCard as FFrelloCard,
+                isUserWatching: action.payload
+            }
         },
         setGetCardStatus: (state, action: PayloadAction<ApiCallStatus>) => {
             state.getCardStatus = action.payload;
@@ -367,15 +386,17 @@ export const workspaceViewSlice = createSlice({
         //new card *****************************************************************************************
         builder.addCase(newCardThunk.pending, (state, action) => {
 
-            console.log('PENding')
-
             //this is not right, we should not mutate state directly
             if (state.currentBoard) {
                 var currentBoardList = state.currentBoard.boardLists.find(x => x.id == action.meta.arg.boardListId);
                 if (!currentBoardList?.cards) {
                     currentBoardList!.cards = [] as FFrelloCard[];
                 }
-                currentBoardList?.cards.push({ boardListId: action.meta.arg.boardListId, title: action.meta.arg.title });
+                currentBoardList?.cards.push({
+                    boardListId: action.meta.arg.boardListId, title: action.meta.arg.title,
+                    boardListName: '',
+                    isUserWatching: false
+                });
             }
 
             state.newCardStatus = ApiCallStatus.Loading;
@@ -416,9 +437,20 @@ export const workspaceViewSlice = createSlice({
                 state.getCardStatus = ApiCallStatus.Success;
                 state.modalCard = action.payload
             })
+
+        //watch card *****************************************************************************************
+        builder.addCase(watchCardThunk.pending, (state) => {
+            state.watchCardStatus = ApiCallStatus.Loading;
+        }),
+            builder.addCase(watchCardThunk.rejected, (state) => {
+                state.watchCardStatus = ApiCallStatus.Failure;
+            }),
+            builder.addCase(watchCardThunk.fulfilled, (state) => {
+                state.watchCardStatus = ApiCallStatus.Success;
+            })
     },
 })
 
-export const { setGetBoardStatus, moveCard, insertCard, setOpenFFrelloCardModal } = workspaceViewSlice.actions
+export const { setGetBoardStatus, moveCard, insertCard, setOpenFFrelloCardModal, setIsWatchingModalCard } = workspaceViewSlice.actions
 
 export default workspaceViewSlice.reducer
