@@ -6,7 +6,8 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import { useDrag, useDrop } from "react-dnd";
 import DraggableType from "../../types/draggableType";
-import { InsertCardReducerPayload, insertCard, moveCard, setOpenFFrelloCardModal } from "../../redux/workspaceViewSlice";
+import { InsertCardReducerPayload, insertCard, } from "../../redux/workspaceViewSlice";
+import { setOpenFFrelloCardModal } from "../../redux/ffrelloCardModalSlice";
 import { useAppDispatch } from "../../hooks";
 
 interface BoardListCard extends FFrelloCard { }

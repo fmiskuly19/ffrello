@@ -4,6 +4,7 @@ import themeReducer from './themeSlice.tsx'
 import userReducer from './userSlice.tsx'
 import workspaceViewReducer from './workspaceViewSlice.tsx'
 import authReducer from './authSlice.tsx'
+import ffrelloCardModalReducer from './ffrelloCardModalSlice.tsx'
 
 const store = configureStore({
    reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
       userSlice: userReducer,
       workspaceViewSlice: workspaceViewReducer,
       authSlice: authReducer,
+      ffrelloCardModalSlice: ffrelloCardModalReducer,
    },
 })
 export default store;

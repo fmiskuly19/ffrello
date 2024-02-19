@@ -41,14 +41,6 @@ export interface moveCardArgs extends FFrelloApiCallArgs {
     cardId: number,
 }
 
-export interface getCardArgs extends FFrelloApiCallArgs {
-    cardId: number,
-}
-
-export interface getCardArgs extends FFrelloApiCallArgs {
-    cardId: number,
-}
-
 export interface newBoardListArgs extends FFrelloApiCallArgs {
     boardId: number,
     name: string,
@@ -64,33 +56,6 @@ export interface starBoardArgs extends FFrelloApiCallArgs {
     isStarred: boolean,
 }
 
-export interface watchCardArgs extends FFrelloApiCallArgs {
-    cardId: number,
-    userId: number,
-    isWatching: boolean,
-}
-
-export interface addCardCommentArgs extends FFrelloApiCallArgs {
-    cardId: number,
-    userId: number,
-    comment: string,
-}
-
-export interface removeCommentArgs extends FFrelloApiCallArgs {
-    comment: Comment
-}
-
-export interface editCommentArgs extends FFrelloApiCallArgs {
-    originalComment: Comment,
-    newValue: string,
-}
-
-export interface editDescriptionArgs extends FFrelloApiCallArgs {
-    cardId: number,
-    newValue: string,
-    originalValue: string,
-}
-
 // #endregion
 
 interface WorkspaceViewSliceProps {
@@ -103,14 +68,6 @@ interface WorkspaceViewSliceProps {
     addBoardListStatus: ApiCallStatus,
     starBoardStatus: ApiCallStatus,
     newCardStatus: ApiCallStatus,
-    getCardStatus: ApiCallStatus,
-    watchCardStatus: ApiCallStatus,
-    removeCommentStatus: ApiCallStatus,
-
-    //card modal
-    openFFrelloCardModal: boolean,
-    ffrelloCardModalId: number,
-    modalCard?: FFrelloCard
 }
 
 export interface MoveCardReducerPayload {
@@ -126,10 +83,6 @@ export interface InsertCardReducerPayload {
     cardDropppedOnBoardListId: number
 }
 
-export interface OpenFFrelloCardModalPayload {
-    openModal: boolean,
-    cardId: number
-}
 
 export const getBoardPageThunk = createAsyncThunk(
     '/getBoard',
@@ -177,50 +130,6 @@ export const moveCardThunk = createAsyncThunk(
     }
 )
 
-export const getCardThunk = createAsyncThunk(
-    '/getCard',
-    async (data: getCardArgs, thunkAPI) => {
-        return await GetCardApiCall(data, thunkAPI);
-    }
-)
-
-export const watchCardThunk = createAsyncThunk(
-    '/watchCard',
-    async (data: watchCardArgs, thunkAPI) => {
-        return await WatchCardApiCall(data, thunkAPI);
-    }
-)
-
-export const addCardCommentThunk = createAsyncThunk(
-    '/addComment',
-    async (data: addCardCommentArgs, thunkAPI) => {
-        return await AddCardCommentApiCall(data, thunkAPI);
-    }
-)
-
-export const removeCommentThunk = createAsyncThunk(
-    '/removeComment',
-    async (data: removeCommentArgs, thunkAPI) => {
-        return await RemoveCommentApiCall(data, thunkAPI);
-    }
-)
-
-export const editCommentThunk = createAsyncThunk(
-    '/editComment',
-    async (data: editCommentArgs, thunkAPI) => {
-        return await EditCommentApiCall(data, thunkAPI);
-    }
-)
-
-export const editDescriptionThunk = createAsyncThunk(
-    '/editDescription',
-    async (data: editDescriptionArgs, thunkAPI) => {
-        return await EditDescriptionApiCall(data, thunkAPI);
-    }
-)
-
-editDescriptionThunk
-
 //#endregion
 
 
@@ -230,13 +139,6 @@ const initialState: WorkspaceViewSliceProps = {
     addBoardListStatus: ApiCallStatus.Idle,
     starBoardStatus: ApiCallStatus.Idle,
     newCardStatus: ApiCallStatus.Idle,
-    getCardStatus: ApiCallStatus.Idle,
-    watchCardStatus: ApiCallStatus.Idle,
-    removeCommentStatus: ApiCallStatus.Idle,
-
-    openFFrelloCardModal: false,
-    ffrelloCardModalId: 0,
-    modalCard: undefined
 }
 
 export const workspaceViewSlice = createSlice({
@@ -328,19 +230,6 @@ export const workspaceViewSlice = createSlice({
             };
 
             state.currentBoard = updatedBoard as Board;
-        },
-        setOpenFFrelloCardModal: (state, action: PayloadAction<OpenFFrelloCardModalPayload>) => {
-            state.openFFrelloCardModal = action.payload.openModal;
-            state.ffrelloCardModalId = action.payload.cardId;
-        },
-        setIsWatchingModalCard: (state, action: PayloadAction<boolean>) => {
-            state.modalCard = {
-                ...state.modalCard as FFrelloCard,
-                isUserWatching: action.payload
-            }
-        },
-        setGetCardStatus: (state, action: PayloadAction<ApiCallStatus>) => {
-            state.getCardStatus = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -499,99 +388,9 @@ export const workspaceViewSlice = createSlice({
 
                 state.newCardStatus = ApiCallStatus.Success;
             })
-
-
-
-        //get card *****************************************************************************************
-        builder.addCase(getCardThunk.pending, (state) => {
-            state.getCardStatus = ApiCallStatus.Loading;
-        }),
-            builder.addCase(getCardThunk.rejected, (state) => {
-                state.getCardStatus = ApiCallStatus.Failure;
-            }),
-            builder.addCase(getCardThunk.fulfilled, (state, action) => {
-                state.getCardStatus = ApiCallStatus.Success;
-                state.modalCard = action.payload
-            })
-
-        //watch card *****************************************************************************************
-        builder.addCase(watchCardThunk.pending, (state) => {
-            state.watchCardStatus = ApiCallStatus.Loading;
-        }),
-            builder.addCase(watchCardThunk.rejected, (state) => {
-                state.watchCardStatus = ApiCallStatus.Failure;
-            }),
-            builder.addCase(watchCardThunk.fulfilled, (state) => {
-                state.watchCardStatus = ApiCallStatus.Success;
-            })
-
-        //add card *****************************************************************************************
-        builder.addCase(addCardCommentThunk.fulfilled, (state, action) => {
-            state.modalCard = {
-                ...state.modalCard as FFrelloCard,
-                comments: action.payload
-            }
-        })
-
-        //remove comment *****************************************************************************************
-        builder.addCase(removeCommentThunk.pending, (state, action) => {
-            //remove comment while it is pending
-            let temp = { ...state.modalCard }
-            temp.comments = temp.comments?.filter(comment => comment.id !== action.meta.arg.comment.id);
-            state.modalCard = temp as FFrelloCard
-        })
-
-        builder.addCase(removeCommentThunk.rejected, (state, action) => {
-            //add comment back if it failed
-            let temp = { ...state.modalCard }
-            temp.comments?.unshift(action.meta.arg.comment)
-            state.modalCard = temp as FFrelloCard
-        })
-
-        //edit comment *****************************************************************************************
-        builder.addCase(editCommentThunk.pending, (state, action) => {
-            //replace comment while it is pending
-            let temp = { ...state.modalCard }
-            temp.comments = temp.comments?.map(c => {
-                // If the comment id matches, replace it with the new comment
-                if (c.id === action.meta.arg.originalComment.id) {
-                    return { ...c, value: action.meta.arg.newValue };
-                }
-                return c;
-            });
-            state.modalCard = temp as FFrelloCard
-        })
-
-        builder.addCase(editCommentThunk.rejected, (state, action) => {
-            //add comment back if it failed
-            let temp = { ...state.modalCard }
-            temp.comments = temp.comments?.map(c => {
-                // If the comment id matches, replace it with the new comment
-                if (c.id === action.meta.arg.originalComment.id) {
-                    return action.meta.arg.originalComment;
-                }
-                return c;
-            });
-            state.modalCard = temp as FFrelloCard
-        })
-
-        //edit card decription *****************************************************************************************
-        builder.addCase(editDescriptionThunk.pending, (state, action) => {
-            //replace description while it is pending
-            let temp = { ...state.modalCard }
-            temp.description = action.meta.arg.newValue
-            state.modalCard = temp as FFrelloCard
-        })
-
-        builder.addCase(editDescriptionThunk.rejected, (state, action) => {
-            //add description back if it failed
-            let temp = { ...state.modalCard }
-            temp.description = action.meta.arg.originalValue
-            state.modalCard = temp as FFrelloCard
-        })
     },
 })
 
-export const { setGetBoardStatus, moveCard, insertCard, setOpenFFrelloCardModal, setIsWatchingModalCard } = workspaceViewSlice.actions
+export const { setGetBoardStatus, moveCard, insertCard } = workspaceViewSlice.actions
 
 export default workspaceViewSlice.reducer

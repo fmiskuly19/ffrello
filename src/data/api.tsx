@@ -1,6 +1,7 @@
 import { enqueueSnackbar } from "notistack";
 import { getBoard, getUserWorkspaceArgs, newBoardArgs, newWorkspaceArgs, removeWorkspaceArgs } from "../redux/userSlice";
-import { addCardCommentArgs, addNewCardArgs, editCommentArgs, editDescriptionArgs, getCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, removeCommentArgs, starBoardArgs, watchCardArgs } from "../redux/workspaceViewSlice";
+import { addNewCardArgs, moveCardArgs, newBoardListArgs, removeBoardListArgs, starBoardArgs, } from "../redux/workspaceViewSlice";
+import { addCardCommentArgs, addChecklistArgs, removeChecklistArgs as removeChecklistArgs, editCommentArgs, editDescriptionArgs, getCardArgs, removeCommentArgs, watchCardArgs, addChecklistItemArgs, setChecklistItemValueArgs } from "../redux/ffrelloCardModalSlice";
 
 const API_HOST_URL = import.meta.env.VITE_FFRELLO_API_ENDPOINT;
 const isDev = import.meta.env.MODE == "development"
@@ -536,8 +537,136 @@ export const EditDescriptionApiCall = async (data: editDescriptionArgs, thunkAPI
     }).catch(err => {
         if (isDev) {
             console.log(`Error editing description: ${err}`);
-            //why is this 
+            //why is this executing twice? 
             enqueueSnackbar(`Error editing description, see log`, { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const AddChecklistApiCall = async (data: addChecklistArgs, thunkAPI: any) => {
+    const target = `card/checklist/new`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cardId: data.cardId, Name: data.name }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success adding checklist`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error adding checklist. Status Code: ${res.status}`);
+                enqueueSnackbar(`Error adding checklist`, { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error adding checklist: ${err}`);
+            enqueueSnackbar(`Error adding checklist, see log`, { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const RemoveChecklistApiCall = async (data: removeChecklistArgs, thunkAPI: any) => {
+    const target = `card/checklist/remove`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'DELETE',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ checklistId: data.checklistId }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success removing checklist`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error removing checklist. Status Code: ${res.status}`);
+                enqueueSnackbar(`Error removing checklist`, { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error removing checklist: ${err}`);
+            enqueueSnackbar(`Error removing checklist, see log`, { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const AddChecklistItemApiCall = async (data: addChecklistItemArgs, thunkAPI: any) => {
+    const target = `card/checklist/item/add`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ checklistId: data.checklistId, Name: data.name }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success adding checklist item`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error adding checklist item. Status Code: ${res.status}`);
+                enqueueSnackbar(`Error adding checklist item`, { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error adding checklist item: ${err}`);
+            enqueueSnackbar(`Error adding checklist item, see log`, { variant: "error" });
+        }
+        return Promise.reject();
+    });
+};
+
+export const SetChecklistItemValueApiCall = async (data: setChecklistItemValueArgs, thunkAPI: any) => {
+    const target = `card/checklist/item/edit`;
+    return await fetch(`${API_HOST_URL}${target}`, {
+        method: 'POST',
+        headers: {
+            "Authorization": `Bearer ${data.accessToken}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ checklistItemId: data.checklistItemId, Value: data.value }),
+        signal: thunkAPI.signal
+    }).then((res) => {
+        if (res.ok) {
+            if (isDev) enqueueSnackbar(`Success adding checklist item`, { variant: "success" });
+            return Promise.resolve();
+        }
+        else {
+            if (isDev) {
+                console.log(`Error adding checklist item. Status Code: ${res.status}`);
+                enqueueSnackbar(`Error adding checklist item`, { variant: "error" });
+            }
+            return Promise.reject();
+        }
+    }).catch(err => {
+        if (isDev) {
+            console.log(`Error adding checklist item: ${err}`);
+            enqueueSnackbar(`Error adding checklist item, see log`, { variant: "error" });
         }
         return Promise.reject();
     });

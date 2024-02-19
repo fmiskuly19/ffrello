@@ -1,15 +1,14 @@
-import { Avatar, Box, Button, Checkbox, Dialog, Divider, IconButton, InputAdornment, Link, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Paper, Stack, TextField, Typography, useTheme } from "@mui/material"
+import { Avatar, Box, Button, Checkbox, Dialog, Divider, IconButton, LinearProgress, Link, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Paper, Stack, TextField, Tooltip, Typography, useTheme } from "@mui/material"
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addCardCommentThunk, editCommentThunk, editDescriptionThunk, getCardThunk, removeCommentThunk, setIsWatchingModalCard, setOpenFFrelloCardModal, watchCardThunk } from "../../redux/workspaceViewSlice";
-import { ApiCallStatus } from "../../types/ApiCallStatus";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { addCardCommentThunk, addChecklistItemThunk, editCommentThunk, editDescriptionThunk, getCardThunk, removeChecklistThunk, removeCommentThunk, setChecklistItemValueThunk, setIsWatchingModalCard, setOpenFFrelloCardModal, watchCardThunk } from "../../../redux/ffrelloCardModalSlice";
+import { ApiCallStatus } from "../../../types/ApiCallStatus";
 import { MoonLoader } from "react-spinners";
-import Comment from "../../types/Comment"
+import Comment from "../../../types/Comment"
 
 //icons
 import PersonIcon from '@mui/icons-material/Person';
 import LabelIcon from '@mui/icons-material/Label';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import BlurLinearIcon from '@mui/icons-material/BlurLinear';
@@ -23,6 +22,9 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import IosShareIcon from '@mui/icons-material/IosShare';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import ChecklistMenuItem from "./checklistMenuItem";
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 
 const FFrelloCardModal = () => {
@@ -30,26 +32,82 @@ const FFrelloCardModal = () => {
     const dispatch = useAppDispatch();
     const theme = useTheme();
 
-    const openFFrelloCardModal = useAppSelector((state) => state.workspaceViewSlice.openFFrelloCardModal);
-    const getCardStatus = useAppSelector((state) => state.workspaceViewSlice.getCardStatus);
-    const ffrelloCard = useAppSelector((state) => state.workspaceViewSlice.modalCard);
+    const openFFrelloCardModal = useAppSelector((state) => state.ffrelloCardModalSlice.openFFrelloCardModal);
+    //statuses
+    const getCardStatus = useAppSelector((state) => state.ffrelloCardModalSlice.getCardStatus);
+    const addChecklistStatus = useAppSelector((state) => state.ffrelloCardModalSlice.addChecklistStatus);
+    const removeChecklistStatus = useAppSelector((state) => state.ffrelloCardModalSlice.removeChecklistStatus);
+    const addChecklistItemStatus = useAppSelector((state) => state.ffrelloCardModalSlice.addChecklistItemStatus);
+    const setChecklistItemValueStatus = useAppSelector((state) => state.ffrelloCardModalSlice.setChecklistItemValueStatus);
+
+    const ffrelloCard = useAppSelector((state) => state.ffrelloCardModalSlice.modalCard);
 
     const userId = useAppSelector((state) => state.authSlice.loggedInUserId)
     const accessToken = useAppSelector((state) => state.authSlice.accessToken)
 
     const googleUser = useAppSelector((state) => state.authSlice.googleUser);
 
-    const cardId = useAppSelector((state) => state.workspaceViewSlice.ffrelloCardModalId);
+    const cardId = useAppSelector((state) => state.ffrelloCardModalSlice.ffrelloCardModalId);
 
     const [openModal, setOpenModal] = useState(false);
 
     const [newComment, setNewCommentValue] = useState("");
 
+    //edit comment
     const [isEditingComment, setIsEditingComment] = useState(0);
     const [editedCommentValue, setEditedCommentValue] = useState("");
 
+    //edit description
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     const [editedDescriptionValue, setEditedDescriptionValue] = useState("");
+
+    //add checklist item
+    const [isAddingChecklistItemChecklistId, setIsAddingChecklistItemChecklistId] = useState(0);
+    const [newChecklistItemName, setNewChecklistItemName] = useState("");
+
+    //show checked items for checklist
+    const [hideCheckedItemsChecklistIdSet, setHideCheckedItemsChecklistIdSet] = useState<Set<number>>(new Set());
+
+    const MenuItems = [
+
+        <MenuItem disabled >
+            <ListItemIcon><PersonIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Members</Typography></ListItemText>
+        </MenuItem>,
+        ,
+        <MenuItem disabled >
+            <ListItemIcon><LabelIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Labels</Typography></ListItemText>
+        </MenuItem >,
+        <ChecklistMenuItem cardId={cardId} />,
+        <MenuItem disabled >
+            <ListItemIcon><DateRangeIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Dates</Typography></ListItemText >
+        </MenuItem >,
+        <MenuItem disabled >
+            <ListItemIcon><AttachFileIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Attachments</Typography></ListItemText>
+        </MenuItem >,
+    ]
+
+    const CardActions = [
+        <MenuItem disabled >
+            <ListItemIcon><ArrowForwardIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Move</Typography></ListItemText>
+        </MenuItem >,
+        <MenuItem disabled >
+            <ListItemIcon><ContentCopyIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Copy</Typography></ListItemText>
+        </MenuItem >,
+        <MenuItem disabled >
+            <ListItemIcon><ArchiveIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Archive</Typography></ListItemText>
+        </MenuItem >,
+        <MenuItem disabled >
+            <ListItemIcon><IosShareIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
+            <ListItemText><Typography variant="body2">Share</Typography></ListItemText>
+        </MenuItem>,
+    ]
 
     useEffect(() => {
         setOpenModal(openFFrelloCardModal)
@@ -58,8 +116,28 @@ const FFrelloCardModal = () => {
             dispatch(getCardThunk({ accessToken: accessToken, cardId: cardId }))
     }, [openFFrelloCardModal])
 
+    const refetchCard = () => {
+        dispatch(getCardThunk({ accessToken: accessToken, cardId: cardId }))
+    }
+
     //re render anytime ffrelloCard changes
-    useEffect(() => { }, [ffrelloCard])
+    useEffect(() => { console.log('ffrello Card Changed'); console.log(ffrelloCard); }, [ffrelloCard])
+
+    //if we successfully added a checklist, re fetch the card
+    useEffect(() => { if (addChecklistStatus == ApiCallStatus.Success) refetchCard() }, [addChecklistStatus])
+
+    //if we successfully removed a checklist, re fetch the card
+    useEffect(() => { if (removeChecklistStatus == ApiCallStatus.Success) refetchCard() }, [removeChecklistStatus])
+
+    //TODO remove so we are not reloading every time, or add a flag to not show the loading spinner. but should probably make it so you add it to state on pending, remove on failure, update on success, etc.
+    //if we successfully added a checklist item, re fetch the card
+    useEffect(() => { if (addChecklistItemStatus == ApiCallStatus.Success) refetchCard() }, [addChecklistItemStatus])
+
+    //TODO remove so we are not reloading every time, or add a flag to not show the loading spinner. but should probably make it so you add it to state on pending, remove on failure, update on success, etc.
+    //if we successfully removed a checklist, re fetch the card
+    useEffect(() => { if (setChecklistItemValueStatus == ApiCallStatus.Success) refetchCard() }, [setChecklistItemValueStatus])
+
+    //#region key press event handlers
 
     const handleNewCommentKeyPress = (event: any) => {
         if (event.key === 'Enter') {
@@ -82,6 +160,33 @@ const FFrelloCardModal = () => {
         }
     };
 
+    const handleNewChecklistItemKeyPress = (event: any, checklistId: number) => {
+        if (event.key === 'Enter') {
+            handleAddNewChecklistItemClick(checklistId);
+            event.preventDefault();
+        }
+    };
+
+    //#endregion
+
+    //#region click handlers
+
+    const handleEditCommentClick = (c: Comment) => {
+        setIsEditingComment(c.id as number);
+        setEditedCommentValue(c.value);
+    }
+
+    const handleEditDescriptionClick = () => {
+        setIsEditingDescription(true)
+        setEditedDescriptionValue(ffrelloCard?.description as string)
+    }
+
+    const handleDeleteClick = (comment: Comment) => {
+        dispatch(removeCommentThunk({ accessToken: accessToken, comment: comment }))
+    }
+
+    //#endregion
+
     const createComment = () => {
         setNewCommentValue("")
         dispatch(addCardCommentThunk({ accessToken: accessToken, cardId: cardId, userId: userId, comment: newComment }))
@@ -99,20 +204,6 @@ const FFrelloCardModal = () => {
         dispatch(editDescriptionThunk({ accessToken: accessToken, cardId: cardId, newValue: editedDescriptionValue, originalValue: ffrelloCard?.description as string }))
     }
 
-    const handleEditCommentClick = (c: Comment) => {
-        setIsEditingComment(c.id as number);
-        setEditedCommentValue(c.value);
-    }
-
-    const handleEditDescriptionClick = () => {
-        setIsEditingDescription(true)
-        setEditedDescriptionValue(ffrelloCard?.description as string)
-    }
-
-    const handleDeleteClick = (comment: Comment) => {
-        dispatch(removeCommentThunk({ accessToken: accessToken, comment: comment }))
-    }
-
     const handleSaveCommentEdit = (comment: Comment) => {
         setIsEditingComment(0);
         setEditedCommentValue("");
@@ -124,53 +215,35 @@ const FFrelloCardModal = () => {
         dispatch(watchCardThunk({ accessToken: accessToken, cardId: cardId, isWatching: !ffrelloCard?.isUserWatching, userId: userId }));
     }
 
-    const reset = () => {
-        setNewCommentValue("");
-        setIsEditingComment(0);
-        setEditedCommentValue("");
+    const handleCancelAddChecklistItemClick = () => {
+        setIsAddingChecklistItemChecklistId(0);
+        setNewChecklistItemName("");
     }
 
-    const MenuItems = [
-        <>
-            <ListItemIcon><PersonIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Members</Typography></ListItemText>
-        </>,
-        <>
-            <ListItemIcon><LabelIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Labels</Typography></ListItemText>
-        </>,
-        <>
-            <ListItemIcon><CheckBoxIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Checklist</Typography></ListItemText>
-        </>,
-        <>
-            <ListItemIcon><DateRangeIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Dates</Typography></ListItemText >
-        </>,
-        <>
-            <ListItemIcon><AttachFileIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Attachments</Typography></ListItemText>
-        </>,
-    ]
+    const handleAddNewChecklistItemClick = (checklistId: number) => {
+        setNewChecklistItemName("");
+        dispatch(addChecklistItemThunk({ accessToken: accessToken, checklistId: checklistId, name: newChecklistItemName }));
+    }
 
-    const CardActions = [
-        <>
-            <ListItemIcon><ArrowForwardIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Move</Typography></ListItemText>
-        </>,
-        <>
-            <ListItemIcon><ContentCopyIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Copy</Typography></ListItemText>
-        </>,
-        <>
-            <ListItemIcon><ArchiveIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Archive</Typography></ListItemText>
-        </>,
-        <>
-            <ListItemIcon><IosShareIcon sx={{ width: '20px', height: '20px' }} /></ListItemIcon>
-            <ListItemText><Typography variant="body2">Share</Typography></ListItemText>
-        </>,
-    ]
+    const handleHideCheckedItemsClick = (checklistId: number) => {
+        //if it exists in list, remove 
+        if (hideCheckedItemsChecklistIdSet.has(checklistId)) {
+            const updatedSet = new Set(hideCheckedItemsChecklistIdSet);
+            updatedSet.delete(checklistId);
+            setHideCheckedItemsChecklistIdSet(updatedSet);
+        }
+        //add to list otherwise
+        else
+            setHideCheckedItemsChecklistIdSet(new Set(hideCheckedItemsChecklistIdSet).add(checklistId));
+    }
+
+    const reset = () => {
+        setNewCommentValue(""); //reset new comment textbox value
+        setIsEditingComment(0); //reset any open comment editor
+        setEditedCommentValue(""); //reset edited comment value
+        setIsEditingDescription(false); //reset open description editor
+        setEditedDescriptionValue("");  //reset edited description value
+    }
 
     let modalContent = <></>
 
@@ -289,6 +362,125 @@ const FFrelloCardModal = () => {
                                 }
 
                             </Stack>
+
+
+
+
+                            {/* Checklists */}
+                            <Stack direction="column" spacing={4}>
+
+                                {ffrelloCard.checklists?.map((checklist: FFrelloCardChecklist) => {
+                                    let hideCheckedItems = hideCheckedItemsChecklistIdSet.has(checklist.id);
+                                    return (
+                                        <Stack direction="column">
+                                            {/* header bar */}
+                                            <Stack direction="row">
+                                                <Box sx={{ width: '10%' }}>
+                                                    <AssignmentTurnedInIcon />
+                                                </Box>
+                                                <Box display="flex" justifyContent="space-between" flexDirection="row" sx={{ width: '90%' }}>
+                                                    <Typography>{checklist.name}</Typography>
+                                                    <Stack direction="row" spacing={1}>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            size="small"
+                                                            onClick={() => handleHideCheckedItemsClick(checklist.id)}
+                                                            disabled={checklist.items?.length === 0}
+                                                            sx={{ textTransform: 'none' }}>{hideCheckedItems ? `Show Checked Items (${checklist.items.filter(x => x.isChecked).length})` : 'Hide Checked Items'}</Button>
+                                                        <Button
+                                                            variant="contained"
+                                                            color="primary"
+                                                            size="small"
+                                                            onClick={() => dispatch(removeChecklistThunk({ accessToken: accessToken, checklistId: checklist.id }))}
+                                                            sx={{ textTransform: 'none' }}>Delete</Button>
+                                                    </Stack>
+                                                </Box>
+                                            </Stack>
+
+                                            {/* progress bar */}
+                                            <Stack direction="row" alignItems={"center"}>
+                                                {/* progress percentage */}
+                                                <Box sx={{ width: '10%' }}>
+                                                    <Typography>{checklist.items.length > 0 ? Math.floor((checklist.items.filter(x => x.isChecked).length / checklist.items.length) * 100) : 0}%</Typography>
+                                                </Box>
+                                                <Box sx={{ width: '90%' }}>
+                                                    <LinearProgress variant="determinate" color="primary" value={checklist.items.length > 0 ? Math.floor((checklist.items.filter(x => x.isChecked).length / checklist.items.length) * 100) : 0} />
+                                                </Box>
+                                            </Stack>
+
+                                            <Stack direction="column" spacing={1}>
+                                                <>
+                                                    {
+                                                        hideCheckedItemsChecklistIdSet.has(checklist.id) ?
+                                                            <>
+                                                                {checklist.items.filter(x => !x.isChecked).map((i: FFrelloCardChecklistItem) => {
+                                                                    return (
+                                                                        <Stack direction="row" alignItems="center">
+                                                                            <Box sx={{ width: '10%' }}><Checkbox size="small" checked={i.isChecked} onChange={(e) => dispatch(setChecklistItemValueThunk({ accessToken: accessToken, checklistItemId: i.id, value: e.target.checked }))} /></Box>
+                                                                            <Box sx={{ width: 'auto' }}><Typography>{i.name}</Typography></Box>
+                                                                        </Stack>
+                                                                    )
+                                                                })}
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {checklist.items.map((i: FFrelloCardChecklistItem) => {
+                                                                    return (
+                                                                        <Stack direction="row" alignItems="center">
+                                                                            <Box sx={{ width: '10%' }}><Checkbox size="small" checked={i.isChecked} onChange={(e) => dispatch(setChecklistItemValueThunk({ accessToken: accessToken, checklistItemId: i.id, value: e.target.checked }))} /></Box>
+                                                                            <Box sx={{ width: 'auto' }}><Typography sx={{ textDecoration: i.isChecked ? 'line-through' : 'none' }}>{i.name}</Typography></Box>
+                                                                        </Stack>
+                                                                    )
+                                                                })}
+                                                            </>
+                                                    }
+                                                    <Box sx={{ position: 'relative', left: '10%', width: '90%' }}>
+                                                        {
+                                                            isAddingChecklistItemChecklistId == checklist.id ?
+
+                                                                <Stack direction="column" spacing={0.5}>
+                                                                    <TextField
+                                                                        autoFocus
+                                                                        size="small"
+                                                                        variant="outlined"
+                                                                        placeholder="Add an item"
+                                                                        value={newChecklistItemName}
+                                                                        onKeyDown={(e) => handleNewChecklistItemKeyPress(e, checklist.id)}
+                                                                        onChange={(e) => setNewChecklistItemName(e.target.value)} />
+                                                                    <Stack direction="row" justifyContent="space-between">
+                                                                        <Stack direction="row" spacing={1}>
+                                                                            <Button sx={{ textTransform: 'none' }} color="primary" variant="contained" size="small" onClick={() => handleAddNewChecklistItemClick(checklist.id)} disabled={newChecklistItemName === ""}>Add</Button>
+                                                                            <Button sx={{ textTransform: 'none' }} size="small" variant="outlined" onClick={handleCancelAddChecklistItemClick}>Cancel</Button>
+                                                                        </Stack>
+                                                                        <Stack direction="row" spacing={1}>
+                                                                            <Tooltip title="doesnt work yet" >
+                                                                                <Button sx={{ textTransform: 'none' }} size="small" variant="outlined">Assign</Button>
+                                                                            </Tooltip>
+                                                                            <Tooltip title="doesnt work yet" >
+                                                                                <Button sx={{ textTransform: 'none' }} size="small" variant="outlined">Due Date</Button>
+                                                                            </Tooltip>
+                                                                        </Stack>
+                                                                    </Stack>
+                                                                </Stack>
+                                                                :
+                                                                <Button
+                                                                    color="primary"
+                                                                    variant="contained"
+                                                                    size="small"
+                                                                    onClick={() => setIsAddingChecklistItemChecklistId(checklist.id)}
+                                                                    sx={{ textTransform: 'none' }}>Add an item</Button>
+                                                        }
+                                                    </Box>
+                                                </>
+                                            </Stack>
+                                        </Stack>
+                                    )
+                                })}
+                            </Stack>
+
+
+                            {/* Activity */}
                             <Stack direction="row" justifyContent={"space-between"}>
                                 <Stack direction="row" spacing={1}>
                                     <BlurLinearIcon />
@@ -317,6 +509,8 @@ const FFrelloCardModal = () => {
                                     : <></>}
 
                             </Stack>
+
+                            {/* Comments */}
                             <Stack direction="column" spacing={1}>
                                 {ffrelloCard.comments?.map((c) => {
                                     return (
@@ -369,7 +563,7 @@ const FFrelloCardModal = () => {
                                                     <Link onClick={() => handleEditCommentClick(c)}>
                                                         <Typography variant="caption">Edit</Typography>
                                                     </Link>
-                                                    <Typography variant="h6">-</Typography>
+                                                    <Typography variant="h6">•</Typography>
                                                     <Link onClick={() => handleDeleteClick(c)}>
                                                         <Typography variant="caption">Delete</Typography>
                                                     </Link>
@@ -387,9 +581,7 @@ const FFrelloCardModal = () => {
                                 <Typography>Add to Card</Typography>
                                 {MenuItems.map((x) =>
                                     <Paper sx={{ borderRadius: '4px' }} elevation={4}>
-                                        <MenuItem>
-                                            {x}
-                                        </MenuItem>
+                                        {x}
                                     </Paper>
                                 )}
                             </Stack>
@@ -397,9 +589,7 @@ const FFrelloCardModal = () => {
                                 <Typography>Card actions</Typography>
                                 {CardActions.map((x) =>
                                     <Paper sx={{ borderRadius: '4px' }} elevation={4}>
-                                        <MenuItem>
-                                            {x}
-                                        </MenuItem>
+                                        {x}
                                     </Paper>)}
                             </Stack>
                         </Stack>

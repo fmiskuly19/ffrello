@@ -10,7 +10,7 @@ interface FFrelloCard {
     comments: Comment[],
     attachments?: string[],
     members?: User[],
-    checklistItems?: string[],
+    checklists?: FFrelloCardChecklist[],
     isUserWatching: boolean,
 }
 

@@ -17,7 +17,7 @@ import BoardListPaper from "../../components/material-ui-cards/boardList";
 
 import { ApiCallStatus } from "../../types/ApiCallStatus";
 import { BoardList } from "../../types/BoardList";
-import FFrelloCardModal from "../../components/modals/ffrelloCardModal";
+import FFrelloCardModal from "../../components/modals/ffrelloCardModal/ffrelloCardModal";
 
 export interface newBoardListCard {
     boardListId: number,
